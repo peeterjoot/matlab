@@ -3,8 +3,10 @@
 % Assumptions:
 % 1) 'label' in [RIVE]label is numeric.  This appears to be the case in all the example spice circuits of
 %    http://www.allaboutcircuits.com/vol_5/chpt_7/8.html
-% 2) .end or EOF terminates the netlist
-% 3) first line of netlist is a comment unless it starts with [RIVE]
+%
+% Not implementing the spice netlist format where:
+% a) .end terminates the netlist
+% b) first line of netlist is a comment unless it starts with [RIVE]
 %
 
 function [G,b,d] = NodalAnalysis(filename)
@@ -43,16 +45,36 @@ function [G,b,d] = NodalAnalysis(filename)
 % and the last argument is the source gain.
 
 % debug:
-   %disp( filename ) ;
-   %fprintf( 'filename: %s\n', filename ) ;
-   trace( 'filename: ' + filename ) ;
+   trace( ['filename: ', filename] ) ;
 
-   try
    fh = fopen( filename ) ;
-   catch exception
-%   if ( -1 == fh )
-%      fprintf( 'error opening file "%s"', filename ) ;
-%   else
+   if ( -1 == fh )
+      error( 'NodalAnalysis:fopen', 'error opening file "%s"', filename ) ;
+   end
+
+   while ~feof( fh )
+      line = fgets( fh ) ;
+
+      switch line(1:1)
+      case 'R'
+         %[label, n1, n2, value] = textscan( '%d %d %d %d' ) ;
+         out = textscan( line, '%d %d %d %d' ) ;
+         %disp( ['R:', line(2:end)] ) ;
+         s = sprintf( 'R %d,%d -> %d,%d', out{1}, out{2}, out{3}, out{4} ) ;
+         disp( out{1} ) ;
+         disp( out{2} ) ;
+         disp( out{3} ) ;
+         disp( out{4} ) ;
+         disp( s ) ;
+      case 'E'
+         disp( ['E:', line(2:end)] ) ;
+      case 'I'
+         disp( ['I:', line(2:end)] ) ;
+      case 'V'
+         disp( ['V:', line(2:end)] ) ;
+      otherwise
+         error( 'NodalAnalysis:parseline', 'expect line "%s" to start with one of R,E,I,V', line ) ;
+      end
    end
 
    d = 1 ;

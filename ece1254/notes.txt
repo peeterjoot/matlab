@@ -1,1 +1,4 @@
 - looks like each function has to be in its own file.
+- not is the ~ character
+- array initialization using {...}, not the () syntax for array indexes
+- strings are '' delimited, not ""

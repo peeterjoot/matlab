@@ -1,1 +1,1 @@
-[G,b] = NodalAnalysis( 1 )
+[G,b,d] = NodalAnalysis( 1 )
