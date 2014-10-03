@@ -1,1 +1,1 @@
-[G,b,d] = NodalAnalysis( 1 )
+[G,b,d] = NodalAnalysis( 'test2.netlist' )

@@ -44,7 +44,7 @@ function [G,b,d] = NodalAnalysis(filename)
 % The controlling voltage is between the nodes nodectrl+ and nodectrl-,
 % and the last argument is the source gain.
 
-% debug:
+   enableTrace() ;
    trace( ['filename: ', filename] ) ;
 
    fh = fopen( filename ) ;
@@ -55,23 +55,25 @@ function [G,b,d] = NodalAnalysis(filename)
    while ~feof( fh )
       line = fgets( fh ) ;
 
+      trace( ['line: ', line] ) ;
+
       switch line(1:1)
       case 'R'
-         %[label, n1, n2, value] = textscan( '%d %d %d %d' ) ;
-         out = textscan( line, '%d %d %d %d' ) ;
-         %disp( ['R:', line(2:end)] ) ;
-         s = sprintf( 'R %d,%d -> %d,%d', out{1}, out{2}, out{3}, out{4} ) ;
-         disp( out{1} ) ;
-         disp( out{2} ) ;
-         disp( out{3} ) ;
-         disp( out{4} ) ;
-         disp( s ) ;
+         [label, n1, n2, value] = sscanf( line(2:end), '%d %d %d %f' ) ;          
+
+         trace( sprintf( 'R:%d %d,%d -> %d\n', label, n1, n2, value ) ) ;
       case 'E'
-         disp( ['E:', line(2:end)] ) ;
+         [label, n1, n2, c1, c2, value] = sscanf( line(2:end), '%d %d %d %d %d %f' ) ;          
+
+         trace( sprintf( 'I:%d %d,%d (%d,%d) -> %d\n', label, n1, n2, c1, c2, value ) ) ;
       case 'I'
-         disp( ['I:', line(2:end)] ) ;
+         [label, n1, n2, value] = sscanf( line(2:end), '%d %d %d DC %f' ) ;          
+
+         trace( sprintf( 'I:%d %d,%d -> %d\n', label, n1, n2, value ) ) ;
       case 'V'
-         disp( ['V:', line(2:end)] ) ;
+         [label, n1, n2, value] = sscanf( line(2:end), '%d %d %d DC %f' ) ;          
+
+         trace( sprintf( 'V:%d %d,%d -> %d\n', label, n1, n2, value ) ) ;
       otherwise
          error( 'NodalAnalysis:parseline', 'expect line "%s" to start with one of R,E,I,V', line ) ;
       end
@@ -82,4 +84,4 @@ function [G,b,d] = NodalAnalysis(filename)
    b = {1,3} ;
 end
 
-%[G, b, d] = NodalAnalysis( 'x.netlist' ) ;
+%[G, b, d] = NodalAnalysis( 'test2.netlist' ) ;
