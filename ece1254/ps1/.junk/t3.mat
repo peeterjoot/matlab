@@ -1,0 +1,10 @@
+clear all ;
+
+a = [ 1; 2; 3; 4 ] ;
+
+[b, c, d, e ] = a ;
+
+disp(b) ;
+disp(c) ;
+disp(d) ;
+disp(e) ;
