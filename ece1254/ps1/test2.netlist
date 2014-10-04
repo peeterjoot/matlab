@@ -1,5 +1,7 @@
 R1 1 2 1
 I1 2 3 DC 1
 V1 3 4 DC 1
-.end
 E1 4 1 1 1 1
+.end
+
+blah not seen

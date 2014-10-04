@@ -4,9 +4,9 @@
 % 1) 'label' in [RIVE]label is numeric.  This appears to be the case in all the example spice circuits of
 %    http://www.allaboutcircuits.com/vol_5/chpt_7/8.html
 % 2) .end terminates the netlist
+% 3) first line of netlist is a (title) comment unless it starts with [RIVE]
 %
 % Not implementing the spice netlist format where:
-% b) first line of netlist is a comment unless it starts with [RIVE]
 %
 
 function [G,b,d] = NodalAnalysis(filename)
@@ -52,6 +52,8 @@ function [G,b,d] = NodalAnalysis(filename)
       error( 'NodalAnalysis:fopen', 'error opening file "%s"', filename ) ;
    end
 
+   firstLineRead = 0 ;
+
    while ~feof( fh )
       line = fgets( fh ) ;
 
@@ -59,6 +61,7 @@ function [G,b,d] = NodalAnalysis(filename)
 
       switch line(1:1)
       case 'R'
+         firstLineRead = 1 ;
          [a, sz] = sscanf( line(2:end), '%d %d %d %f' ) ;          
          if ( sz ~= 4 )
             error( 'NodalAnalysis:parseline:R', 'expected 4 fields, but read %d fields from resistor line "%s"', sz, line ) ;
@@ -72,6 +75,7 @@ function [G,b,d] = NodalAnalysis(filename)
 
          trace( sprintf( 'R:%d %d,%d -> %d\n', label, n1, n2, value ) ) ;
       case 'E'
+         firstLineRead = 1 ;
          [a, sz] = sscanf( line(2:end), '%d %d %d %d %d %f' ) ;          
          if ( sz ~= 6 )
             error( 'NodalAnalysis:parseline:E', 'expected 6 fields, but read %d fields from controlling voltage line "%s"', sz, line ) ;
@@ -86,6 +90,7 @@ function [G,b,d] = NodalAnalysis(filename)
 
          trace( sprintf( 'I:%d %d,%d (%d,%d) -> %d\n', label, n1, n2, nodectrl1, nodectrl2, gain ) ) ;
       case 'I'
+         firstLineRead = 1 ;
          [a, sz] = sscanf( line(2:end), '%d %d %d DC %f' ) ;          
          if ( sz ~= 4 )
             error( 'NodalAnalysis:parseline:I', 'expected 4 fields, but read %d fields from current line "%s"', sz, line ) ;
@@ -99,6 +104,7 @@ function [G,b,d] = NodalAnalysis(filename)
 
          trace( sprintf( 'I:%d %d,%d -> %d\n', label, n1, n2, value ) ) ;
       case 'V'
+         firstLineRead = 1 ;
          [a, sz] = sscanf( line(2:end), '%d %d %d DC %f' ) ;          
          if ( sz ~= 4 )
             error( 'NodalAnalysis:parseline:V', 'expected 4 fields, but read %d fields from current line "%s"', sz, line ) ;
@@ -117,7 +123,9 @@ function [G,b,d] = NodalAnalysis(filename)
             break ;
          end
       otherwise
-         error( 'NodalAnalysis:parseline', 'expect line "%s" to start with one of R,E,I,V', line ) ;
+         if ( firstLineRead )
+            error( 'NodalAnalysis:parseline', 'expect line "%s" to start with one of R,E,I,V', line ) ;
+         end
       end
    end
 
