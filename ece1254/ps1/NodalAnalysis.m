@@ -4,7 +4,8 @@
 % 1) 'label' in [RIVE]label is numeric.  This appears to be the case in all the example spice circuits of
 %    http://www.allaboutcircuits.com/vol_5/chpt_7/8.html
 % 2) .end terminates the netlist
-% 3) first line of netlist is a (title) comment unless it starts with [RIVE]
+% 3) The first line of netlist is a (title) comment unless it starts with [RIVE]
+% 4) The netlist file will always include a 0 (ground) node.
 %
 % Not implementing the spice netlist format where:
 %
