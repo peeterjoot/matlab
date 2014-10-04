@@ -63,58 +63,66 @@ function [G,b,d] = NodalAnalysis(filename)
       switch line(1:1)
       case 'R'
          firstLineRead = 1 ;
-         [a, sz] = sscanf( line(2:end), '%d %d %d %f' ) ;          
+         [amat, sz] = sscanf( line(2:end), '%d %d %d %f' ) ;
          if ( sz ~= 4 )
             error( 'NodalAnalysis:parseline:R', 'expected 4 fields, but read %d fields from resistor line "%s"', sz, line ) ;
          end
 
-         %[label ; n1 ; n2 ; value] = a ;
-         label = a(1) ;
-         n1    = a(2) ;
-         n2    = a(3) ;
-         value = a(4) ;
+         % http://stackoverflow.com/a/26190231/189270
+         % http://www.mathworks.com/help/matlab/ref/deal.html?refresh=true, example 3:
+         a = num2cell( amat ) ;
+         [label, n1, n2, value] = a{:} ;
+%         label = amat(1) ;
+%         n1    = amat(2) ;
+%         n2    = amat(3) ;
+%         value = amat(4) ;
 
          trace( sprintf( 'R:%d %d,%d -> %d\n', label, n1, n2, value ) ) ;
       case 'E'
          firstLineRead = 1 ;
-         [a, sz] = sscanf( line(2:end), '%d %d %d %d %d %f' ) ;          
+         [amat, sz] = sscanf( line(2:end), '%d %d %d %d %d %f' ) ;
          if ( sz ~= 6 )
             error( 'NodalAnalysis:parseline:E', 'expected 6 fields, but read %d fields from controlling voltage line "%s"', sz, line ) ;
          end
-         %[label, n1, n2, c1, c2, value] = a ;
-         label     = a(1) ;
-         n1        = a(2) ;
-         n2        = a(3) ;
-         nodectrl1 = a(4) ;
-         nodectrl2 = a(5) ;
-         gain      = a(6) ;
+
+         a = num2cell( amat ) ;
+         [label, n1, n2, nodectrl1, nodectrl2, gain] = a{:} ;
+%         label     = amat(1) ;
+%         n1        = amat(2) ;
+%         n2        = amat(3) ;
+%         nodectrl1 = amat(4) ;
+%         nodectrl2 = amat(5) ;
+%         gain      = amat(6) ;
 
          trace( sprintf( 'I:%d %d,%d (%d,%d) -> %d\n', label, n1, n2, nodectrl1, nodectrl2, gain ) ) ;
       case 'I'
          firstLineRead = 1 ;
-         [a, sz] = sscanf( line(2:end), '%d %d %d DC %f' ) ;          
+         [amat, sz] = sscanf( line(2:end), '%d %d %d DC %f' ) ;
          if ( sz ~= 4 )
             error( 'NodalAnalysis:parseline:I', 'expected 4 fields, but read %d fields from current line "%s"', sz, line ) ;
          end
 
-         %[label, n1, n2, value] = a ;
-         label = a(1) ;
-         n1    = a(2) ;
-         n2    = a(3) ;
-         value = a(4) ;
+         a = num2cell( amat ) ;
+         [label, n1, n2, value] = a{:} ;
+%         label = amat(1) ;
+%         n1    = amat(2) ;
+%         n2    = amat(3) ;
+%         value = amat(4) ;
 
          trace( sprintf( 'I:%d %d,%d -> %d\n', label, n1, n2, value ) ) ;
       case 'V'
          firstLineRead = 1 ;
-         [a, sz] = sscanf( line(2:end), '%d %d %d DC %f' ) ;          
+         [amat, sz] = sscanf( line(2:end), '%d %d %d DC %f' ) ;
          if ( sz ~= 4 )
             error( 'NodalAnalysis:parseline:V', 'expected 4 fields, but read %d fields from current line "%s"', sz, line ) ;
          end
-         %[label, n1, n2, value] = a ;
-         label = a(1) ;
-         n1    = a(2) ;
-         n2    = a(3) ;
-         value = a(4) ;
+
+         a = num2cell( amat ) ;
+         %[label, n1, n2, value] = a{:} ;
+%         label = amat(1) ;
+%         n1    = amat(2) ;
+%         n2    = amat(3) ;
+%         value = amat(4) ;
 
          trace( sprintf( 'V:%d %d,%d -> %d\n', label, n1, n2, value ) ) ;
       case '.'
