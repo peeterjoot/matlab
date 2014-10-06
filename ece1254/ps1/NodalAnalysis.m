@@ -1,13 +1,13 @@
 
 %
-% Assumptions:
+% Assumptions (many of which would be probably be invalid for more general spice netlist files).
+%
 % 1) 'label' in [RIVE]label is numeric.  This appears to be the case in all the example spice circuits of
 %    http://www.allaboutcircuits.com/vol_5/chpt_7/8.html -- may be a bad general assumption.
 % 2) .end terminates the netlist
 % 3) The first line of netlist is a (title) comment unless it starts with [RIVE]
 % 4) The netlist file will always include a 0 (ground) node.
-%
-% Not implementing the spice netlist format where:
+% 5) There are no gaps in the node numbers.
 %
 
 function [G,b] = NodalAnalysis(filename)
@@ -118,6 +118,9 @@ function [G,b] = NodalAnalysis(filename)
       end
    end
 
+   % if we wanted to allow for gaps in the node numbers (like 1, 3, 4, 5), then we'd have to count the number of unique node numbers
+   % instead of just taking a max, and map the matrix positions to the original node numbers later.
+   % 
    allnodes = horzcat( resistorLines(2:3, :), currentLines(2:3, :), voltageLines(2:3, :), ampLines(2:3, :), ampLines(4:5, :) ) ;
    maxNode = max( max( allnodes ) ) ;
    trace( [ 'maxnode: ', sprintf('%d', maxNode) ] ) ;
@@ -127,14 +130,15 @@ function [G,b] = NodalAnalysis(filename)
    % 
    %----------------------------------------------------------------------------
 
+   numVoltageSources = size( voltageLines, 2 ) ;
+
    % have to adjust these sizes for sources, and amps
-   G = zeros( maxNode, maxNode ) ;
-   b = zeros( maxNode, 1 ) ;
+   G = zeros( maxNode + numVoltageSources, maxNode + numVoltageSources ) ;
+   b = zeros( maxNode + numVoltageSources, 1 ) ;
 
    % process the resistor lines:
-   ic = 0 ;
+   % note: matlab for loop appears to iterate over matrix by assigning each column to a temp variable
    for r = resistorLines
-      ic = ic + 1 ;
       label = r(1) ;
       n1 = r(2) ;
       n2 = r(3) ;
@@ -155,25 +159,51 @@ function [G,b] = NodalAnalysis(filename)
       end
    end
 
-%        a = num2cell( a ) ;
+   % process the voltage sources:
+   r = maxNode ;
+   for v = voltageLines
+      r = r + 1 ;
+
+      label = v(1) ;
+      n1 = v(2) ;
+      n2 = v(3) ;
+      value = v(4) ;
+  
+      trace( sprintf( 'V:%d %d,%d -> %d\n', label, n1, n2, value ) ) ;
+
+      if ( n1 )
+         G( n1, r ) = 1 ;
+         G( r, n1 ) = -1 ;
+      end
+      if ( n2 )
+         G( n2, r ) = -1 ;
+         G( r, n2 ) = 1 ;
+      end
+
+      b( r,1 ) = value ;
+   end
+
+   % process the current sources:
+   for i = currentLines
+      label = i(1) ;
+      n1 = i(2) ;
+      n2 = i(3) ;
+      value = i(4) ;
+
+      trace( sprintf( 'I:%d %d,%d -> %d\n', label, n1, n2, value ) ) ;
+
+      if ( n1 )
+         b( n1 ) = b( n1 ) - value ;
+      end
+      if ( n2 )
+         b( n2 ) = b( n2 ) + value ;
+      end
+   end
+
+   % process the (voltage) amplifier lines:
+%      trace( sprintf( 'E:%d %d,%d (%d,%d) -> %d\n', label, n1, n2, nodectrl1, nodectrl2, gain ) ) ;
 %        [label, n1, n2, nodectrl1, nodectrl2, gain] = a{:} ;
 %
-%        trace( sprintf( 'I:%d %d,%d (%d,%d) -> %d\n', label, n1, n2, nodectrl1, nodectrl2, gain ) ) ;
-
-%         a = num2cell( a ) ;
-%         [label, n1, n2, value] = a{:} ;
-
-% collect all the current lines so we know the size of the nodelist.
-%         b( n1 ) = b( n1 ) - value ;
-%         b( n2 ) = b( n2 ) + value ;
-%
-%         trace( sprintf( 'I:%d %d,%d -> %d\n', label, n1, n2, value ) ) ;
-
-
-%         a = num2cell( a ) ;
-%         [label, n1, n2, value] = a{:} ;
-%
-%         trace( sprintf( 'V:%d %d,%d -> %d\n', label, n1, n2, value ) ) ;
 end
 
 %clear all ; [G, b] = NodalAnalysis( 'test2.netlist' ) ;
