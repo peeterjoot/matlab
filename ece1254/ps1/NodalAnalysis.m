@@ -2,7 +2,7 @@
 %
 % Assumptions:
 % 1) 'label' in [RIVE]label is numeric.  This appears to be the case in all the example spice circuits of
-%    http://www.allaboutcircuits.com/vol_5/chpt_7/8.html
+%    http://www.allaboutcircuits.com/vol_5/chpt_7/8.html -- may be a bad general assumption.
 % 2) .end terminates the netlist
 % 3) The first line of netlist is a (title) comment unless it starts with [RIVE]
 % 4) The netlist file will always include a 0 (ground) node.
@@ -10,7 +10,7 @@
 % Not implementing the spice netlist format where:
 %
 
-function [G,b,d] = NodalAnalysis(filename)
+function [G,b] = NodalAnalysis(filename)
 % NodalAnalysis generates the modified nodal analysis (MNA) equations from a text file
 %
 % Write a MATLAB routine [G,b]=NodalAnalysis(filename)
@@ -24,7 +24,7 @@ function [G,b,d] = NodalAnalysis(filename)
 % 
 % Rlabel node1 node2 value
 % 
-% where â€œvalueâ€? is the resistance value. Current sources are specified with
+% where "value" is the resistance value. Current sources are specified with
 % the line
 % 
 % Ilabel node1 node2 DC value
@@ -35,8 +35,8 @@ function [G,b,d] = NodalAnalysis(filename)
 % 
 % Vlabel node+ node- DC value
 % 
-% where node+ and node- identify, respectively, the node where the â€œposi-
-% tiveâ€? and â€œnegativeâ€? terminal is connected to. A voltage-controlled volt-
+% where node+ and node- identify, respectively, the node where the posi-
+% tive and "negative" terminal is connected to. A voltage-controlled volt-
 % age source, connected between the nodesnode+ and node-, is specified
 % by the line
 % 
@@ -48,6 +48,17 @@ function [G,b,d] = NodalAnalysis(filename)
    enableTrace() ;
    trace( ['filename: ', filename] ) ;
 
+   currentLines = [] ;
+   resistorLines = [] ;
+   voltageLines = [] ;
+   currentLines = [] ;
+   ampLines = [] ;
+
+   %----------------------------------------------------------------------------
+   %
+   % Parse the netlist file.  Collect up the results into some temporary arrays so we can figure out the max node number
+   % and other info along the way.
+   %
    fh = fopen( filename ) ;
    if ( -1 == fh )
       error( 'NodalAnalysis:fopen', 'error opening file "%s"', filename ) ;
@@ -63,68 +74,37 @@ function [G,b,d] = NodalAnalysis(filename)
       switch line(1:1)
       case 'R'
          firstLineRead = 1 ;
-         [amat, sz] = sscanf( line(2:end), '%d %d %d %f' ) ;
+         % Note: sscanf appears to treat ' ' as one or more spaces (which is what we want)
+         [a, sz] = sscanf( line(2:end), '%d %d %d %f' ) ;
          if ( sz ~= 4 )
             error( 'NodalAnalysis:parseline:R', 'expected 4 fields, but read %d fields from resistor line "%s"', sz, line ) ;
          end
 
-         % http://stackoverflow.com/a/26190231/189270
-         % http://www.mathworks.com/help/matlab/ref/deal.html?refresh=true, example 3:
-         a = num2cell( amat ) ;
-         [label, n1, n2, value] = a{:} ;
-%         label = amat(1) ;
-%         n1    = amat(2) ;
-%         n2    = amat(3) ;
-%         value = amat(4) ;
-
-         trace( sprintf( 'R:%d %d,%d -> %d\n', label, n1, n2, value ) ) ;
+         resistorLines(:,end+1) = a ;
       case 'E'
          firstLineRead = 1 ;
-         [amat, sz] = sscanf( line(2:end), '%d %d %d %d %d %f' ) ;
+         [a, sz] = sscanf( line(2:end), '%d %d %d %d %d %f' ) ;
          if ( sz ~= 6 )
             error( 'NodalAnalysis:parseline:E', 'expected 6 fields, but read %d fields from controlling voltage line "%s"', sz, line ) ;
          end
 
-         a = num2cell( amat ) ;
-         [label, n1, n2, nodectrl1, nodectrl2, gain] = a{:} ;
-%         label     = amat(1) ;
-%         n1        = amat(2) ;
-%         n2        = amat(3) ;
-%         nodectrl1 = amat(4) ;
-%         nodectrl2 = amat(5) ;
-%         gain      = amat(6) ;
-
-         trace( sprintf( 'I:%d %d,%d (%d,%d) -> %d\n', label, n1, n2, nodectrl1, nodectrl2, gain ) ) ;
+         ampLines(:,end+1) = a ;
       case 'I'
          firstLineRead = 1 ;
-         [amat, sz] = sscanf( line(2:end), '%d %d %d DC %f' ) ;
+         [a, sz] = sscanf( line(2:end), '%d %d %d DC %f' ) ;
          if ( sz ~= 4 )
             error( 'NodalAnalysis:parseline:I', 'expected 4 fields, but read %d fields from current line "%s"', sz, line ) ;
          end
 
-         a = num2cell( amat ) ;
-         [label, n1, n2, value] = a{:} ;
-%         label = amat(1) ;
-%         n1    = amat(2) ;
-%         n2    = amat(3) ;
-%         value = amat(4) ;
-
-         trace( sprintf( 'I:%d %d,%d -> %d\n', label, n1, n2, value ) ) ;
+         currentLines(:,end+1) = a ;
       case 'V'
          firstLineRead = 1 ;
-         [amat, sz] = sscanf( line(2:end), '%d %d %d DC %f' ) ;
+         [a, sz] = sscanf( line(2:end), '%d %d %d DC %f' ) ;
          if ( sz ~= 4 )
             error( 'NodalAnalysis:parseline:V', 'expected 4 fields, but read %d fields from current line "%s"', sz, line ) ;
          end
 
-         a = num2cell( amat ) ;
-         %[label, n1, n2, value] = a{:} ;
-%         label = amat(1) ;
-%         n1    = amat(2) ;
-%         n2    = amat(3) ;
-%         value = amat(4) ;
-
-         trace( sprintf( 'V:%d %d,%d -> %d\n', label, n1, n2, value ) ) ;
+         voltageLines(:,end+1) = a ;
       case '.'
          if ( 0 == strncmp( line, '.end', 4 ) )
             error( 'NodalAnalysis:parseline', 'unexpected line "%s"', line ) ;
@@ -138,9 +118,62 @@ function [G,b,d] = NodalAnalysis(filename)
       end
    end
 
-   d = 1 ;
-   G = {1,1} ;
-   b = {1,3} ;
+   allnodes = horzcat( resistorLines(2:3, :), currentLines(2:3, :), voltageLines(2:3, :), ampLines(2:3, :), ampLines(4:5, :) ) ;
+   maxNode = max( max( allnodes ) ) ;
+   trace( [ 'maxnode: ', sprintf('%d', maxNode) ] ) ;
+
+   %
+   % Done parsing the netlist file.
+   % 
+   %----------------------------------------------------------------------------
+
+   % have to adjust these sizes for sources, and amps
+   G = zeros( maxNode, maxNode ) ;
+   b = zeros( maxNode, 1 ) ;
+
+   % process the resistor lines:
+   ic = 0 ;
+   for r = resistorLines
+      ic = ic + 1 ;
+      label = r(1) ;
+      n1 = r(2) ;
+      n2 = r(3) ;
+      z = 1/r(4) ;
+
+      trace( sprintf( 'R:%d %d,%d -> %d\n', label, n1, n2, 1/z ) ) ;
+
+      % insert the stamp:
+      if ( n1 )
+         G( n1, n1 ) = z ;
+         if ( n2 )
+            G( n1, n2 ) = -z ;
+            G( n2, n1 ) = -z ;
+         end
+      end
+      if ( n2 )
+         G( n2, n2 ) = z ;
+      end
+   end
+
+%        a = num2cell( a ) ;
+%        [label, n1, n2, nodectrl1, nodectrl2, gain] = a{:} ;
+%
+%        trace( sprintf( 'I:%d %d,%d (%d,%d) -> %d\n', label, n1, n2, nodectrl1, nodectrl2, gain ) ) ;
+
+%         a = num2cell( a ) ;
+%         [label, n1, n2, value] = a{:} ;
+
+% collect all the current lines so we know the size of the nodelist.
+%         b( n1 ) = b( n1 ) - value ;
+%         b( n2 ) = b( n2 ) + value ;
+%
+%         trace( sprintf( 'I:%d %d,%d -> %d\n', label, n1, n2, value ) ) ;
+
+
+%         a = num2cell( a ) ;
+%         [label, n1, n2, value] = a{:} ;
+%
+%         trace( sprintf( 'V:%d %d,%d -> %d\n', label, n1, n2, value ) ) ;
 end
 
-%clear all ; [G, b, d] = NodalAnalysis( 'test2.netlist' ) ;
+%clear all ; [G, b] = NodalAnalysis( 'test2.netlist' ) ;
