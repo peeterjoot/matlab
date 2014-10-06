@@ -147,79 +147,110 @@ function [G,b] = NodalAnalysis(filename)
    %----------------------------------------------------------------------------
 
    numVoltageSources = size( voltageLines, 2 ) ;
+   numAmpSources = size( ampLines, 2 ) ;
 
-   % have to adjust these sizes for sources, and amps
-   G = zeros( maxNode + numVoltageSources, maxNode + numVoltageSources ) ;
-   b = zeros( maxNode + numVoltageSources, 1 ) ;
+   numAdditionalSources = numVoltageSources + numAmpSources ;
+
+   % have to adjust these sizes for sources, and voltage control sources
+   G = zeros( maxNode + numAdditionalSources, maxNode + numAdditionalSources ) ;
+   b = zeros( maxNode + numAdditionalSources, 1 ) ;
 
    % process the resistor lines:
    % note: matlab for loop appears to iterate over matrix by assigning each column to a temp variable
    for r = resistorLines
-      label = r(1) ;
-      n1 = r(2) ;
-      n2 = r(3) ;
-      z = 1/r(4) ;
+      label     = r(1) ;
+      plusNode  = r(2) ;
+      minusNode = r(3) ;
+      z         = 1/r(4) ;
 
-      trace( sprintf( 'R:%d %d,%d -> %d\n', label, n1, n2, 1/z ) ) ;
+      trace( sprintf( 'R:%d %d,%d -> %d\n', label, plusNode, minusNode, 1/z ) ) ;
 
       % insert the stamp:
-      if ( n1 )
-         G( n1, n1 ) = z ;
-         if ( n2 )
-            G( n1, n2 ) = -z ;
-            G( n2, n1 ) = -z ;
+      if ( plusNode )
+         G( plusNode, plusNode ) = z ;
+         if ( minusNode )
+            G( plusNode, minusNode ) = -z ;
+            G( minusNode, plusNode ) = -z ;
          end
       end
-      if ( n2 )
-         G( n2, n2 ) = z ;
+      if ( minusNode )
+         G( minusNode, minusNode ) = z ;
       end
    end
+disp(G );
 
    % process the voltage sources:
    r = maxNode ;
    for v = voltageLines
       r = r + 1 ;
 
-      label = v(1) ;
-      n1 = v(2) ;
-      n2 = v(3) ;
-      value = v(4) ;
+      label       = v(1) ;
+      plusNode    = v(2) ;
+      minusNode   = v(3) ;
+      value       = v(4) ;
   
-      trace( sprintf( 'V:%d %d,%d -> %d\n', label, n1, n2, value ) ) ;
+      trace( sprintf( 'V:%d %d,%d -> %d\n', label, plusNode, minusNode, value ) ) ;
 
-      if ( n1 )
-         G( n1, r ) = 1 ;
-         G( r, n1 ) = -1 ;
+      if ( plusNode )
+         G( plusNode, r ) = 1 ;
+         G( r, plusNode ) = -1 ;
       end
-      if ( n2 )
-         G( n2, r ) = -1 ;
-         G( r, n2 ) = 1 ;
+      if ( minusNode )
+         G( minusNode, r ) = -1 ;
+         G( r, minusNode ) = 1 ;
       end
 
       b( r,1 ) = value ;
    end
+disp(G );
+
+   % value for r (fall through from loop above)
+   % process the voltage controled lines
+   for a = ampLines
+      r = r + 1 ;
+
+disp(r);
+      label                = a(1) ;
+      plusNodeNum          = a(2) ;
+      minusNodeNum         = a(3) ;
+      plusControlNodeNum   = a(4) ;
+      minusControlNodeNum  = a(5) ;
+      gain                 = a(6) ;
+
+      trace( sprintf( 'E:%d %d,%d (%d,%d) -> %d\n', label, plusNodeNum, minusNodeNum, plusControlNodeNum, minusControlNodeNum, gain ) ) ;
+
+      if ( minusNodeNum )
+         G( minusNodeNum, r ) = 1 ;
+      end
+      if ( plusNodeNum )
+         G( plusNodeNum, r ) = -1 ;
+      end
+      if ( plusControlNodeNum )
+         G( plusControlNodeNum, r ) = gain ;
+      end
+      if ( minusControlNodeNum )
+         G( minusControlNodeNum, r ) = -gain ;
+      end
+   end
+disp(G );
 
    % process the current sources:
    for i = currentLines
-      label = i(1) ;
-      n1 = i(2) ;
-      n2 = i(3) ;
-      value = i(4) ;
+      label       = i(1) ;
+      plusNode    = i(2) ;
+      minusNode   = i(3) ;
+      value       = i(4) ;
 
-      trace( sprintf( 'I:%d %d,%d -> %d\n', label, n1, n2, value ) ) ;
+      trace( sprintf( 'I:%d %d,%d -> %d\n', label, plusNode, minusNode, value ) ) ;
 
-      if ( n1 )
-         b( n1 ) = b( n1 ) - value ;
+      if ( plusNode )
+         b( plusNode ) = b( plusNode ) - value ;
       end
-      if ( n2 )
-         b( n2 ) = b( n2 ) + value ;
+      if ( minusNode )
+         b( minusNode ) = b( minusNode ) + value ;
       end
    end
 
-   % process the (voltage) amplifier lines:
-%      trace( sprintf( 'E:%d %d,%d (%d,%d) -> %d\n', label, n1, n2, nodectrl1, nodectrl2, gain ) ) ;
-%        [label, n1, n2, nodectrl1, nodectrl2, gain] = a{:} ;
-%
 end
 
 %clear all ; [G, b] = NodalAnalysis( 'test2.netlist' ) ;
