@@ -2,12 +2,14 @@
 %
 % Assumptions (many of which would be probably be invalid for more general spice netlist files).
 %
-% 1) 'label' in [RIVE]label is numeric.  This appears to be the case in all the example spice circuits of
-%    http://www.allaboutcircuits.com/vol_5/chpt_7/8.html -- may be a bad general assumption.
+% 1) The 'label' following the R, I, V, E is numeric.  This appears to be the case in all the example spice circuits of
+%    http://www.allaboutcircuits.com/vol_5/chpt_7/8.html -- that may be a bad general assumption.
 % 2) .end terminates the netlist
-% 3) The first line of netlist is a (title) comment unless it starts with [RIVE]
-% 4) The netlist file will always include a 0 (ground) node.
+% 3) The first line of netlist is a (title) comment unless it starts with R, I, V, E.
+% 4) The netlist file will always include a 0 (ground) node.  I haven't tried to check that.
 % 5) There are no gaps in the node numbers.
+% 6) I seem to recall that spice files allowed the constants to be specified with k, m, M modifiers.
+%    I haven't tried to support that.
 %
 
 function [G,b] = NodalAnalysis(filename)
@@ -105,6 +107,8 @@ function [G,b] = NodalAnalysis(filename)
          end
 
          voltageLines(:,end+1) = a ;
+      case '#'
+         trace( ['comment line: ', line ] ) ;
       case '.'
          if ( 0 == strncmp( line, '.end', 4 ) )
             error( 'NodalAnalysis:parseline', 'unexpected line "%s"', line ) ;
@@ -121,7 +125,19 @@ function [G,b] = NodalAnalysis(filename)
    % if we wanted to allow for gaps in the node numbers (like 1, 3, 4, 5), then we'd have to count the number of unique node numbers
    % instead of just taking a max, and map the matrix positions to the original node numbers later.
    % 
-   allnodes = horzcat( resistorLines(2:3, :), currentLines(2:3, :), voltageLines(2:3, :), ampLines(2:3, :), ampLines(4:5, :) ) ;
+   allnodes = zeros(2, 1) ;
+   if ( size( resistorLines, 2 ) )
+      allnodes = horzcat( allnodes, resistorLines(2:3, :) ) ;
+   end
+   if ( size( currentLines, 2 ) )
+      allnodes = horzcat( allnodes, currentLines(2:3, :) ) ;
+   end
+   if ( size( voltageLines, 2 ) )
+      allnodes = horzcat( allnodes, voltageLines(2:3, :) ) ;
+   end
+   if ( size( ampLines, 2 ) )
+      allnodes = horzcat( allnodes, ampLines(2:3, :), ampLines(4:5, :) ) ;
+   end
    maxNode = max( max( allnodes ) ) ;
    trace( [ 'maxnode: ', sprintf('%d', maxNode) ] ) ;
 
@@ -207,3 +223,4 @@ function [G,b] = NodalAnalysis(filename)
 end
 
 %clear all ; [G, b] = NodalAnalysis( 'test2.netlist' ) ;
+%clear all ; [G, b] = NodalAnalysis( 'ps1.circuit.netlist' ) ;
