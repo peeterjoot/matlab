@@ -177,7 +177,6 @@ function [G,b] = NodalAnalysis(filename)
          G( minusNode, minusNode ) = z ;
       end
    end
-disp(G );
 
    % process the voltage sources:
    r = maxNode ;
@@ -202,14 +201,12 @@ disp(G );
 
       b( r,1 ) = value ;
    end
-disp(G );
 
    % value for r (fall through from loop above)
    % process the voltage controled lines
    for a = ampLines
       r = r + 1 ;
 
-disp(r);
       label                = a(1) ;
       plusNodeNum          = a(2) ;
       minusNodeNum         = a(3) ;
@@ -220,19 +217,18 @@ disp(r);
       trace( sprintf( 'E:%d %d,%d (%d,%d) -> %d\n', label, plusNodeNum, minusNodeNum, plusControlNodeNum, minusControlNodeNum, gain ) ) ;
 
       if ( minusNodeNum )
-         G( minusNodeNum, r ) = 1 ;
+         G( r, minusNodeNum ) = 1 ;
       end
       if ( plusNodeNum )
-         G( plusNodeNum, r ) = -1 ;
+         G( r, plusNodeNum ) = -1 ;
       end
       if ( plusControlNodeNum )
-         G( plusControlNodeNum, r ) = gain ;
+         G( r, plusControlNodeNum ) = gain ;
       end
       if ( minusControlNodeNum )
-         G( minusControlNodeNum, r ) = -gain ;
+         G( r, minusControlNodeNum ) = -gain ;
       end
    end
-disp(G );
 
    % process the current sources:
    for i = currentLines
@@ -250,7 +246,6 @@ disp(G );
          b( minusNode ) = b( minusNode ) + value ;
       end
    end
-
 end
 
 %clear all ; [G, b] = NodalAnalysis( 'test2.netlist' ) ;
