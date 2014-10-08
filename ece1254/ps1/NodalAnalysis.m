@@ -47,7 +47,7 @@ function [G,b] = NodalAnalysis(filename)
 % The controlling voltage is between the nodes nodectrl+ and nodectrl-,
 % and the last argument is the source gain.
 
-   enableTrace() ;
+   %enableTrace() ;
    trace( ['filename: ', filename] ) ;
 
    currentLines = [] ;
@@ -191,12 +191,12 @@ function [G,b] = NodalAnalysis(filename)
       trace( sprintf( 'V:%d %d,%d -> %d\n', label, plusNode, minusNode, value ) ) ;
 
       if ( plusNode )
-         G( plusNode, r ) = 1 ;
-         G( r, plusNode ) = -1 ;
+         G( r, plusNode ) = 1 ;
+         G( plusNode, r ) = -1 ;
       end
       if ( minusNode )
-         G( minusNode, r ) = -1 ;
-         G( r, minusNode ) = 1 ;
+         G( r, minusNode ) = -1 ;
+         G( minusNode, r ) = 1 ;
       end
 
       b( r,1 ) = value ;
@@ -218,9 +218,11 @@ function [G,b] = NodalAnalysis(filename)
 
       if ( minusNodeNum )
          G( r, minusNodeNum ) = 1 ;
+         G( minusNodeNum, r ) = -1 ;
       end
       if ( plusNodeNum )
          G( r, plusNodeNum ) = -1 ;
+         G( plusNodeNum, r ) = 1 ;
       end
       if ( plusControlNodeNum )
          G( r, plusControlNodeNum ) = gain ;
@@ -249,4 +251,4 @@ function [G,b] = NodalAnalysis(filename)
 end
 
 %clear all ; [G, b] = NodalAnalysis( 'test2.netlist' ) ;
-%clear all ; [G, b] = NodalAnalysis( 'ps1.circuit.netlist' ) ;
+%clear all ; [G, b] = NodalAnalysis( 'ps1.circuit.netlist' ) ; G\b
