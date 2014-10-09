@@ -11,6 +11,9 @@ function [ M, P, permutationSign ] = inplaceLU( M )
 % 
 % Side effects: the determinant of M can be computed by the products of the resulting
 % diagonal times the (returned) permutationSign.
+% 
+% Pivot permutation matrix code was implemented, but is buggy.  This function does not work unless no pivots are
+% required.
 %
 
 %enableTrace( ) ;

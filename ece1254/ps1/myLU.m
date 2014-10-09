@@ -13,7 +13,7 @@ function [ P, L, U, permutationSign ] = myLU( M )
 % diagonal times the (returned) permutationSign.
 %
 
-enableTrace( ) ;
+%enableTrace( ) ;
 sz = size(M, 1) ;
 
 if ( size(M, 2) ~= sz )
@@ -23,11 +23,12 @@ end
 % permutation matrix
 P = eye( sz ) ;
 L = eye( sz ) ;
+U = M ;
 permutationSign = 1 ; % could use to compute the determinant (product of diagonal of U with this)
 
-for i = 1:sz
+for i = 1:sz-1
 %disp( M ) ;
-   rowContainingMaxElement = findMaxIndexOfColumnMatrix( M(i:sz, i), i - 1 ) ;
+   rowContainingMaxElement = findMaxIndexOfColumnMatrix( U(i:sz, i), i - 1 ) ;
    
    % http://stackoverflow.com/questions/4939738/swapping-rows-and-columns 
    % example:
@@ -40,12 +41,12 @@ for i = 1:sz
    if ( rowContainingMaxElement ~= i )
       % apply the operation to both U and the permutation matrix that is tracking the row exchanges.
 
-      M( [ rowContainingMaxElement, i ], i:sz ) = M( [ i, rowContainingMaxElement ], i:sz ) ;
+      U( [ rowContainingMaxElement, i ], i:sz ) = U( [ i, rowContainingMaxElement ], i:sz ) ;
       P( [ rowContainingMaxElement, i ], 1:sz ) = P( [ i, rowContainingMaxElement ], 1:sz ) ;
 
       permutationSign = -permutationSign ;
 
-      trace( sprintf( 'permutation sign: %d, pivot value: %d', permutationSign, M(i,i) ) ) ;
+      trace( sprintf( 'permutation sign: %d, pivot value: %d', permutationSign, U(i,i) ) ) ;
    end 
 
    % now do the row operations:
@@ -55,18 +56,23 @@ for i = 1:sz
    % M_ji -> M_ji/M_ii (no sign, since this is the inverse operation)
    %
    for j = i+1:sz
-      multiplier = M(j, i)/M(i, i) ;
+      multiplier = U(j, i)/U(i, i) ;
 
       trace( sprintf('iteration: %d, row %d, multiplier: %d', i, j, multiplier) ) ;
 
-      M( j, i+1:sz ) = M( j, i+1:sz ) - multiplier * M( i, i+1:sz ) ;
+      U( j, i ) = 0 ;
+      U( j, i+1:sz ) = U( j, i+1:sz ) - multiplier * U( i, i+1:sz ) ;
       L( j, i ) = multiplier ;
    end
 end
 
-%clear all ; A = [1 1 1 ; 2 3 1 ; 3 2 1 ] ; [P, L, U, s] = myLU( A ) ;
-%clear all ; A = [2 0 4 ; 1 1 1 ; 0 0 1 ] ; [P, L, U, s] = myLU( A ) ;
+% requires two pivots:
 %clear all ; A = [0 0 1 ; 2 0 4 ; 1 1 1 ] ; [P, L, U, s] = myLU( A ) ;
+
+% requires no pivots:
+%clear all ; A = [2 0 4 ; 1 1 1 ; 0 0 1 ] ; [P, L, U, s] = myLU( A ) ;
+
+%clear all ; A = [1 1 1 ; 2 3 1 ; 3 2 1 ] ; [P, L, U, s] = myLU( A ) ;
 
 % t/c to trigger size checking error:
 %clear all ; A = [2 3 1 ; 3 2 1 ] ; [P, L, U, s] = myLU( A ) ;
