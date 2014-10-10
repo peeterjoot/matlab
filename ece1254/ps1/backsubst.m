@@ -6,30 +6,58 @@
 % 3) The input vector is size compatable with the matrix (checked)
 %
 
-function [ x ] = backsubst( U, b )
+function x = backsubst( U, b )
 % backsubst performs a back substitution returning x for the system U x = b, where U is upper triangular and has no
 % zeros on the diagonal.
 % 
 
 enableTrace( ) ;
 [m, n] = size( U ) ;
-bSize = size( b ) ;
+[bm, bn] = size( b ) ;
 x = zeros( m, 1 ) ;
 
-if ( size(U, 2) ~= m )
-   error( 'backsubst:squareCheck', 'matrix dimensions %d,%d are not square', m, n ) ;
+if ( n ~= m )
+   error( 'backsubst:squareCheck', 'matrix with dimensions %d,%d are not square', m, n ) ;
 end
 
-if ( bSize ~= m )
-   error( 'backsubst:compatCheck', 'matrix dimensions %d,%d are not compatable with vector dimentions %d', m, n, bSize ) ;
+if ( bn ~= 1 )
+   error( 'backsubst:columnCheck', 'vector with dimensions %d,%d is not a column vector', bm, bn ) ;
+end
+
+if ( bm ~= m )
+   error( 'backsubst:compatCheck', 'matrix dimensions %d,%d are not compatable with vector dimensions %d,%d', m, n, bm, bn ) ;
 end
 
 % iterate backwards solving for x_m, x_{m-1}, ... in turn.
 for i = m:-1:1
    dotprod = 0 ;
+   bi = b(i, 1) ;
+   uii = U(i, i) ;
    if ( i ~= m )
-      dotprod = x(i+1:m) * U(i, i+1:m) ;
+      % The dot() function takes care of the transpose operation if required (so that the result is a scalar 
+      % and not a matrix) :
+      dotprod = dot( x(i+1:m), U(i, i+1:m) ) ;
    end
-   x( i ) = (b(i) - dotprod)/U(i,i) ;
-   trace( sprintf('%d; dotprod=%g, b_i=%g, U_ii=%g => x_i = %g', i, dotprod, b(i), U(i,i), x(i) ) ) ;
+   trace( sprintf('%d; dotprod=%g, b_i=%g, U_ii=%g\n', i, dotprod, bi, uii ) ) ;
+
+% debug code for 'Subscripted assignment dimension mismatch.' error:
+%disp( 'x_i1' ) ;
+%disp( x(i, 1) ) ;
+%size( x(i, 1) ) ;
+%
+%disp( 'b_i1' ) ;
+%disp( bi ) ;
+%size( bi ) ;
+%
+%disp( 'U_ii' ) ;
+%disp( uii ) ;
+%disp( size(uii) ) ;
+%
+%disp( 'dotprod' ) ;
+%disp( dotprod ) ;
+%disp( size(dotprod) ) ;
+
+   x( i, 1 ) = (bi - dotprod)/uii ;
+
+   trace( sprintf('%d; x_i = %g\n', i, x(i, 1) ) ) ;
 end

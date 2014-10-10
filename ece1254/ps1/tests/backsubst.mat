@@ -9,13 +9,21 @@ if ( x ~= expect )
    disp( expect ) ;
    error( 'backsubst:tc1', 'x != expect' ) ;
 end
+
+
+
  
 % t/c to trigger size checking error:
 U = [2 3 1 ; 0 2 1 ] ;
 b = [ 1 ; 2 ; 3 ] ;
 x = backsubst( U, b ) ;
+% expect: matrix with dimensions 2,3 are not square
 
 % t/c to trigger size checking error:
 U = [2 3 1 ; 0 2 1 ; 0 0 1 ] ;
 b = [ 1 ; 2 ] ;
 x = backsubst( U, b ) ;
+% expect: matrix dimensions 3,3 are not compatable with vector dimensions 2,1
+
+x = backsubst( U, U ) ;
+% expect: vector with dimensions 3,3 is not a column vector
