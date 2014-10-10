@@ -9,7 +9,7 @@ clear all ;
 %     0.0    -1.0e+006    -1.0     0.0     0.0 0 0 0;
 %     0.0     0.0    -1.0e+006    -1.0     1.0e+006 0 0 0 ] ;
 
-[G, b] = NodalAnalysis( 'ps1.circuit.netlist' ) ; G\b
+[G, b] = NodalAnalysis( 'testdata/ps1.circuit.netlist' ) ; G\b
 
 %[P, L, U, s] = myLU( G ) ;
 [P, L, U, s] = noPivotLU( G, 1.0e-020 ) ;
