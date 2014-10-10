@@ -65,14 +65,3 @@ for i = 1:sz-1
       L( j, i ) = multiplier ;
    end
 end
-
-% requires two pivots:
-%clear all ; A = [0 0 1 ; 2 0 4 ; 1 1 1 ] ; [P, L, U, s] = myLU( A ) ;
-
-% requires no pivots:
-%clear all ; A = [2 0 4 ; 1 1 1 ; 0 0 1 ] ; [P, L, U, s] = myLU( A ) ;
-
-%clear all ; A = [1 1 1 ; 2 3 1 ; 3 2 1 ] ; [P, L, U, s] = myLU( A ) ;
-
-% t/c to trigger size checking error:
-%clear all ; A = [2 3 1 ; 3 2 1 ] ; [P, L, U, s] = myLU( A ) ;

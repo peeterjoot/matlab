@@ -1,0 +1,24 @@
+%clear all ;
+
+% requires two pivots:
+A = [0 0 1 ;
+     2 0 4 ;
+     1 1 1 ] ;
+[P, L, U, s] = noPivotLU( A, 1.0e-018 ) ;
+
+% requires no pivots:
+A = [2 0 4 ;
+     1 1 1 ;
+     0 0 1 ] ;
+[P, L, U, s] = noPivotLU( A, 1.0e-018 ) ;
+
+A = [1 1 1 ;
+     2 3 1 ;
+     3 2 1 ] ;
+[P, L, U, s] = noPivotLU( A, 1.0e-018 ) ;
+
+% t/c to trigger size checking error:
+A = [2 3 1 ;
+     3 2 1 ] ;
+[P, L, U, s] = noPivotLU( A ) ;
+

@@ -249,8 +249,3 @@ function [G,b] = NodalAnalysis(filename)
       end
    end
 end
-
-%clear all ; [G, b] = NodalAnalysis( 'test2.netlist' ) ;
-%clear all ; [G, b] = NodalAnalysis( 'ps1.circuit.netlist' ) ; G\b
-
-

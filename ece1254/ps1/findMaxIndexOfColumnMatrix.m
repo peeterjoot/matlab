@@ -21,11 +21,3 @@ for r = 1:m
 end
 
 maxIndex = maxIndex + offset ;
-
-% test cases:
-% 1)
-% clear all ; i = findMaxIndexOfColumnMatrix( [ -1 ; 0 ; 30 ; 2 ] ) 
-%
-% 2)
-% should produce error:
-% clear all ; i = findMaxIndexOfColumnMatrix( [ 1 1 ; 2 2 ] )

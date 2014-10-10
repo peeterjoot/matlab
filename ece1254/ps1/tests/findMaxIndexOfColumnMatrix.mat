@@ -1,0 +1,16 @@
+clear all ;
+
+% tc1
+in = [ -1 ; 0 ; 30 ; 2 ] ;
+i = findMaxIndexOfColumnMatrix( [ -1 ; 0 ; 30 ; 2 ] ) 
+expect = 3 ;
+
+if ( i ~= expect )
+   disp( i ) ;
+   disp( in ) ;
+   error( 'findMaxIndexOfColumnMatrix:tc1', 'i != expect' ) ;
+end
+ 
+% tc2
+% should produce error:
+i = findMaxIndexOfColumnMatrix( [ 1 1 ; 2 2 ] )

@@ -1,0 +1,5 @@
+clear all ;
+[G, b] = NodalAnalysis( 'test2.netlist' ) ;
+
+[G, b] = NodalAnalysis( 'ps1.circuit.netlist' ) ;
+G\b
