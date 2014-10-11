@@ -1,7 +1,7 @@
 % syntax debugging code:
 %Subscripted assignment dimension mismatch.
 %
-%Error in backsubst (line 50)
+%Error in backSubst (line 50)
 %   x( i, 1 ) = (bi - dotprod)/uii ;
 
 clear all ; 

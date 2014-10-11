@@ -1,32 +1,34 @@
 %
 % Assumptions
 %
-% 1) The input matrix is square (checked) and in upper triangular form (assumed)
+% 1) The input matrix is square (checked) and in upper triangular form (checked)
 % 2) The matrix is invertable (assumed)
 % 3) The input vector is size compatable with the matrix (checked)
 %
 
-function x = backsubst( U, b )
-% backsubst performs a back substitution returning x for the system U x = b, where U is upper triangular and has no
+function x = backSubst( U, b, epsilon )
+% backSubst performs a back substitution returning x for the system U x = b, where U is upper triangular and has no
 % zeros on the diagonal.
 % 
 
-enableTrace( ) ;
+%enableTrace( ) ;
 [m, n] = size( U ) ;
 [bm, bn] = size( b ) ;
 x = zeros( m, 1 ) ;
 
 if ( n ~= m )
-   error( 'backsubst:squareCheck', 'matrix with dimensions %d,%d are not square', m, n ) ;
+   error( 'backSubst:squareCheck', 'matrix with dimensions %d,%d are not square', m, n ) ;
 end
 
 if ( bn ~= 1 )
-   error( 'backsubst:columnCheck', 'vector with dimensions %d,%d is not a column vector', bm, bn ) ;
+   error( 'backSubst:columnCheck', 'vector with dimensions %d,%d is not a column vector', bm, bn ) ;
 end
 
 if ( bm ~= m )
-   error( 'backsubst:compatCheck', 'matrix dimensions %d,%d are not compatable with vector dimensions %d,%d', m, n, bm, bn ) ;
+   error( 'backSubst:compatCheck', 'matrix dimensions %d,%d are not compatable with vector dimensions %d,%d', m, n, bm, bn ) ;
 end
+
+verifyUpperTriangular( U, epsilon ) ;
 
 % iterate backwards solving for x_m, x_{m-1}, ... in turn.
 for i = m:-1:1

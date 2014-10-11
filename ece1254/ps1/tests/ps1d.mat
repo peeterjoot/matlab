@@ -1,0 +1,35 @@
+clear all ;
+
+[G, b] = NodalAnalysis( 'testdata/ps1.circuit.netlist' ) ;
+
+% For debug: rescale to make less ill conditioned.
+% This doesn't make a difference numerically with double precision,
+% but is nice for display of the matrix so it doesn't show up as all zeros
+if ( 0 )
+   G(1:5,:) = 1000 * G(1:5,:) ;
+   G(6:8,:) = G(6:8,:)/1000 ;
+   b(1:5) = 1000 * b(1:5) ;
+   b(6:8) = b(6:8)/1000 ;
+end
+
+epsilon = eps( 1.0 ) * 100 ;
+%[P, L, U, s] = myLU( G ) ;
+[L, U] = noPivotLU( G, epsilon ) ;
+%[P, L, U, s] = withPivotLU( G, epsilon ) ;
+x = backSubst( U, b, epsilon ) ;
+
+format short eng ;
+G
+G\b  % ps1: 1c.
+
+% sanity check: expect zero:
+G - L * U
+
+%disp( x ) ;
+%disp( P * x ) ;
+
+% can a permutation matrix be applied to a list of symbols?
+% there's probably a better way:
+%v = [ 'V_1' ; 'V_2' ; 'V_3' ; 'V_4' ; 'V_5' ; 'i_10' ; 'i_30' ; 'i_50' ; ] ;
+%v = [ 1 ; 2 ; 3 ; 4 ; 5 ; 6 ; 7 ; 8 ; ] ;
+%P * v

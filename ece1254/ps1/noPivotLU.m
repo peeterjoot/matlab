@@ -3,15 +3,13 @@
 %
 % 1) The input matrix is square.
 % 2) The matrix is invertable.
+% 3) No pivots are required to produce the factorization.
 %
 
-function [ P, L, U, permutationSign ] = noPivotLU( M, epsilon )
-% noPivotLU performs LU factorization (not in place) of the input matrix, producing the factors: P M = L U,
-% where P is a permutation matrix, and L and U are lower and upper triangular respectively.
+function [ L, U ] = noPivotLU( M, epsilon )
+% noPivotLU performs LU factorization (not in place) of the input matrix, producing the factors: M = L U,
+% where L and U are lower and upper triangular respectively.
 % 
-% Side effects: the determinant of M can be computed by the products of the resulting
-% diagonal times the (returned) permutationSign.
-%
 
 %enableTrace( ) ;
 sz = size(M, 1) ;
@@ -21,10 +19,10 @@ if ( size(M, 2) ~= sz )
 end
 
 % permutation matrix
-P = eye( sz ) ;
+%P = eye( sz ) ;
 L = eye( sz ) ;
 U = M ;
-permutationSign = 1 ; % could use to compute the determinant (product of diagonal of U with this)
+%permutationSign = 1 ; % could use to compute the determinant (product of diagonal of U with this)
 
 for i = 1:sz-1
 %%%%disp( M ) ;
@@ -69,3 +67,6 @@ for i = 1:sz-1
       end
    end
 end
+
+verifyUpperTriangular( U, epsilon ) ;
+verifyUpperTriangular( L.', epsilon ) ;

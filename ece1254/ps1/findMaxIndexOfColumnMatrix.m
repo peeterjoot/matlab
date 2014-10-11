@@ -13,7 +13,8 @@ end
 maxIndex = 0 ;
 maxValue = -1 ;
 for r = 1:m
-   e = max( C(r) ) ;
+   e = abs( C(r) ) ;
+
    if ( e > maxValue )
       maxValue = e ;
       maxIndex = r ;
