@@ -14,22 +14,16 @@ end
 
 epsilon = eps( 1.0 ) * 100 ;
 %[P, L, U, s] = myLU( G ) ;
-[L, U] = noPivotLU( G, epsilon ) ;
 %[P, L, U, s] = withPivotLU( G, epsilon ) ;
-x = backSubst( U, b, epsilon ) ;
+
+[L, U] = noPivotLU( G, epsilon ) ;
+y = forwardSubst( L, b, epsilon ) ;
+x = backSubst( U, y, epsilon ) ;
 
 format short eng ;
 G
 G\b  % ps1: 1c.
+x
 
 % sanity check: expect zero:
 G - L * U
-
-%disp( x ) ;
-%disp( P * x ) ;
-
-% can a permutation matrix be applied to a list of symbols?
-% there's probably a better way:
-%v = [ 'V_1' ; 'V_2' ; 'V_3' ; 'V_4' ; 'V_5' ; 'i_10' ; 'i_30' ; 'i_50' ; ] ;
-%v = [ 1 ; 2 ; 3 ; 4 ; 5 ; 6 ; 7 ; 8 ; ] ;
-%P * v

@@ -28,7 +28,7 @@ if ( bm ~= m )
    error( 'forwardSubst:compatCheck', 'matrix dimensions %d,%d are not compatable with vector dimensions %d,%d', m, n, bm, bn ) ;
 end
 
-verifyLowerTriangular( L, epsilon ) ;
+verifyUpperTriangular( L.', epsilon ) ;
 
 % iterate backwards solving for x_m, x_{m-1}, ... in turn.
 for i = 1:m
