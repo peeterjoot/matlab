@@ -4,36 +4,102 @@ format short eng ;
 
 netlistFileName = 'ps1.2.netlist' ;
 
-generateResistorGridNetlist( netlistFileName, 20 ) ;
-
-[G, b] = NodalAnalysis( netlistFileName ) ;
-
 epsilon = eps( 1.0 ) * 100 ;
 
-% not a matrix that we are lucky enough to do the LU factorization without pivots:
-%[L, U] = noPivotLU( G, epsilon ) ;
+doProblemB = 0 ;
 
-numTimings = 1 ;
-luTimings = zeros(numTimings, 1) ;
-forwardTimings = zeros(numTimings, 1) ;
-backwardTimings = zeros(numTimings, 1) ;
-for i = 1:numTimings
-   tic
-   [P, L, U, s] = withPivotLU( G, epsilon ) ;
-   luTimings(i) = toc ;
+if ( doProblemB )
+   % p2(b).  Plot times vs. N
+   gridSizes = [ 2 4 8 16 32 ] ;
+   numTimings = 1 ;
+else
+   % p2(a)
+   gridSizes = [ 5 ] ;
+   numTimings = 3 ;
+end
+numGrids = size( gridSizes, 2 ) ;
 
-   tic
-   y = forwardSubst( P * L, P * b, epsilon ) ;
-   forwardTimings(i) = toc ;
+luTimings       = zeros( numTimings, numGrids ) ;
+forwardTimings  = zeros( numTimings, numGrids ) ;
+backwardTimings = zeros( numTimings, numGrids ) ;
+solveTimings    = zeros( numTimings, numGrids ) ;
 
-   tic
-   x = backSubst( U, y, epsilon ) ;
-   backwardTimings(i) = toc ;
+% interval timing:
+% http://cens.ioc.ee/local/man/matlab/techdoc/ref/tic.html
+
+for j = 1:numGrids
+   generateResistorGridNetlist( netlistFileName, gridSizes(j) ) ;
+   [G, b] = NodalAnalysis( netlistFileName ) ;
+
+   for i = 1:numTimings
+      tic
+      [P, L, U, s] = withPivotLU( G, epsilon ) ;
+      luTimings(i, j) = toc ;
+
+      tic
+      y = forwardSubst( P * L, P * b, epsilon ) ;
+      forwardTimings(i, j) = toc ;
+
+      tic
+      x = backSubst( U, y, epsilon ) ;
+      backwardTimings(i, j) = toc ;
+
+      tic
+      xm = G\b
+      solveTimings(i, j) = toc ;
+   end
 end
 
-% sanity check: expect zero:
-G - L * U
+if ( ~doProblemB )
+   % do the surface plot
 
-%G
-G\b
+   % surf() is a surface plot function, that takes three arrays, one for X coordinate, one for Y coordinates, and one
+   % for the value of the function at each of these points.
+   %>> [X,Y,Z] = peaks(3); figure ; surf(X,Y,Z)
+   %>> X
+   %
+   %X =
+   %
+   %    -3.0000e+000     0.0000e+000     3.0000e+000
+   %    -3.0000e+000     0.0000e+000     3.0000e+000
+   %    -3.0000e+000     0.0000e+000     3.0000e+000
+   %
+   %>> Y
+   %
+   %Y =
+   %
+   %    -3.0000e+000    -3.0000e+000    -3.0000e+000
+   %     0.0000e+000     0.0000e+000     0.0000e+000
+   %     3.0000e+000     3.0000e+000     3.0000e+000
+   %
+   %>> Z
+   %
+   %Z = ...
 
+   n = gridSizes(1) ;
+   X = zeros( n ) ;
+   Y = zeros( n ) ;
+   Z = zeros( n ) ;
+
+   % to map from row,column = i,j to node number we use: n(i,j) = (N+1)(i-1) + j
+   for i = 1:n+1
+   for j = 1:n+1
+      X(i,j) = i ;
+      Y(i,j) = j ;
+      Z(i,j) = x( (N+1)(i-1) + j ) ;
+   end
+   end
+
+   X
+   Y
+   Z
+end
+
+% take the minimum timing value as representitive
+%min(luTimings)
+%min(forwardTimings)
+%min(backwardTimings)
+%min(solveTimings)
+
+% sanity check: expect something near zero:
+max(max(abs(G - L * U)))

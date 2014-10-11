@@ -1,5 +1,7 @@
 clear all ;
 
+enableDebug() ;
+
 epsilon = eps(1.0) * 100 ;
 
 % requires no pivots:
@@ -31,7 +33,7 @@ A = [2 2 0 0 ;
      1 2 1 1 ;
      0 1 2 2 ] ;
 [P, L, U, s] = withPivotLU( A, epsilon ) ;
-if ( P * A - (L *U) ~= zeros(4) )
+if ( A - (L *U) ~= zeros(4) )
    disp( P ) ;
    disp( A ) ;
    disp( L * U ) ;

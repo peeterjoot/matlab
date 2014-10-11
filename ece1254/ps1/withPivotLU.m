@@ -3,12 +3,11 @@
 %
 % 1) The input matrix is square.
 % 2) The matrix is invertable.
-% 3) No pivots are required to produce the factorization.
 %
 
 function [ P, L, U, permutationSign ] = withPivotLU( U, epsilon )
-% withPivotLU performs LU factorization (not in place) of the input matrix, producing the factors: M = L' U,
-% where L = P L' and U are lower and upper triangular respectively, and P is a permutation matrix.
+% withPivotLU performs LU factorization (not in place) of the input matrix, producing the factors: M = L U,
+% where L' = P L and U are lower and upper triangular respectively, and P is a permutation matrix.
 % 
 % also returns a +-1 value 's' that can be used to compute the determinant from U (d = s \prod_i U_ii).
 % (this is because, except for the permutations, we use only elementary matrix operations that do not alter
@@ -70,16 +69,23 @@ for i = 1:m-1
          multiplier = U(j, i)/U(i, i) ;
    
          %trace( sprintf('iteration: %d, row %d, multiplier: %d', i, j, multiplier) ) ;
-   
+  
+         % rows: U_j -> U_j - m U_i 
          U( j, i ) = 0 ;
          U( j, i+1:m ) = U( j, i+1:m ) - multiplier * U( i, i+1:m ) ;
 
-         % this is a stupid inefficient way to do this:
-         Ltemp = eye( m ) ;
-         Ltemp( j, i ) = multiplier ;
-         L = L * Ltemp ;
+         if ( 0 )
+            % this is a stupid inefficient way to do this:
+            %Ltemp = eye( m ) ;
+            %Ltemp( j, i ) = multiplier ;
+            %L = L * Ltemp ;
+         else
+            % what we are really doing is applying a column operation (notice the transposition of indexes and signs
+            %  relative to the row operation above applied to U)
+            % column: L_i -> L_i + m L_j 
+            L( :, i) = L( :, i) + multiplier * L( :, j) ;
+         end
 
-%         L( j, i ) = multiplier ;
       else
          %trace( sprintf('iteration: %d, row %d, multiplier: <= epsilon', i, j) ) ;
       end
@@ -88,5 +94,5 @@ end
 
 if ( isDebugEnabled() )
    verifyUpperTriangular( U, epsilon ) ;
-   verifyUpperTriangular( P * L, epsilon ) ;
+   verifyUpperTriangular( (P * L).', epsilon ) ;
 end
