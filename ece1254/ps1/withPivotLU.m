@@ -7,8 +7,8 @@
 %
 
 function [ P, L, U, permutationSign ] = withPivotLU( U, epsilon )
-% withPivotLU performs LU factorization (not in place) of the input matrix, producing the factors: P M = L U,
-% where L and U are lower and upper triangular respectively, and P is a permutation matrix.
+% withPivotLU performs LU factorization (not in place) of the input matrix, producing the factors: M = L' U,
+% where L = P L' and U are lower and upper triangular respectively, and P is a permutation matrix.
 % 
 % also returns a +-1 value 's' that can be used to compute the determinant from U (d = s \prod_i U_ii).
 % (this is because, except for the permutations, we use only elementary matrix operations that do not alter
@@ -26,6 +26,7 @@ P = eye( m ) ;
 L = eye( m ) ;
 permutationSign = 1 ;
 
+% trace disabled now that the correct operation of this function has been verified.
 for i = 1:m-1
 %disp( sprintf('iter: %d.  U,U_1 = \n', i ) ) ;
 %disp( U ) ;
@@ -39,23 +40,23 @@ for i = 1:m-1
    % - row 1, with columns ranging from 2:4 
    % - row 3, with columns ranging from 2:4 
 
-   trace( sprintf('i = %d, pivotRow = %d', i, rowContainingMaxElement) ) ;
+   %trace( sprintf('i = %d, pivotRow = %d', i, rowContainingMaxElement) ) ;
    if ( rowContainingMaxElement ~= i )
       % apply the operation to both U and the permutation matrix that is tracking the row exchanges.
 
       % we are applying the permutation as a row operation to M_{i+1} = P M_i (left multiplication).
       % Apply the same permuation as a column operation (i.e. right multiplication) 
       % L_{i+1} = L_i P
-      L( 1:m, [ rowContainingMaxElement, i ] ) = L( 1:m, [ i, rowContainingMaxElement ] )
+      L( 1:m, [ rowContainingMaxElement, i ] ) = L( 1:m, [ i, rowContainingMaxElement ] ) ;
       U( [ rowContainingMaxElement, i ], i:m ) = U( [ i, rowContainingMaxElement ], i:m ) ;
-trace( sprintf('iter: %d.  pivot: %d <-> %d.  U = \n', i, rowContainingMaxElement, i ) ) ;
-%disp( U ) ;
+
+      %%trace( sprintf('iter: %d.  pivot: %d <-> %d.  U = %s\n', i, rowContainingMaxElement, i, num2str( U ) ) ) ;
 
       P( [ rowContainingMaxElement, i ], 1:m ) = P( [ i, rowContainingMaxElement ], 1:m ) ;
 
       permutationSign = -permutationSign ;
 
-      trace( sprintf( 'permutation sign: %d, pivot value: %d', permutationSign, U(i,i) ) ) ;
+      %trace( sprintf( 'permutation sign: %d, pivot value: %d', permutationSign, U(i,i) ) ) ;
    end 
 
    % now do the row operations:
@@ -68,7 +69,7 @@ trace( sprintf('iter: %d.  pivot: %d <-> %d.  U = \n', i, rowContainingMaxElemen
       if ( abs(U(j, i)) > epsilon )
          multiplier = U(j, i)/U(i, i) ;
    
-         trace( sprintf('iteration: %d, row %d, multiplier: %d', i, j, multiplier) ) ;
+         %trace( sprintf('iteration: %d, row %d, multiplier: %d', i, j, multiplier) ) ;
    
          U( j, i ) = 0 ;
          U( j, i+1:m ) = U( j, i+1:m ) - multiplier * U( i, i+1:m ) ;
@@ -80,10 +81,12 @@ trace( sprintf('iter: %d.  pivot: %d <-> %d.  U = \n', i, rowContainingMaxElemen
 
 %         L( j, i ) = multiplier ;
       else
-         trace( sprintf('iteration: %d, row %d, multiplier: <= epsilon', i, j) ) ;
+         %trace( sprintf('iteration: %d, row %d, multiplier: <= epsilon', i, j) ) ;
       end
    end
 end
 
-verifyUpperTriangular( U, epsilon ) ;
-%verifyUpperTriangular( L.', epsilon ) ;
+if ( isDebugEnabled() )
+   verifyUpperTriangular( U, epsilon ) ;
+   verifyUpperTriangular( P * L, epsilon ) ;
+end

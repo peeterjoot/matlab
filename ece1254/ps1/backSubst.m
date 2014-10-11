@@ -28,7 +28,9 @@ if ( bm ~= m )
    error( 'backSubst:compatCheck', 'matrix dimensions %d,%d are not compatable with vector dimensions %d,%d', m, n, bm, bn ) ;
 end
 
-verifyUpperTriangular( U, epsilon ) ;
+if ( isDebugEnabled() )
+   verifyUpperTriangular( U, epsilon ) ;
+end
 
 % iterate backwards solving for x_m, x_{m-1}, ... in turn.
 for i = m:-1:1

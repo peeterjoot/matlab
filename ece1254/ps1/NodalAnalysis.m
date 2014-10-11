@@ -129,7 +129,7 @@ function [G,b] = NodalAnalysis(filename)
    % 
    allnodes = zeros(2, 1) ;
 
-enableTrace() ;
+%enableTrace() ;
    sz = size( resistorLines, 2 ) ;
    if ( sz )
       trace( sprintf( 'resistorLines: %d', sz ) ) ;
@@ -154,7 +154,7 @@ enableTrace() ;
 
       allnodes = horzcat( allnodes, ampLines(2:3, :), ampLines(4:5, :) ) ;
    end
-disableTrace() ;
+%disableTrace() ;
    maxNode = max( max( allnodes ) ) ;
    trace( [ 'maxnode: ', sprintf('%d', maxNode) ] ) ;
 

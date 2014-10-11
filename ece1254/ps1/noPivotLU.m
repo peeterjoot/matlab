@@ -68,5 +68,7 @@ for i = 1:sz-1
    end
 end
 
-verifyUpperTriangular( U, epsilon ) ;
-verifyUpperTriangular( L.', epsilon ) ;
+if ( isDebugEnabled() )
+   verifyUpperTriangular( U, epsilon ) ;
+   verifyUpperTriangular( L.', epsilon ) ;
+end

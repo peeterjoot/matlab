@@ -36,11 +36,13 @@ function generateResistorGridNetlist(filename, N)
    end
    end
 
-   for i = 1:(N+1)
-   for j = 0:N
+   for i = 1:N+1
+   for j = 0:N-1
       resistorNumber = resistorNumber + 1 ;
+      n = j * (N+1) + i ;
+      trace( sprintf('R%d: node: %d', resistorNumber, n) ) ;
 
-      fprintf( fh, 'R%d %d %d 0.2\n', resistorNumber, j * (N+1) + i, j * (N+1) + i + (N+1) ) ;
+      fprintf( fh, 'R%d %d %d 0.2\n', resistorNumber, n, n + N + 1 ) ;
    end
    end
 

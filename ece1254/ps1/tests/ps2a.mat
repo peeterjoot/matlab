@@ -4,23 +4,36 @@ format short eng ;
 
 netlistFileName = 'ps1.2.netlist' ;
 
-generateResistorGridNetlist( netlistFileName, 2 ) ;
+generateResistorGridNetlist( netlistFileName, 20 ) ;
 
 [G, b] = NodalAnalysis( netlistFileName ) ;
 
 epsilon = eps( 1.0 ) * 100 ;
 
-% without pivots we can't solve this problem:
+% not a matrix that we are lucky enough to do the LU factorization without pivots:
 %[L, U] = noPivotLU( G, epsilon ) ;
 
-[P, L, U, s] = withPivotLU( G, epsilon ) ;
-% sanity check: expect zero:
-%G - L * U
+numTimings = 1 ;
+luTimings = zeros(numTimings, 1) ;
+forwardTimings = zeros(numTimings, 1) ;
+backwardTimings = zeros(numTimings, 1) ;
+for i = 1:numTimings
+   tic
+   [P, L, U, s] = withPivotLU( G, epsilon ) ;
+   luTimings(i) = toc ;
 
-y = forwardSubst( L, b, epsilon ) ;
-x = backSubst( U, y, epsilon ) ;
+   tic
+   y = forwardSubst( P * L, P * b, epsilon ) ;
+   forwardTimings(i) = toc ;
+
+   tic
+   x = backSubst( U, y, epsilon ) ;
+   backwardTimings(i) = toc ;
+end
+
+% sanity check: expect zero:
+G - L * U
 
 %G
 G\b
-x
 
