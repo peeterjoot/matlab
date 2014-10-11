@@ -122,22 +122,39 @@ function [G,b] = NodalAnalysis(filename)
       end
    end
 
+   fclose( fh ) ;
+
    % if we wanted to allow for gaps in the node numbers (like 1, 3, 4, 5), then we'd have to count the number of unique node numbers
    % instead of just taking a max, and map the matrix positions to the original node numbers later.
    % 
    allnodes = zeros(2, 1) ;
-   if ( size( resistorLines, 2 ) )
+
+enableTrace() ;
+   sz = size( resistorLines, 2 ) ;
+   if ( sz )
+      trace( sprintf( 'resistorLines: %d', sz ) ) ;
+
       allnodes = horzcat( allnodes, resistorLines(2:3, :) ) ;
    end
-   if ( size( currentLines, 2 ) )
+   sz = size( currentLines, 2 ) ;
+   if ( sz )
+      trace( sprintf( 'currentLines: %d', sz ) ) ;
+
       allnodes = horzcat( allnodes, currentLines(2:3, :) ) ;
    end
-   if ( size( voltageLines, 2 ) )
+   sz = size( voltageLines, 2 ) ;
+   if ( sz )
+      trace( sprintf( 'voltageLines: %d', sz ) ) ;
+
       allnodes = horzcat( allnodes, voltageLines(2:3, :) ) ;
    end
-   if ( size( ampLines, 2 ) )
+   sz = size( ampLines, 2 ) ;
+   if ( sz )
+      trace( sprintf( 'ampLines: %d', sz ) ) ;
+
       allnodes = horzcat( allnodes, ampLines(2:3, :), ampLines(4:5, :) ) ;
    end
+disableTrace() ;
    maxNode = max( max( allnodes ) ) ;
    trace( [ 'maxnode: ', sprintf('%d', maxNode) ] ) ;
 

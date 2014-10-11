@@ -14,18 +14,19 @@ function generateResistorGridNetlist(filename, N)
 % 1) Reference node means ground.  
 %     http://www.solved-problems.com/circuits/circuits-articles/525/reference-node-node-voltages/
 
-   %disableTrace() ;
    %enableTrace() ;
    trace( ['filename: ', filename] ) ;
 
    resistorNumber = 0 ;
+
+   delete( filename ) ;
 
    fh = fopen( filename, 'w+' ) ;
    if ( -1 == fh )
       error( 'generateResistorGridNetlist:fopen', 'error opening file "%s"', filename ) ;
    end
 
-   fprintf( fh, 'V1 1 0 1\n' ) ;
+   fprintf( fh, 'V1 1 0 DC 1\n' ) ;
 
    for j = 0:N
    for i = 1:N
@@ -39,7 +40,7 @@ function generateResistorGridNetlist(filename, N)
    for j = 0:N
       resistorNumber = resistorNumber + 1 ;
 
-      fprintf( fh, 'R%d %d %d 0.2\n', resistorNumber, j + i, j + i + (N+1) ) ;
+      fprintf( fh, 'R%d %d %d 0.2\n', resistorNumber, j * (N+1) + i, j * (N+1) + i + (N+1) ) ;
    end
    end
 
@@ -47,7 +48,7 @@ function generateResistorGridNetlist(filename, N)
       currentNode = randi((N+1) * (N+1)) ;
       sourceValue = 0.01 + (0.1 - 0.01) * rand() ;
      
-      fprintf( fh, 'I%d %d 0 %g\n', i, currentNode, sourceValue ) ;
+      fprintf( fh, 'I%d %d 0 DC %g\n', i, currentNode, sourceValue ) ;
    end
 
    fclose( fh ) ;

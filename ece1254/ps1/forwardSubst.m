@@ -11,7 +11,7 @@ function x = forwardSubst( L, b, epsilon )
 % zeros on the diagonal.
 % 
 
-enableTrace( ) ;
+%enableTrace( ) ;
 [m, n] = size( L ) ;
 [bm, bn] = size( b ) ;
 x = zeros( m, 1 ) ;

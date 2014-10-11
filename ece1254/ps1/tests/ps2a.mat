@@ -1,1 +1,26 @@
-generateResistorGridNetlist( 'ps1.2.netlist', 5 ) ;
+clear all ;
+
+format short eng ;
+
+netlistFileName = 'ps1.2.netlist' ;
+
+generateResistorGridNetlist( netlistFileName, 2 ) ;
+
+[G, b] = NodalAnalysis( netlistFileName ) ;
+
+epsilon = eps( 1.0 ) * 100 ;
+
+% without pivots we can't solve this problem:
+%[L, U] = noPivotLU( G, epsilon ) ;
+
+[P, L, U, s] = withPivotLU( G, epsilon ) ;
+% sanity check: expect zero:
+%G - L * U
+
+y = forwardSubst( L, b, epsilon ) ;
+x = backSubst( U, y, epsilon ) ;
+
+%G
+G\b
+x
+
