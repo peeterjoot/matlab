@@ -1,5 +1,33 @@
 clear all ;
 [G, b] = NodalAnalysis( 'testdata/test2.netlist' ) ;
+% this was a manual test case, was verified manually.
 
 [G, b] = NodalAnalysis( 'testdata/ps1.circuit.netlist' ) ;
 G\b
+% this was the circuit of the problem set.
+
+
+% constant voltage source test case:
+[G, b] = NodalAnalysis( 'testdata/test3.netlist' ) ;
+%G\b
+if ( G ~= [ 2 -2 1 ; -2 6 0 ; 1 0 0 ] )
+   disp(G) ;
+   error( 'NodalAnalysis:tc3', 'unexpected value for G' ) ;
+end
+if ( b ~= [ 0 ; 0 ; 3 ] )
+   disp(b) ;
+   error( 'NodalAnalysis:tc3', 'unexpected value for b' ) ;
+end
+
+% constant current source test case:
+[G, b] = NodalAnalysis( 'testdata/test4.netlist' ) ;
+G\b
+if ( G ~= [ 2 -2 ; -2 6 ] )
+   disp(G) ;
+   error( 'NodalAnalysis:tc4', 'unexpected value for G' ) ;
+end
+if ( b ~= [ -1 ; 0 ] )
+   disp(b) ;
+   error( 'NodalAnalysis:tc4', 'unexpected value for b' ) ;
+end
+
