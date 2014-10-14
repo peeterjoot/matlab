@@ -1,12 +1,11 @@
-clear all ;
+function problem2driver(doProblemB)
+% call with problem2driver(0) for part (a), and problem2driver(1) for part (b).
 
 format short eng ;
 
 netlistFileName = 'ps1.2.netlist' ;
 
 epsilon = eps( 1.0 ) * 100 ;
-
-doProblemB = 1 ;
 
 if ( doProblemB )
    % p2(b).  Plot times vs. N
@@ -17,6 +16,7 @@ else
    % p2(a)
    gridSizes = [ 50 ] ;
    numTimings = 3 ;
+   %numTimings = 1 ;
 end
 numGrids = size( gridSizes, 2 ) ;
 

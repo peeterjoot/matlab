@@ -1,4 +1,5 @@
-clear all ;
+function ps1d()
+% driver that calculates G\b and the corresponding LU factorization based solution for ps3.p1.
 
 [G, b] = NodalAnalysis( 'testdata/ps1.circuit.netlist' ) ;
 
