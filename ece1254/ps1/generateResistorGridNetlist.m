@@ -19,7 +19,8 @@ function generateResistorGridNetlist(filename, N)
 
    resistorNumber = 0 ;
 
-   delete( filename ) ;
+   % this appeared neccessary, but was only due to a missing fclose() that was keeping the file handle open.
+   %delete( filename ) ;
 
    fh = fopen( filename, 'w+' ) ;
    if ( -1 == fh )

@@ -22,7 +22,7 @@ function generateHeatNetlist(filename, N, doProblemA, withSineSource )
 
    resistorNumber = 0 ;
 
-   delete( filename ) ;
+   %delete( filename ) ;
 
    fh = fopen( filename, 'w+' ) ;
    if ( -1 == fh )
