@@ -1,0 +1,15 @@
+R1 2 1 0.5
+R2 2 0 0.25
+V1 1 0 DC 3
+.end
+
+This is a test case to check the G/b results for a single constant voltage source.
+
+Expect 
+
+G = [ 2 -2 1 ; -2 6 0 ; 1 0 0 ]
+b = [ 0 ; 0 ; 3 ]
+
+with solution:
+
+[v1, v2, i] = [3, 1, -4]

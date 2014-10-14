@@ -1,0 +1,12 @@
+R1 2 1 0.5
+R2 2 0 0.25
+I1 0 1 DC -1
+.end
+
+This is a test case to check the G/b results for a single constant current source.
+
+Expect 
+
+G = [ 2 -2 ; -2 6 ]
+b = [ -1 ; 0 ] 
+
