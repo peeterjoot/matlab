@@ -1,11 +1,11 @@
-function plotHeatQ1(n)
+function plotHeatQ1(n, doProblemA)
 % plot the netlist results for ps1 p3b
 %
 % For details see the ps1 pdf.
 %
-   filename = 'heat1a.netlist' ;
+   filename = 'heat.netlist' ;
    
-   generateHeatNetlist( filename, n, 0 ) ;
+   generateHeatNetlist( filename, n, doProblemA ) ;
    
    [G, b] = NodalAnalysis( filename ) ;
 

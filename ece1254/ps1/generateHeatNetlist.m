@@ -6,6 +6,10 @@ function generateHeatNetlist(filename, N, doProblemA)
    %enableTrace() ;
    trace( ['filename: ', filename] ) ;
 
+% first implementation of (p3.d) was in commit: 44ff3320a9b53aaa2656d9e2b89cdd7b75f4c73a
+% that generated a meaningless looking plot (scale was way wrong, and also didn't have zero
+% heat flow at the origin.)
+
    resistorNumber = 0 ;
 
    delete( filename ) ;
@@ -28,21 +32,18 @@ function generateHeatNetlist(filename, N, doProblemA)
    if ( doProblemA )
       fprintf( fh, 'V2 1 0 DC %f\n', tEnds ) ;
       fprintf( fh, 'V3 %d 0 DC %f\n', N, tEnds ) ;
+
+      firstResistorNodeStart = 1 ;
+      lastResistorNodeStart = N-1 ;
    else
-      tEnd =  N * 50 / kappaA ;
+      firstResistorNodeStart = 2 ;
+      lastResistorNodeStart = N-2 ;
 
-      fprintf( fh, 'V2 %d %d DC %f\n', 2 * N, N, tEnd ) ;
-
-      j=1
-      for i = N+1:N+N-1
-         % Elabel node+ node- nodectrl+ nodectrl- gain
-         fprintf( fh, 'E%d %d %d %d %d 1\n', i, i, i+1, j, N+1 ) ;
-
-         j = j + 1 ;
-      end
+      fprintf( fh, 'I%d 1 2 DC 0\n', N+1 ) ;
+      fprintf( fh, 'I%d %d %d DC 0\n', N+2, N-1, N ) ;
    end
 
-   for i = 1:N-1
+   for i = firstResistorNodeStart:lastResistorNodeStart
       resistorNumber = resistorNumber + 1 ;
 
       fprintf( fh, 'R%d %d %d %f\n', resistorNumber, i, i + 1, deltaX ) ;
