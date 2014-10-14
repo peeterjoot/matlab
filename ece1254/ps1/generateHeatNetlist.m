@@ -1,4 +1,4 @@
-function generateHeatNetlist(filename, N)
+function generateHeatNetlist(filename, N, doProblemA)
 % A small matlab function that generates a netlist for the heat network in ps1 p3a.
 %
 % For details see the ps1 pdf.
@@ -22,11 +22,25 @@ function generateHeatNetlist(filename, N)
    tZero = 400 ;
    tEnds = 250 ;
 
-   fprintf( fh, 'V1 1 0 DC %f\n', tEnds ) ;
-   fprintf( fh, 'V2 %d 0 DC %f\n', N, tEnds ) ;
-
    % final node is for the ambiant temperature.
-   fprintf( fh, 'V3 %d 0 DC %f\n', N + 1, tZero ) ;
+   fprintf( fh, 'V1 %d 0 DC %f\n', N + 1, tZero ) ;
+
+   if ( doProblemA )
+      fprintf( fh, 'V2 1 0 DC %f\n', tEnds ) ;
+      fprintf( fh, 'V3 %d 0 DC %f\n', N, tEnds ) ;
+   else
+      tEnd =  N * 50 / kappaA ;
+
+      fprintf( fh, 'V2 %d %d DC %f\n', 2 * N, N, tEnd ) ;
+
+      j=1
+      for i = N+1:N+N-1
+         % Elabel node+ node- nodectrl+ nodectrl- gain
+         fprintf( fh, 'E%d %d %d %d %d 1\n', i, i, i+1, j, N+1 ) ;
+
+         j = j + 1 ;
+      end
+   end
 
    for i = 1:N-1
       resistorNumber = resistorNumber + 1 ;
@@ -43,7 +57,11 @@ function generateHeatNetlist(filename, N)
 
    for i = 1:N
       xi = (i - 1) * deltaX ;
-      si = sin( 2 * pi * xi ) ;
+      if ( doProblemA )
+         si = sin( 2 * pi * xi ) ;
+      else
+         si = 1 ;
+      end
 
       trace( sprintf('i: %d, xi: %f, si: %f, H/\\kappa_m = %f', i, xi, si, hAmp/ kappaM ) ) ;
       current = hAmp * deltaX * si * si / kappaM ;

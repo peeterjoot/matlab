@@ -5,7 +5,7 @@ function plotHeatQ1(n)
 %
    filename = 'heat1a.netlist' ;
    
-   generateHeatNetlist( filename, n ) ;
+   generateHeatNetlist( filename, n, 0 ) ;
    
    [G, b] = NodalAnalysis( filename ) ;
 
