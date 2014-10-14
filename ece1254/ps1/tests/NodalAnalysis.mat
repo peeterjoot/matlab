@@ -22,6 +22,8 @@ end
 % constant current source test case:
 [G, b] = NodalAnalysis( 'testdata/test4.netlist' ) ;
 G\b
+% FIXME: introducing a typo here does'nt trigger a test failure.  Must have an error in the matlab syntax?
+% have to check other tests too, if this is an issue there.  
 if ( G ~= [ 2 -2 ; -2 6 ] )
    disp(G) ;
    error( 'NodalAnalysis:tc4', 'unexpected value for G' ) ;

@@ -184,14 +184,14 @@ function [G,b] = NodalAnalysis(filename)
 
       % insert the stamp:
       if ( plusNode )
-         G( plusNode, plusNode ) = z ;
+         G( plusNode, plusNode ) = G( plusNode, plusNode ) + z ;
          if ( minusNode )
-            G( plusNode, minusNode ) = -z ;
-            G( minusNode, plusNode ) = -z ;
+            G( plusNode, minusNode ) = G( plusNode, minusNode ) - z ;
+            G( minusNode, plusNode ) = G( minusNode, plusNode ) - z ;
          end
       end
       if ( minusNode )
-         G( minusNode, minusNode ) = z ;
+         G( minusNode, minusNode ) = G( minusNode, minusNode ) + z ;
       end
    end
 
