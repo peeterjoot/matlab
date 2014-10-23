@@ -24,3 +24,5 @@ for i = [1:4]
    hold on ;
 end
 hold off ;
+
+% better way to do the above in: http://stackoverflow.com/questions/26515957/plot-discrete-points-and-some-circles-that-enclose-them-in-matlab
