@@ -1,4 +1,4 @@
-FROMPS1 := changeTrace.m disableTrace.m enableTrace.m trace.m NodalAnalysis.m
+FROMPS1 := changeTrace.m disableTrace.m enableTrace.m trace.m
 
 all : $(FROMPS1)
 
@@ -9,9 +9,6 @@ clean:
 # why is this recursing?
 #%.m : ../ps1/%.m
 #	cp $^ $@
-
-NodalAnalysis.m : ../ps1/NodalAnalysis.m
-	cp $^ $@
 
 changeTrace.m : ../ps1/changeTrace.m
 	cp $^ $@

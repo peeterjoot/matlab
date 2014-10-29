@@ -67,7 +67,7 @@ function generateResistorGridNetlist(filename, N, R, Rg, Vs, Rs)
 % • a non-ideal voltage source connected between node 1 and ground. The voltage source
 %   has value V_s and internal (series) resistance R_s
    fprintf( fh, 'V1 1 %d DC %g\n', (N+1)^2 + 1, Vs ) ;
-   fprintf( fh, 'Rs %d 0 DC %g\n', (N+1)^2 + 1, Rs ) ;
+   fprintf( fh, 'Vs %d 0 DC %g\n', (N+1)^2 + 1, Rs ) ;
 
    minCurrentSourceAmperage = 0.01 ;
    maxCurrentSourceAmperage = 0.1 ;
