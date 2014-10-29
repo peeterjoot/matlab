@@ -1,18 +1,21 @@
-function x = conguateGradient( G, b, epsilon )
+function x = conjugateGradient( G, b, epsilon )
 % write in MATLAB your own routine for the conjugate gradient method.
 % Give to the user the possibility of specifying a preconditioning matrix P. 
 % The routine shall stop iterations when the residual norm satisfies
 %   \Norm{G x − b}^2/\Norm{b}^2 < e
 % where e is a threshold specified by the user.
 
+%enableTrace() ;
 i = 0 ;
 [m, n] = size( G ) ;
 
 if ( n ~= m )
-   error( 'conguateGradient:squareCheck', 'matrix with dimensions %d,%d are not square', m, n ) ;
+   error( 'conjugateGradient:squareCheck', 'matrix with dimensions %d,%d are not square', m, n ) ;
 end
 
 x = rand(m, 1) ;
+
+trace( sprintf( 'N: %d', m ) ) ;
 
 % Algorithm from Shewchuk's
 % "An Introduction to the Conjugate Gradient Method Without the Agonizing Pain"
@@ -43,3 +46,5 @@ while ( (i < iMax) && (deltaNew > (eSq * deltaNought)) )
    d = r + beta * d ;
    i = i + 1 ; 
 end
+
+trace( sprintf( 'deltaNew: %f, deltaNought: %f, i: %d', deltaNew, deltaNought, i ) ) ;
