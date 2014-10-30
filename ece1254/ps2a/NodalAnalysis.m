@@ -45,7 +45,7 @@ function [G,b] = NodalAnalysis(filename)
 % The controlling voltage is between the nodes nodectrl+ and nodectrl-,
 % and the last argument is the source gain.
 
-   enableTrace() ;
+   %enableTrace() ;
    trace( ['filename: ', filename] ) ;
 
    currentLines   = [] ;

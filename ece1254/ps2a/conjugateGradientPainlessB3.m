@@ -1,21 +1,26 @@
-function x = conjugateGradientWithPreconditioner( G, b, P, epsilon )
+function x = conjugateGradientPainlessB3( G, b, P, epsilon )
 % write in MATLAB your own routine for the conjugate gradient method.
 % Give to the user the possibility of specifying a preconditioning matrix P. 
 % The routine shall stop iterations when the residual norm satisfies
 %   \Norm{G x − b}^2/\Norm{b}^2 < e
 % where e is a threshold specified by the user.
+%
+% This directly uses the algorithm from Shewchuk's
+% "An Introduction to the Conjugate Gradient Method Without the Agonizing Pain"
+% appendix B.3
+%
 
 %enableTrace() ;
 i = 0 ;
 [m, n] = size( G ) ;
 
 if ( n ~= m )
-   error( 'conjugateGradientWithPreconditioner:squareCheck', 'matrix with dimensions %d,%d are not square', m, n ) ;
+   error( 'conjugateGradientPainlessB3:squareCheck', 'matrix with dimensions %d,%d are not square', m, n ) ;
 end
 
 [mp, np] = size( P ) ;
 if ( (m ~= mp) || (n ~= np) )
-   error( 'conjugateGradientWithPreconditioner:preconditionerCheck', 'preconditioning matrix dimensions %d,%d do not match input matrix dimensions %d,%d', mp, np, m, n ) ;
+   error( 'conjugateGradientPainlessB3:preconditionerCheck', 'preconditioning matrix dimensions %d,%d do not match input matrix dimensions %d,%d', mp, np, m, n ) ;
 end
 
 x = rand(m, 1) ;
