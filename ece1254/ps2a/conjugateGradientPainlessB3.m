@@ -76,7 +76,9 @@ while ( (i < iMax) && (relativeErr > epsilon) )
    beta = deltaNew/deltaOld ;
    d = s + beta * d ;
 
-   trace( sprintf( '%d: deltaNew: %f, relErr: %f, deltaNought: %f', i, deltaNew, relativeErr, deltaNought ) ) ;
+   if ( mod( i, 200 ) == 0 )
+      trace( sprintf( '%d: deltaNew: %f, relErr: %f, deltaNought: %f', i, deltaNew, relativeErr, deltaNought ) ) ;
+   end
 
    i = i + 1 ; 
 end
