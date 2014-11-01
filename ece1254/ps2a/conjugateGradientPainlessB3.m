@@ -5,7 +5,7 @@ function x = conjugateGradientPainlessB3( G, b, P, epsilon )
 %   \Norm{G x − b}^2/\Norm{b}^2 < e
 % where e is a threshold specified by the user.
 %
-% This directly uses the algorithm from Shewchuk's
+% This is based on the pseudocode algorithm from Shewchuk's
 % "An Introduction to the Conjugate Gradient Method Without the Agonizing Pain"
 % appendix B.3
 %
