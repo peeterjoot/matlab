@@ -8,13 +8,13 @@ b3 = [ 0 ; 2 ] ;
 P = eye( 2 ) ;
 
 A\b1
-x = conjugateGradientWithPreconditioner( A, b1, P, eps * 100 )
+x = conjugateGradientPainlessB3( A, b1, P, eps * 100 )
 
 A\b2
-x = conjugateGradientWithPreconditioner( A, b2, P, eps * 100 )
+x = conjugateGradientPainlessB3( A, b2, P, eps * 100 )
 
 A\b3
-x = conjugateGradientWithPreconditioner( A, b3, P, eps * 100 )
+x = conjugateGradientPainlessB3( A, b3, P, eps * 100 )
 
 clear all ;
 
@@ -25,18 +25,18 @@ b3 = [ 0 ; 2 ; 3 ] ;
 P = eye( 3 ) ;
 
 A\b1
-x = conjugateGradientWithPreconditioner( A, b1, P, eps * 100 )
+x = conjugateGradientPainlessB3( A, b1, P, eps * 100 )
 
 A\b2
-x = conjugateGradientWithPreconditioner( A, b2, P, eps * 100 )
+x = conjugateGradientPainlessB3( A, b2, P, eps * 100 )
 
 A\b3
-x = conjugateGradientWithPreconditioner( A, b3, P, eps * 100 )
+x = conjugateGradientPainlessB3( A, b3, P, eps * 100 )
 
 clear all ;
 enableTrace() ;
 
-N = 5 ;
+N = 100 ;
 A = rand( N, N ) ;
 A = A + A.' ;
 b = rand( N, 1 ) ;
@@ -44,12 +44,17 @@ P = zeros( N ) ;
 
 % is there a vectorized syntax for this assignment?
 for d = [1 : N]
-   P( d, d ) = A( d, d ) ;
+   P( d, d ) = 1/A( d, d ) ;
 end
 
-A\b
+r = A\b ;
+s = conjugateGradientPainlessB2( A, b, [], eps * 100 ) ;
+t = conjugateGradientPainlessB2( A, b, P, eps * 100 ) ;
+u = conjugateGradientPainlessB3( A, b, [], eps * 100 ) ;
+v = conjugateGradientPainlessB3( A, b, P, eps * 100 ) ;
 
-z = conjugateGradient( A, b, [], eps * 100 ) ;
-w = conjugateGradient( A, b, P, eps * 100 ) ;
-
-%y = conjugateGradientWithPreconditioner( A, b, P, eps * 100 )
+norm(A * r - b)
+norm(A * s - b)
+norm(A * t - b)
+norm(A * u - b)
+norm(A * v - b)

@@ -9,9 +9,10 @@ function x = conjugateGradientPainlessB3( G, b, P, epsilon )
 % "An Introduction to the Conjugate Gradient Method Without the Agonizing Pain"
 % appendix B.3
 %
+% (but modified to use the stop-iteration condition above).
+%
 
 %enableTrace() ;
-i = 0 ;
 [m, n] = size( G ) ;
 
 if ( n ~= m )
@@ -19,10 +20,6 @@ if ( n ~= m )
 end
 
 [mp, np] = size( P ) ;
-if ( (m ~= mp) || (n ~= np) )
-   error( 'conjugateGradientPainlessB3:preconditionerCheck', 'preconditioning matrix dimensions %d,%d do not match input matrix dimensions %d,%d', mp, np, m, n ) ;
-end
-
 x = rand(m, 1) ;
 
 trace( sprintf( 'N: %d', m ) ) ;
@@ -31,33 +28,55 @@ trace( sprintf( 'N: %d', m ) ) ;
 % "An Introduction to the Conjugate Gradient Method Without the Agonizing Pain"
 % appendix B.3
 
+i = 0 ;
 iMax = m ;
 r = b - G * x ;
-%Inv = inv( P ) ;
-pInv = P ;
-d = pInv * r ;
+if ( np ~= 0 )
+   if ( (m ~= mp) || (n ~= np) )
+      error( 'conjugateGradientPainlessB3:preconditionerCheck', 'preconditioning matrix dimensions %d,%d do not match input matrix dimensions %d,%d', mp, np, m, n ) ;
+   end
+
+   d = P\r ;
+else
+   d = r ;
+end
 deltaNew = r.' * d ;
 deltaNought = deltaNew ;
-eSq = epsilon^2 ;
-iResetThresh = 50 ;
+%eSq = epsilon^2 ;
+%iResetThresh = 50 ;
+rSq = r.' * r ;
+bSq = b.' * b ;
+relativeErr = rSq/bSq ;
 
-while ( (i < iMax) && (deltaNew > (eSq * deltaNought)) )
+% B.3 convergence condition:
+%while ( (i < iMax) && (deltaNew > (eSq * deltaNought)) )
+
+% Assignment convergence condition:
+while ( (i < iMax) && (relativeErr > epsilon) )
    q = G * d ;
    alpha = deltaNew/( d.' * q ) ;
    x = x + alpha * d ;
 
-   if ( mod( i, iResetThresh ) == 0 )
-      r = b - G * x ;
-   else
+%   if ( mod( i, iResetThresh ) == 0 )
+%      r = b - G * x ;
+%   else
       r = r - alpha * q ;
+%   end
+   rSq = r.' * r ;
+   relativeErr = rSq/bSq ;
+
+   if ( np ~= 0 )
+      s = P\r ;
+   else
+      s = r ;
    end
 
-   s = pInv * r ;
    deltaOld = deltaNew ;
    deltaNew = r.' * s ;
    beta = deltaNew/deltaOld ;
-   d = r + beta * d ;
+   d = s + beta * d ;
+
+   trace( sprintf( '%d: deltaNew: %f, relErr: %f, deltaNought: %f', i, deltaNew, relativeErr, deltaNought ) ) ;
+
    i = i + 1 ; 
 end
-
-trace( sprintf( 'deltaNew: %f, deltaNought: %f, i: %d', deltaNew, deltaNought, i ) ) ;

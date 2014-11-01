@@ -9,8 +9,12 @@ function x = conjugateGradientPainlessB2( G, b, P, epsilon )
 % "An Introduction to the Conjugate Gradient Method Without the Agonizing Pain"
 % appendix B.2
 %
-% It has been modified by using a dumb and inefficient application of an optional
-% preconditioner.
+% It has been modified:
+%
+% - using a dumb and inefficient application of an 
+%   optional preconditioner.
+%
+% - also modified to use the stop-iteration condition above.
 % 
 
 %enableTrace() ;
@@ -48,28 +52,37 @@ d = r ;
 deltaNew = r.' * r ;
 deltaNought = deltaNew ;
 eSq = epsilon^2 ;
-iResetThresh = 50 ;
+%iResetThresh = 50 ;
+rSq = r.' * r ;
+bSq = b.' * b ;
+relativeErr = rSq/bSq ;
 
-while ( (i < iMax) && (deltaNew > (eSq * deltaNought)) )
+% B.2 convergence condition:
+%while ( (i < iMax) && (deltaNew > (eSq * deltaNought)) )
+
+% Assignment convergence condition:
+while ( (i < iMax) && (relativeErr > epsilon) )
    q = G * d ;
    alpha = deltaNew/( d.' * q ) ;
    x = x + alpha * d ;
 
-   if ( mod( i, iResetThresh ) == 0 )
-      r = b - G * x ;
-   else
+%   if ( mod( i, iResetThresh ) == 0 )
+%      r = b - G * x ;
+%   else
       r = r - alpha * q ;
-   end
+%   end
+   rSq = r.' * r ;
+   relativeErr = rSq/bSq ;
 
    deltaOld = deltaNew ;
    deltaNew = r.' * r ;
    beta = deltaNew/deltaOld ;
    d = r + beta * d ;
    i = i + 1 ; 
+
+   trace( sprintf( '%d: deltaNew: %f, relErr: %f, deltaNought: %f', i, deltaNew, relativeErr, deltaNought ) ) ;
 end
 
 if ( size(P, 1) ~= 0 )
    x = pHalfInverse * x ;
 end
-
-trace( sprintf( 'deltaNew: %f, deltaNought: %f, i: %d', deltaNew, deltaNought, i ) ) ;

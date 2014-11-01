@@ -7,13 +7,13 @@ b2 = [ 1 ; 0 ] ;
 b3 = [ 0 ; 2 ] ;
 
 A\b1
-x = conjugateGradient( A, b1, [], eps * 100 )
+x = conjugateGradientPainlessB3( A, b1, [], eps * 100 )
 
 A\b2
-x = conjugateGradient( A, b2, [], eps * 100 )
+x = conjugateGradientPainlessB3( A, b2, [], eps * 100 )
 
 A\b3
-x = conjugateGradient( A, b3, [], eps * 100 )
+x = conjugateGradientPainlessB3( A, b3, [], eps * 100 )
 
 clear all ;
 
@@ -23,12 +23,12 @@ b2 = [ 1 ; 0 ; 3 ] ;
 b3 = [ 0 ; 2 ; 3 ] ;
 
 A\b1
-x = conjugateGradient( A, b1, [], eps * 100 )
+x = conjugateGradientPainlessB3( A, b1, [], eps * 100 )
 
 A\b2
-x = conjugateGradient( A, b2, [], eps * 100 )
+x = conjugateGradientPainlessB3( A, b2, [], eps * 100 )
 
 A\b3
-x = conjugateGradient( A, b3, [], eps * 100 )
+x = conjugateGradientPainlessB3( A, b3, [], eps * 100 )
 
 
