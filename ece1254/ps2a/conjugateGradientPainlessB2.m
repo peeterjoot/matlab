@@ -1,4 +1,4 @@
-function x = conjugateGradientPainlessB2( G, b, P, epsilon )
+function [x, stats] = conjugateGradientPainlessB2( G, b, P, epsilon )
 % write in MATLAB your own routine for the conjugate gradient method.
 % Give to the user the possibility of specifying a preconditioning matrix P. 
 % The routine shall stop iterations when the residual norm satisfies
@@ -56,6 +56,7 @@ eSq = epsilon^2 ;
 rSq = r.' * r ;
 bSq = b.' * b ;
 relativeErr = rSq/bSq ;
+stats = [] ;
 
 % B.2 convergence condition:
 %while ( (i < iMax) && (deltaNew > (eSq * deltaNought)) )
@@ -80,11 +81,14 @@ while ( (i < iMax) && (relativeErr > epsilon) )
    d = r + beta * d ;
    i = i + 1 ; 
 
-   if ( mod( i, 200 ) == 0 )
-      trace( sprintf( '%d: deltaNew: %f, relErr: %f', i, deltaNew, relativeErr ) ) ;
-   end
+%   if ( mod( i, 200 ) == 0 )
+%      trace( sprintf( '%d: deltaNew: %f, relErr: %f', i, deltaNew, relativeErr ) ) ;
+%   end
 end
 
 if ( size(P, 1) ~= 0 )
    x = pHalfInverse * x ;
 end
+
+stats(end+1) = relativeErr ;
+stats(end+1) = i ;

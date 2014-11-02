@@ -1,9 +1,9 @@
-function [x, stats] = conjugateGradientQuarteroniPrecond( G, b, P, epsilon )
+function [x, stats] = conjugateGradientQuarteroniPrecond( G, b, P, epsilon, withoutLU )
 % write in MATLAB your own routine for the conjugate gradient method.
 % Give to the user the possibility of specifying a preconditioning matrix P. 
 % The routine shall stop iterations when the residual norm satisfies
-%   \Norm{G x − b}^2/\Norm{b}^2 < e
-% where e is a threshold specified by the user.
+%   \Norm{G x − b}^2/\Norm{b}^2 < epsilon
+% where epsilon is a threshold specified by the user.
 %
 % This is based on the algorithm from Quarteroni, et al's "Numerical Mathematics"
 % 
@@ -13,6 +13,14 @@ function [x, stats] = conjugateGradientQuarteroniPrecond( G, b, P, epsilon )
 % This matlab routine was coded using the algorithm but not using the explicit listing.  The
 % change of variables used to go from the algorthim to this routine are listed in the
 % problem set writup.
+% 
+% parameters:
+%  in/out: G x = b (returns x)
+%  P (in): preconditioner
+%  epsilon (in): see above.
+%  withoutLU (optional: in): default is 1 (using solution with \ operator).  specify 0
+%                            to do one time factorization to try to optimize the preconditioner
+%                            application.
 %
 
 %enableTrace() ;
@@ -29,6 +37,9 @@ x = rand(m, 1) ;
 
 i = 0 ;
 iMax = m ;
+if ( nargin < 5 )
+   withoutLU = 1 ;
+end
 
 r = b - G * x ;
 if ( np ~= 0 )
@@ -36,7 +47,15 @@ if ( np ~= 0 )
       error( 'conjugateGradientQuarteroniPrecond:preconditionerCheck', 'preconditioning matrix dimensions %d,%d do not match input matrix dimensions %d,%d', mp, np, m, n ) ;
    end
 
-   z = P\r ;
+   if ( withoutLU ) 
+      z = P\r ;
+   else
+      [ L, U, luP ] = lu( P ) ;
+ 
+      Pr = luP * r ; 
+      y = L\Pr ;
+      z = U\y ;
+   end
 else
    z = r ;
 end
@@ -61,7 +80,13 @@ while ( (i < iMax) && (relativeErr > epsilon) )
    relativeErr = rSq/bSq ;
 
    if ( np ~= 0 )
-      z = P\r ;
+      if ( withoutLU ) 
+         z = P\r ;
+      else
+         Pr = luP * r ; 
+         y = L\Pr ;
+         z = U\y ;
+      end
    else
       z = r ;
    end
