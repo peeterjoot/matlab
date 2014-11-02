@@ -1,4 +1,4 @@
-function generateResistorGridNetlist(filename, N, R, Rg, Vs, Rs)
+function generateResistorGridNetlist(filename, N, R, Rg, Vs, Rs, withVoltageSource)
 % Write a small matlab function that generates a netlist for a network made by:
 %
 % • a N×N square grid of resistors of value R, where N is the number of
@@ -39,7 +39,7 @@ function generateResistorGridNetlist(filename, N, R, Rg, Vs, Rs)
    for i = 1:N
       resistorNumber = resistorNumber + 1 ;
 
-      fprintf( fh, 'Rs%d %d %d %g\n', resistorNumber, (N+1) * j + i, (N+1) * j + i + 1, R ) ;
+      fprintf( fh, 'R%d %d %d %g\n', resistorNumber, (N+1) * j + i, (N+1) * j + i + 1, R ) ;
    end
    end
 
@@ -49,13 +49,13 @@ function generateResistorGridNetlist(filename, N, R, Rg, Vs, Rs)
       n = j * (N+1) + i ;
       trace( sprintf('Rs%d: node: %d', resistorNumber, n) ) ;
 
-      fprintf( fh, 'Rs%d %d %d %g\n', resistorNumber, n, n + N + 1, R ) ;
+      fprintf( fh, 'R%d %d %d %g\n', resistorNumber, n, n + N + 1, R ) ;
    end
    end
 
 % • resistor R_g between each node of the grid and the reference node.
-   for i = 1:N
-   for j = 1:N
+   for i = 1:N+1
+   for j = 1:N+1
       resistorNumber = resistorNumber + 1 ;
 
       n = (j-1) * (N+1) + i ;
@@ -64,10 +64,15 @@ function generateResistorGridNetlist(filename, N, R, Rg, Vs, Rs)
    end
    end
 
-% • a non-ideal voltage source connected between node 1 and ground. The voltage source
-%   has value V_s and internal (series) resistance R_s
-   fprintf( fh, 'V1 1 %d DC %g\n', (N+1)^2 + 1, Vs ) ;
-   fprintf( fh, 'Vs %d 0 DC %g\n', (N+1)^2 + 1, Rs ) ;
+   if ( withVoltageSource )
+      % • a non-ideal voltage source connected between node 1 and ground. The voltage source
+      %   has value V_s and internal (series) resistance R_s
+      fprintf( fh, 'V1 1 %d DC %g\n', (N+1)^2 + 1, Vs ) ;
+      fprintf( fh, 'Rs %d 0 %g\n', (N+1)^2 + 1, Rs ) ;
+   else
+      fprintf( fh, 'I1 1 0 DC %g\n', Vs/Rs ) ;
+      fprintf( fh, 'Rs 1 0 %g\n', Rs ) ;
+   end
 
    minCurrentSourceAmperage = 0.01 ;
    maxCurrentSourceAmperage = 0.1 ;
