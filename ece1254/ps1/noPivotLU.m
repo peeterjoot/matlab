@@ -57,13 +57,13 @@ for i = 1:sz-1
       if ( abs(U(j, i)) > epsilon )
          multiplier = U(j, i)/U(i, i) ;
    
-         trace( sprintf('iteration: %d, row %d, multiplier: %d', i, j, multiplier) ) ;
+         %trace( sprintf('iteration: %d, row %d, multiplier: %d', i, j, multiplier) ) ;
    
          U( j, i ) = 0 ;
          U( j, i+1:sz ) = U( j, i+1:sz ) - multiplier * U( i, i+1:sz ) ;
          L( j, i ) = multiplier ;
       else
-         trace( sprintf('iteration: %d, row %d, multiplier: <= epsilon', i, j) ) ;
+         %trace( sprintf('iteration: %d, row %d, multiplier: <= epsilon', i, j) ) ;
       end
    end
 end

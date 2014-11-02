@@ -42,7 +42,7 @@ for i = m:-1:1
       % and not a matrix) :
       dotprod = dot( x(i+1:m), U(i, i+1:m) ) ;
    end
-   trace( sprintf('%d; dotprod=%g, b_i=%g, U_ii=%g\n', i, dotprod, bi, uii ) ) ;
+   %trace( sprintf('%d; dotprod=%g, b_i=%g, U_ii=%g\n', i, dotprod, bi, uii ) ) ;
 
 % debug code for 'Subscripted assignment dimension mismatch.' error:
 %disp( 'x_i1' ) ;
@@ -63,5 +63,5 @@ for i = m:-1:1
 
    x( i, 1 ) = (bi - dotprod)/uii ;
 
-   trace( sprintf('%d; x_i = %g\n', i, x(i, 1) ) ) ;
+   %trace( sprintf('%d; x_i = %g\n', i, x(i, 1) ) ) ;
 end

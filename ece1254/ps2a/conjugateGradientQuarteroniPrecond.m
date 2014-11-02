@@ -79,3 +79,6 @@ while ( (i < iMax) && (relativeErr > epsilon) )
 
    i = i + 1 ; 
 end
+
+stats(end+1) = relativeErr ;
+stats(end+1) = i ;

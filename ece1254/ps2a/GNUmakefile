@@ -1,4 +1,4 @@
-FROMPS1 := changeTrace.m disableTrace.m enableTrace.m trace.m backSubst.m forwardSubst.m noPivotLU.m withPivotLU.m
+FROMPS1 := changeTrace.m disableTrace.m enableTrace.m trace.m backSubst.m forwardSubst.m noPivotLU.m withPivotLU.m isDebugEnabled.m
 
 all : $(FROMPS1)
 
@@ -32,5 +32,8 @@ noPivotLU.m : ../ps1/noPivotLU.m
 	cp $^ $@
 
 withPivotLU.m : ../ps1/withPivotLU.m
+	cp $^ $@
+
+isDebugEnabled.m : ../ps1/isDebugEnabled.m
 	cp $^ $@
 

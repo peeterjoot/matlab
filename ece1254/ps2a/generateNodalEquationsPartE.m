@@ -12,8 +12,7 @@ Vs = 2 ;
 Rs = 0.1 ;
 withVoltage = 0 ;
 
-%N = [ 4 8 16 32 64 128 ] ;
-N = [ 192 ] ;
+N = [ 4 8 16 32 64 128 192 ] ;
 for i = N
    generateResistorGridNetlist( netlistFileName, i, R, Rg, Vs, Rs, withVoltage ) ;
 
