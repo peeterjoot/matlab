@@ -1,4 +1,4 @@
-FROMPS1 := changeTrace.m disableTrace.m enableTrace.m trace.m
+FROMPS1 := changeTrace.m disableTrace.m enableTrace.m trace.m backSubst.m forwardSubst.m noPivotLU.m withPivotLU.m
 
 all : $(FROMPS1)
 
@@ -6,7 +6,7 @@ clean:
 	rm -f $(FROMPS1)
 	rm -f ps2a.1b.netlist ps2a.1d.netlist
 
-# why is this recursing?
+# why is this recursing?  hacked around this by copying each manually below
 #%.m : ../ps1/%.m
 #	cp $^ $@
 
@@ -21,3 +21,16 @@ enableTrace.m : ../ps1/enableTrace.m
 
 trace.m : ../ps1/trace.m
 	cp $^ $@
+
+backSubst.m : ../ps1/backSubst.m
+	cp $^ $@
+
+forwardSubst.m : ../ps1/forwardSubst.m
+	cp $^ $@
+
+noPivotLU.m : ../ps1/noPivotLU.m
+	cp $^ $@
+
+withPivotLU.m : ../ps1/withPivotLU.m
+	cp $^ $@
+

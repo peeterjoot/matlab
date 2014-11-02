@@ -25,7 +25,7 @@ end
 [mp, np] = size( P ) ;
 x = rand(m, 1) ;
 
-trace( sprintf( 'N: %d', m ) ) ;
+%trace( sprintf( 'N: %d', m ) ) ;
 
 i = 0 ;
 iMax = m ;
@@ -72,10 +72,10 @@ while ( (i < iMax) && (relativeErr > epsilon) )
    p = z + beta * p ;
 
 %   if ( mod( i, 200 ) == 0 )
-   if ( mod( i, 50 ) == 0 )
-      stats(end+1) = relativeErr ;
-      trace( sprintf( '%d: delta: %f, relErr: %f', i, delta, relativeErr ) ) ;
-   end
+%   if ( mod( i, 50 ) == 0 )
+%      stats(end+1) = relativeErr ;
+%      trace( sprintf( '%d: delta: %f, relErr: %f', i, delta, relativeErr ) ) ;
+%   end
 
    i = i + 1 ; 
 end

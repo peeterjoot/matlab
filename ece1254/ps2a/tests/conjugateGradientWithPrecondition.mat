@@ -72,3 +72,28 @@ norm(A * w - b) ;
 norm(A * x - b) ;
 norm(A * y - b) ;
 norm(A * z - b) ]
+
+clear all ;
+% a t/c with a tridiagonal preconditioner.
+% with N=50, the last iterations without and with were respectively:
+%debug: 18: delta: 0.008972, relErr: 0.000006
+%debug: 7: delta: 0.000627, relErr: 0.000008
+
+N = 50 ;
+s = sprandsym( N, 0.3, 1:N ) ;
+b = 10*rand(N, 1) ;
+d = spdiags(s, -1:1) ;
+P = diag(d(1:N-1,1), -1) + diag(d(:,2), 0) + diag(d(2:N,3), 1) ; 
+
+enableTrace() ;
+z = s\b
+[x, stats] = conjugateGradientQuarteroniPrecond( s, b, [], 1e-5 ) ;
+%x
+[y, stats] = conjugateGradientQuarteroniPrecond( s, b, P, 1e-5 ) ;
+%y
+
+[ norm(z - x) ; norm( z - y) ]
+
+%eig(s)  % 1:N
+q = inv( sqrt( P ) ) ;
+eig( q * s * q ) 

@@ -1,0 +1,14 @@
+clear all ;
+a = rand(6) ;
+a = a + a.' ;
+d = spdiags(a, -1:1) ;
+s = sparse(diag(d(2:6,3), 1) + diag(d(:,2), 0) + diag(d(1:5,1), -1))
+r = full(s)
+b = 1:6
+
+s = sprandsym( 6, 0.5, 1:6 )
+ic = ichol(s) 
+
+% display it:
+full(s)
+full(ic) % this isn't tridiagonal

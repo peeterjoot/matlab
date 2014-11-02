@@ -1,5 +1,4 @@
 function [norms, stats] = usenetlistProblemBD(withVoltageSource, err)
-% Write a small matlab function that generates a netlist for a network made by:
 
 % format short eng ;
 

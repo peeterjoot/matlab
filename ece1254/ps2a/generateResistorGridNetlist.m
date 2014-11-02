@@ -1,4 +1,4 @@
-function generateResistorGridNetlist(filename, N, R, Rg, Vs, Rs, withVoltageSource)
+function generateResistorGridNetlist(filename, N, R, Rg, Vs, Rs, withVoltageSource, noRandom)
 % Write a small matlab function that generates a netlist for a network made by:
 %
 % • a N×N square grid of resistors of value R, where N is the number of
@@ -13,6 +13,16 @@ function generateResistorGridNetlist(filename, N, R, Rg, Vs, Rs, withVoltageSour
 %
 %   The source current must flow from the grid to the reference node as shown in fig. 1.1
 %   (and not viceversa!). 
+% 
+% parameters: 
+%    filename: string: file location to write the generated netlist.
+%    N: integer: number of resistors per edge.
+%    R: value of resistance of internal node resistances.
+%    Rg: grid to ground resistance value.
+%    Rs: node 1 voltage source internal resistance.
+%    withVoltageSource: boolean: controls whether the original voltage source
+%                                described above is used.
+%    noRandom: boolean: (default 0): override random current source node locations and values.
 
 % 
 % Assumptions
@@ -70,17 +80,31 @@ function generateResistorGridNetlist(filename, N, R, Rg, Vs, Rs, withVoltageSour
       fprintf( fh, 'V1 1 %d DC %g\n', (N+1)^2 + 1, Vs ) ;
       fprintf( fh, 'Rs %d 0 %g\n', (N+1)^2 + 1, Rs ) ;
    else
-      fprintf( fh, 'I1 1 0 DC %g\n', Vs/Rs ) ;
+      fprintf( fh, 'I1 0 1 DC %g\n', Vs/Rs ) ;
       fprintf( fh, 'Rs 1 0 %g\n', Rs ) ;
    end
 
    minCurrentSourceAmperage = 0.01 ;
    maxCurrentSourceAmperage = 0.1 ;
 
+   if ( nargin < 8 )
+      noRandom = 0 ;
+   end
+
    for i = 1:3
-      currentNode = randi((N+1) * (N+1)) ;
-      sourceValue = minCurrentSourceAmperage + (maxCurrentSourceAmperage - minCurrentSourceAmperage) * rand() ;
-     
+      sourceValue = minCurrentSourceAmperage + (maxCurrentSourceAmperage - minCurrentSourceAmperage) ;
+
+      % Toggle for comparison of solutions with and without Norton voltage 
+      % source to current source transformation:
+      %
+      if ( noRandom )
+         currentNode = (N+1) * (N+1) - i ;
+         sourceValue = sourceValue * 0.3 ;
+      else
+         currentNode = randi((N+1) * (N+1)) ;
+         sourceValue = sourceValue * rand() ;
+      end
+
       fprintf( fh, 'I%d %d 0 DC %g\n', i, currentNode, sourceValue ) ;
    end
 
