@@ -4,7 +4,7 @@ all : $(FROMPS1)
 
 clean: 
 	rm -f $(FROMPS1)
-	rm -f ps2a.1b.netlist ps2a.1d.netlist tmp.netlist nodal.*.mat
+	rm -f ps2a.1b.netlist ps2a.1d.netlist tmp.netlist nodal.*.mat 'gershgorinPlotR1.000000e-01Fig6.png' gershgorinPlotR1Fig7.png gershgorinPlotR10Fig8.png 'gershgorinPlotPreconditionedR1.000000e-01Fig9.png' gershgorinPlotPreconditionedR1Fig10.png gershgorinPlotPreconditionedR10Fig11.png
 
 # why is this recursing?  hacked around this by copying each manually below
 #%.m : ../ps1/%.m
