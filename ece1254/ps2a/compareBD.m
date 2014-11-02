@@ -14,8 +14,6 @@ generateResistorGridNetlist( netlistFileNameD, N, 0.1, 1000000, 2, 0.1, 0, 1 ) ;
 [GV, bV] = NodalAnalysis( netlistFileNameA ) ;
 [GI, bI] = NodalAnalysis( netlistFileNameD ) ;
 
-save( 'norand.withV', 'GV', 'bV' ) ;
-
 rV = GV\bV ;
 rI = GI\bI ;
 

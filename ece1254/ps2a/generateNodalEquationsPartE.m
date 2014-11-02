@@ -12,18 +12,15 @@ Vs = 2 ;
 Rs = 0.1 ;
 withVoltage = 0 ;
 
-N = 4 ;
-for i = 1:6
-   N = N * 2 ;
+%N = [ 4 8 16 32 64 128 ] ;
+N = [ 192 ] ;
+for i = N
+   generateResistorGridNetlist( netlistFileName, i, R, Rg, Vs, Rs, withVoltage ) ;
 
-   if ( 1 )
-      generateResistorGridNetlist( netlistFileName, N, R, Rg, Vs, Rs, withVoltage ) ;
+   [G, b] = NodalAnalysis( netlistFileName ) ;
+   G = sparse( G ) ; % save, taking less space.
 
-      [G, b] = NodalAnalysis( netlistFileName ) ;
-      G = sparse( G ) ;
-
-   end
-   savename = sprintf( 'nodal.%d.mat', N ) ;
+   savename = sprintf( 'nodal.%d.mat', i ) ;
    disp( savename )
 
    save( savename, 'G', 'b' ) ;
