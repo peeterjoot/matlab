@@ -1,4 +1,4 @@
-function generateNodalEquationsPartE()
+function generateNodalEquationsPartEH(partE)
 
 netlistFileName = 'tmp.netlist' ;
 
@@ -12,15 +12,32 @@ Vs = 2 ;
 Rs = 0.1 ;
 withVoltage = 0 ;
 
-N = [ 4 8 16 32 64 128 192 ] ;
-for i = N
-   generateResistorGridNetlist( netlistFileName, i, R, Rg, Vs, Rs, withVoltage ) ;
+if ( partE )
+   N = [ 4 8 16 32 64 128 192 ] ;
+   for i = N
+      generateResistorGridNetlist( netlistFileName, i, R, Rg, Vs, Rs, withVoltage ) ;
 
-   [G, b] = NodalAnalysis( netlistFileName ) ;
-   G = sparse( G ) ; % save, taking less space.
+      [G, b] = NodalAnalysis( netlistFileName ) ;
+      G = sparse( G ) ; % save, taking less space.
 
-   savename = sprintf( 'nodal.%d.mat', i ) ;
-   disp( savename )
+      savename = sprintf( 'nodal.%d.mat', i ) ;
+      disp( savename )
 
-   save( savename, 'G', 'b' ) ;
+      save( savename, 'G', 'b' ) ;
+   end
+else
+   N = 20 ;
+   R = [ 0.1 1 10 ] ;
+
+   for r = R
+      generateResistorGridNetlist( netlistFileName, N, r, Rg, Vs, Rs, withVoltage ) ;
+
+      [G, b] = NodalAnalysis( netlistFileName ) ;
+      G = sparse( G ) ; % save, taking less space.
+
+      savename = sprintf( 'nodal.N%d.R%d.mat', N, r ) ;
+      disp( savename )
+
+      save( savename, 'G', 'b' ) ;
+   end
 end
