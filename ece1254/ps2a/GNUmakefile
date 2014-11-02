@@ -4,7 +4,7 @@ all : $(FROMPS1)
 
 clean: 
 	rm -f $(FROMPS1)
-	rm -f ps2a.1.netlist
+	rm -f ps2a.1b.netlist ps2a.1d.netlist
 
 # why is this recursing?
 #%.m : ../ps1/%.m

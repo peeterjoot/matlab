@@ -1,4 +1,4 @@
-function norms = usenetlistProblemBD(withVoltageSource)
+function [norms, stats] = usenetlistProblemBD(withVoltageSource, err)
 % Write a small matlab function that generates a netlist for a network made by:
 
 % format short eng ;
@@ -13,21 +13,20 @@ end
 %Gx = b (1.1)
 %for a grid with N = 40, R = 0.1Ω, R g = 1MΩ,V s = 2V, R s = 0.1Ω.
 
-generateResistorGridNetlist( netlistFileName, 40, 0.1, 1000000, 2, 0.1, 0 ) ;
+generateResistorGridNetlist( netlistFileName, 40, 0.1, 1000000, 2, 0.1, withVoltageSource ) ;
 
 [G, b] = NodalAnalysis( netlistFileName ) ;
 
 r = G\b ;
 
-err = 1e-10 ;
 enableTrace() ;
-s = conjugateGradientQuarteroniPrecond( G, b, [], err ) ;
+[s, stats] = conjugateGradientQuarteroniPrecond( G, b, [], err ) ;
 disableTrace() ;
 
 t = conjugateGradientPainlessB2( G, b, [], err ) ;
 u = conjugateGradientPainlessB3( G, b, [], err ) ;
 N = size(G, 1) ;
-[v, relres, iter, flag] = conjgrad( G, b, b, eye(N), N, err ) ;
+[v, relres, iter, flag] = conjgrad( G, b, b, eye(N), N, sqrt(err) ) ;
 
 % compare direct solution with CG "solution".  None of these CG implementations converge.
 norms = [ norm( G * r - b ) 
