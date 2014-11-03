@@ -1,4 +1,4 @@
-function [x, stats] = conjugateGradientQuarteroniPrecond( G, b, P, epsilon, withoutLU )
+function [x, stats, residuals] = conjugateGradientQuarteroniPrecond( G, b, P, epsilon, withoutLU )
 % write in MATLAB your own routine for the conjugate gradient method.
 % Give to the user the possibility of specifying a preconditioning matrix P. 
 % The routine shall stop iterations when the residual norm satisfies
@@ -66,6 +66,9 @@ bSq = b.' * b ;
 relativeErr = rSq/bSq ;
 stats = [] ;
 
+residuals = [] ;
+residuals(end+1) = relativeErr ;
+
 while ( (i < iMax) && (relativeErr > epsilon) )
    q = G * p ;
    alpha = delta/( p.' * q ) ;
@@ -78,6 +81,7 @@ while ( (i < iMax) && (relativeErr > epsilon) )
 %   end
    rSq = r.' * r ;
    relativeErr = rSq/bSq ;
+   residuals(end+1) = relativeErr ;
 
    if ( np ~= 0 )
       if ( withoutLU ) 

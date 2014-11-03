@@ -10,13 +10,13 @@ b3 = [ 0 ; 2 ] ;
 P = eye( 2 ) ;
 
 A\b1
-[x, stats] = conjugateGradientQuarteroniPrecond( A, b1, P, err )
+[x, stats, residuals] = conjugateGradientQuarteroniPrecond( A, b1, P, err )
 
 A\b2
-[x, stats] = conjugateGradientQuarteroniPrecond( A, b2, P, err )
+[x, stats, residuals] = conjugateGradientQuarteroniPrecond( A, b2, P, err )
 
 A\b3
-[x, stats] = conjugateGradientQuarteroniPrecond( A, b3, P, err )
+[x, stats, residuals] = conjugateGradientQuarteroniPrecond( A, b3, P, err )
 
 clear all ;
 
@@ -28,13 +28,13 @@ b3 = [ 0 ; 2 ; 3 ] ;
 P = eye( 3 ) ;
 
 A\b1
-[x, stats] = conjugateGradientQuarteroniPrecond( A, b1, P, err )
+[x, stats, residuals] = conjugateGradientQuarteroniPrecond( A, b1, P, err )
 
 A\b2
-[x, stats] = conjugateGradientQuarteroniPrecond( A, b2, P, err )
+[x, stats, residuals] = conjugateGradientQuarteroniPrecond( A, b2, P, err )
 
 A\b3
-[x, stats] = conjugateGradientQuarteroniPrecond( A, b3, P, err )
+[x, stats, residuals] = conjugateGradientQuarteroniPrecond( A, b3, P, err )
 
 % none of these conjugate gradient implementations do very well with N=100,50,25,15,12 but N=10 seems to
 % converge.
@@ -58,8 +58,8 @@ s = conjugateGradientPainlessB2( A, b, [], err ) ;
 t = conjugateGradientPainlessB2( A, b, P, err ) ;
 u = conjugateGradientPainlessB3( A, b, [], err ) ;
 v = conjugateGradientPainlessB3( A, b, P, err ) ;
-[w, stats] = conjugateGradientQuarteroniPrecond( A, b, [], err ) ;
-[x, stats] = conjugateGradientQuarteroniPrecond( A, b, P, err ) ;
+[w, stats, residuals] = conjugateGradientQuarteroniPrecond( A, b, [], err ) ;
+[x, stats, residuals] = conjugateGradientQuarteroniPrecond( A, b, P, err ) ;
 [y, relres, iter, flag] = conjgrad( A, b, b, eye(N), N, err ) ;
 [z, relres, iter, flag] = conjgrad( A, b, b, P, N, err ) ;
 
@@ -87,9 +87,9 @@ P = diag(d(1:N-1,1), -1) + diag(d(:,2), 0) + diag(d(2:N,3), 1) ;
 
 enableTrace() ;
 z = s\b
-[x, stats] = conjugateGradientQuarteroniPrecond( s, b, [], 1e-5 ) ;
+[x, stats, residuals] = conjugateGradientQuarteroniPrecond( s, b, [], 1e-5 ) ;
 %x
-[y, stats] = conjugateGradientQuarteroniPrecond( s, b, P, 1e-5 ) ;
+[y, stats, residuals] = conjugateGradientQuarteroniPrecond( s, b, P, 1e-5 ) ;
 %y
 
 [ norm(z - x) ; norm( z - y) ]

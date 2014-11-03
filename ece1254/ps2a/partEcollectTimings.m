@@ -60,7 +60,7 @@ for i = N
    tmp = [] ;
    for k = 1:nSamples
       tic ;
-         [t, stats] = conjugateGradientQuarteroniPrecond( G, b, [], 1e-3 ) ;
+         [t, stats, residuals] = conjugateGradientQuarteroniPrecond( G, b, [], 1e-3 ) ;
       delta = toc ;
       tmp(end+1) = delta ;
 
@@ -87,7 +87,7 @@ for i = N
    tmp = [] ;
    for k = 1:nSamples
       tic ;
-         [u, stats] = conjugateGradientQuarteroniPrecond( G, b, P, 1e-3 ) ;
+         [u, stats, residuals] = conjugateGradientQuarteroniPrecond( G, b, P, 1e-3 ) ;
       delta = toc ;
       tmp(end+1) = delta ;
 
@@ -100,7 +100,7 @@ for i = N
    tmp = [] ;
    for k = 1:nSamples
       tic ;
-         [w, stats] = conjugateGradientQuarteroniPrecond( G, b, P, 1e-3, 0 ) ;
+         [w, stats, residuals] = conjugateGradientQuarteroniPrecond( G, b, P, 1e-3, 0 ) ;
       delta = toc ;
       tmp(end+1) = delta ;
 

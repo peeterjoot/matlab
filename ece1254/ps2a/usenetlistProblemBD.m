@@ -19,7 +19,7 @@ generateResistorGridNetlist( netlistFileName, 40, 0.1, 1000000, 2, 0.1, withVolt
 r = G\b ;
 
 enableTrace() ;
-[s, stats] = conjugateGradientQuarteroniPrecond( G, b, [], err ) ;
+[s, stats, residuals] = conjugateGradientQuarteroniPrecond( G, b, [], err ) ;
 disableTrace() ;
 
 t = conjugateGradientPainlessB2( G, b, [], err ) ;
