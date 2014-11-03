@@ -1,7 +1,8 @@
-function [x, f, iter, absF, diffX, totalIters] = newtonsDiode( lastX, tolF, tolX, tolRel, maxIter, useStepping )
+function [x, f, iter, absF, diffX, totalIters] = newtonsDiode( lastX, tolF, tolX, tolRel, maxIter, useStepping, useDerivative )
 
 if ( useStepping )
-   lambdas = 0:0.1:1 ;
+   deltaLambda = 0.1 ;
+   lambdas = 0:deltaLambda:1 ;
 else
    lambdas = [ 1 ] ;
 end
@@ -45,4 +46,10 @@ for lambda = lambdas
 
    %disp( sprintf( 'lambda=%f, i: %d, x = %f, f = %2.1e, fp = %2.1e, |dx| = %2.1e, relDiff=%2.1e', lambda, iter, x, f, fp, diffX, relDiffX ) ) ;
    disp( sprintf( '%1.1f & %d & %f & %2.1e & %2.1e & %2.1e \\\\ \\hline', lambda, iter, x, f, diffX, relDiffX ) ) ;
+
+   if ( useDerivative )
+      if ( lambda ~= lambdas(end) )
+         lastX = lastX + deltaLambda * 5/ddiode( lastX ) ;
+      end
+   end
 end
