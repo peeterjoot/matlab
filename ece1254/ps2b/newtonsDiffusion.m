@@ -1,4 +1,8 @@
-function [x, f, iter, normSqF, dxSquared, totalIters] = newtonsDiffusion( N, V, tolF, tolX, tolRel, maxIter, useStepping )
+function [x, f, iter, normSqF, dxSquared, totalIters] = newtonsDiffusion( N, V, tolF, tolX, tolRel, maxIter, useStepping, alpha )
+% sample call:
+% 
+%     [x, f, iter, normSqF, dxSquared, totalIters] = newtonsDiffusion( 5, 1, 1e-12, 1e-12, 1e-12, 1000, 0, 1e-3 )
+%
 % solve: F(x, lambda) = G * x - lambda * b + 2 [sinh(x_i)]_i
 %        b(1) = -lambda * V, b(N) = lambda * V, b({else}) = 0.
 %        G = 2 I - P - P^T, where P is ones on the superdiagonal, and zeros elsewhere.
@@ -8,6 +12,7 @@ function [x, f, iter, normSqF, dxSquared, totalIters] = newtonsDiffusion( N, V, 
 %    d^2 psi/du^2 = 2 sinh( psi(u) ), psi(0) = -V, psi(1) = V.
 %
 % N: number of sampling points (not including end points).  solution vector x has components: x_i = psi( u_i )
+% alpha: damping constant
 %
 % +-V: values at x=1,0
 %
@@ -37,7 +42,7 @@ else
 end
 
 nOnes = ones( N, 1 ) ;
-G = sparse( diag(2 * nOnes, 0) - diag(nOnes(1:n-1), -1) - diag(nOnes(1:n-1), 1) ) ;
+G = sparse( diag(2 * nOnes, 0) - diag(nOnes(1:N-1), -1) - diag(nOnes(1:N-1), 1) ) ;
 b = zeros( N, 1 ) ;
 lastX = b ;
 b(1,1) = -V ;
@@ -65,7 +70,7 @@ for lambda = lambdas
          disp( sprintf( '%1.1f & %d & %f & %2.1e & %2.1e & %2.1e \\\\ \\hline', lambda, iter, x.' * x, f.' * f, dxSquared, relDiffSqX ) ) ;
       end
 
-      x = lastX - f/fp ;
+      x = lastX - alpha * f/fp ;
       f = G * x - lambda * b + 2 * deltaXsq * sinh( x(1:N) ) ;
       normSqF = f.' * f ;
       iter = iter + 1 ;
