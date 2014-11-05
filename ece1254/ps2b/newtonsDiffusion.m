@@ -1,7 +1,7 @@
 function [x, f, iter, normSqF, dxSquared, totalIters] = newtonsDiffusion( N, V, tolF, tolX, tolRel, maxIter, useStepping, alpha )
 % sample call:
 % 
-%     [x, f, iter, normSqF, dxSquared, totalIters] = newtonsDiffusion( 5, 1, 1e-12, 1e-12, 1e-12, 1000, 0, 1e-3 )
+%     n = 5 ; d=1/6 ; [x, f, iter, normSqF, dxSquared, totalIters] = newtonsDiffusion( n, 1, 1e-12, 1e-12, 1e-12, 1000, 0, 1 ) ; plot( d:d:n * d, f )
 %
 % solve: F(x, lambda) = G * x - lambda * b + 2 [sinh(x_i)]_i
 %        b(1) = -lambda * V, b(N) = lambda * V, b({else}) = 0.
@@ -35,8 +35,13 @@ function [x, f, iter, normSqF, dxSquared, totalIters] = newtonsDiffusion( N, V, 
 %    totalIters: sum of last iter counts if useStepping is set (otherwise == iter).
 
 if ( useStepping )
-   deltaLambda = 0.1 ;
-   lambdas = 0:deltaLambda:1 ;
+   steppingIntervals = 100 ;
+
+%   lambdas = 1/steppingIntervals:1/steppingIntervals:1 ;
+%   lambdas = 1/steppingIntervals:1/steppingIntervals:3/steppingIntervals ;
+%   lambdas = [ 0.01 ] ;
+
+   lambdas = [ 0.69 0.7 ] ;
 else
    lambdas = [ 1 ] ;
 end
@@ -45,33 +50,35 @@ nOnes = ones( N, 1 ) ;
 G = sparse( diag(2 * nOnes, 0) - diag(nOnes(1:N-1), -1) - diag(nOnes(1:N-1), 1) ) ;
 b = zeros( N, 1 ) ;
 lastX = b ;
-b(1,1) = -V ;
-b(N,1) = V ;
+b(1,1) = V ;
+b(N,1) = -V ;
 deltaXsq = 1/(N+1)^2 ;
 % H(x) = 2 * deltaXsq * sinh( x(1:N) ) 
-% F(x) = G * x - b + H(x)
-%      = G * x - b + 2 * deltaXsq * sinh( x(1:N) )
+% F(x) = G * x - lambda * b + H(x)
+%      = G * x - lambda * b + 2 * deltaXsq * sinh( x(1:N) )
 
+fp = 2 * deltaXsq ;
+J = G + sparse( diag(fp * nOnes, 0) ) ;
+fpinv = inv( J ) ;
 totalIters = 0 ;
-disp( '\\( \\lambda \\) & i & \\( \\Norm{ \\Bx }^2 \\) & \\( \\Norm{ F(\\Bx)}^2 \\) & \\( \\Norm{\\Delta x}^2 \\) & \\( \\Norm{\\Delta x}^2/\\Norm{x}^2 \\) \\\\ \\hline' ) ;
+disp( '\\( \\lambda \\) & i & \\( \\Norm{ \\Bx } \\) & \\( \\Norm{ F(\\Bx)} \\) & \\( \\Norm{\\Delta x} \\) & \\( \\Norm{\\Delta x}/\\Norm{x} \\) \\\\ \\hline' ) ;
 for lambda = lambdas
    iter = 0 ;
    x = lastX ;
-   f = G * x - lambda * b + 2 * deltaXsq * sinh( x(1:N) ) ;
+   f = G * x - lambda * b + fp * sinh( x(1:N) ) ;
    dxSquared = 0 ;
    relDiffSqX = 0 ;
    normSqF = f.' * f ;
-   fp = 2 * deltaXsq ;
 
    while ( iter < maxIter )
       totalIters = totalIters + 1 ;
 
       if ( ( 0 == mod(iter, 50) ) || (iter < 10) )
-         disp( sprintf( '%1.1f & %d & %f & %2.1e & %2.1e & %2.1e \\\\ \\hline', lambda, iter, x.' * x, f.' * f, dxSquared, relDiffSqX ) ) ;
+         disp( sprintf( '%1.2f & %d & %f & %2.1e & %2.1e & %2.1e \\\\ \\hline', lambda, iter, norm(x), norm(f), sqrt(dxSquared), sqrt(relDiffSqX) ) ) ;
       end
 
-      x = lastX - alpha * f/fp ;
-      f = G * x - lambda * b + 2 * deltaXsq * sinh( x(1:N) ) ;
+      x = lastX - alpha * fpinv * f ;
+      f = G * x - lambda * b + fp * sinh( x(1:N) ) ;
       normSqF = f.' * f ;
       iter = iter + 1 ;
 
@@ -85,5 +92,5 @@ for lambda = lambdas
       end
    end
 
-   disp( sprintf( '%1.1f & %d & %f & %2.1e & %2.1e & %2.1e \\\\ \\hline', lambda, iter, x.' * x, f.' * f, dxSquared, relDiffSqX ) ) ;
+   disp( sprintf( '%1.2f & %d & %f & %2.1e & %2.1e & %2.1e \\\\ \\hline', lambda, iter, norm(x), norm(f), sqrt(dxSquared), sqrt(relDiffSqX) ) ) ;
 end
