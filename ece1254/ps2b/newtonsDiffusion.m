@@ -2,6 +2,7 @@ function [x, f, iter, normSqF, dxSquared, totalIters] = newtonsDiffusion( N, V, 
 % sample call:
 % 
 %     n = 5 ; d=1/6 ; [x, f, iter, normSqF, dxSquared, totalIters] = newtonsDiffusion( n, 1, 1e-12, 1e-12, 1e-12, 1000, 0, 1 ) ; plot( d:d:n * d, f )
+%     n=100 ; d=1/101 ; [x, f, iter, normSqF, dxSquared, totalIters] = newtonsDiffusion( n, 8, 1e-12, 1e-12, 1e-12, 2000, 0, 1 ) ; plot( d:d:n * d, x )
 %
 % solve: F(x, lambda) = G * x - lambda * b + 2 [sinh(x_i)]_i
 %        b(1) = -lambda * V, b(N) = lambda * V, b({else}) = 0.
@@ -9,7 +10,7 @@ function [x, f, iter, normSqF, dxSquared, totalIters] = newtonsDiffusion( N, V, 
 % 
 % This are the nodal equations for the finite approximation of the nonlinear Poisson equation:
 %
-%    d^2 psi/du^2 = 2 sinh( psi(u) ), psi(0) = -V, psi(1) = V.
+%    d^2 psi/du^2 = 2 sinh( psi(u) ), psi(0) = -V, psi(1) = V, u in [0,1]
 %
 % N: number of sampling points (not including end points).  solution vector x has components: x_i = psi( u_i )
 % alpha: damping constant
@@ -37,11 +38,7 @@ function [x, f, iter, normSqF, dxSquared, totalIters] = newtonsDiffusion( N, V, 
 if ( useStepping )
    steppingIntervals = 100 ;
 
-%   lambdas = 1/steppingIntervals:1/steppingIntervals:1 ;
-%   lambdas = 1/steppingIntervals:1/steppingIntervals:3/steppingIntervals ;
-%   lambdas = [ 0.01 ] ;
-
-   lambdas = [ 0.69 0.7 ] ;
+   lambdas = 1/steppingIntervals:1/steppingIntervals:1 ;
 else
    lambdas = [ 1 ] ;
 end
@@ -50,8 +47,11 @@ nOnes = ones( N, 1 ) ;
 G = sparse( diag(2 * nOnes, 0) - diag(nOnes(1:N-1), -1) - diag(nOnes(1:N-1), 1) ) ;
 b = zeros( N, 1 ) ;
 lastX = b ;
-b(1,1) = V ;
-b(N,1) = -V ;
+
+% FIXME: See what may be ping-ponging at N=100,V=8,maxIter=2000
+b(1,1) = -V ;
+b(N,1) = V ;
+
 deltaXsq = 1/(N+1)^2 ;
 % H(x) = 2 * deltaXsq * sinh( x(1:N) ) 
 % F(x) = G * x - lambda * b + H(x)
@@ -59,7 +59,10 @@ deltaXsq = 1/(N+1)^2 ;
 
 fp = 2 * deltaXsq ;
 J = G + sparse( diag(fp * nOnes, 0) ) ;
+
+% FIXME: use LU, but wait until I get base algorithm right.  
 fpinv = inv( J ) ;
+
 totalIters = 0 ;
 disp( '\\( \\lambda \\) & i & \\( \\Norm{ \\Bx } \\) & \\( \\Norm{ F(\\Bx)} \\) & \\( \\Norm{\\Delta x} \\) & \\( \\Norm{\\Delta x}/\\Norm{x} \\) \\\\ \\hline' ) ;
 for lambda = lambdas
