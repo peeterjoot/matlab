@@ -1,7 +1,7 @@
-function [x, F, iter, normSqF, dxSquared, totalIters] = newtonsDiffusion( N, V, tolF, tolX, tolRel, maxIter, useStepping )
+function [x, F, normSqF, dxSquared, totalIters, deltaX] = newtonsDiffusion( N, V, tolF, tolX, tolRel, maxIter, numStepIntervals )
 % sample call:
 % 
-% n=100;d=1/101;V=20;ee=1e-12;[x, F, iter, normSqF, dxSquared] = newtonsDiffusion( n, V, ee, ee, ee, 1000, 0 ) ; y = [ -V;x;V ] ; plot( 0:d:1, y )
+% V=20;ee=1e-12;[x, F, fSq, dxSq, i, d] = newtonsDiffusion( 100, V, ee, ee, ee, 50, 10 ) ; y = [ -V;x;V ] ; plot( 0:d:1, y )
 %
 % solve: F(x) = G * x - b + 2 [sinh(x_i)]_i
 %        b(1) = -V, b(N) = V, b({else}) = 0.
@@ -14,6 +14,8 @@ function [x, F, iter, normSqF, dxSquared, totalIters] = newtonsDiffusion( N, V, 
 % N: number of sampling points (not including end points).  solution vector x has components: x_i = psi( u_i )
 %
 % +-V: values at x=1,0
+%
+% numStepIntervals: 1 for no stepping.  Something higher to step the values of V from V/numStepIntervals to V.
 %
 % maxIter: stop after this many iterations if not converged.
 %
@@ -37,7 +39,8 @@ x = b ;
 b(1,1) = -V ;
 b(N,1) = V ;
 
-deltaXsq = 1/(N+1)^2 ;
+deltaX = 1/(N+1) ;
+deltaXsq = deltaX * deltaX ;
 hcoeff = 2 * deltaXsq ;
 % H(x) = hcoeff * sinh( x(1:N) ) 
 % F(x) = G * x - b + H(x)
@@ -45,12 +48,7 @@ hcoeff = 2 * deltaXsq ;
 
 disp( 'i & lambda & max |x_i| & |F| & |dx| & |dx|/|x|' ) ;
 
-if ( useStepping )
-   numSteps = 10 ;
-   lambdas = 1/10:1/10:1 ;
-else
-   lambdas = [ 1 ] ;
-end
+lambdas = 1/numStepIntervals:1/numStepIntervals:1 ;
 
 iter = 0 ;
 totalIters = 0 ;
