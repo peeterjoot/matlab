@@ -1,7 +1,7 @@
-function [x, F, iter, normSqF, dxSquared] = newtonsDiffusion( N, V, tolF, tolX, tolRel, maxIter )
+function [x, F, iter, normSqF, dxSquared, totalIters] = newtonsDiffusion( N, V, tolF, tolX, tolRel, maxIter, useStepping )
 % sample call:
 % 
-% n=100;d=1/101;V=20;ee=1e-12;[x, F, iter, normSqF, dxSquared] = newtonsDiffusion( n, V, ee, ee, ee, 1000 ) ; y = [ -V;x;V ] ; plot( 0:d:1, y )
+% n=100;d=1/101;V=20;ee=1e-12;[x, F, iter, normSqF, dxSquared] = newtonsDiffusion( n, V, ee, ee, ee, 1000, 0 ) ; y = [ -V;x;V ] ; plot( 0:d:1, y )
 %
 % solve: F(x) = G * x - b + 2 [sinh(x_i)]_i
 %        b(1) = -V, b(N) = V, b({else}) = 0.
@@ -38,63 +38,79 @@ b(1,1) = -V ;
 b(N,1) = V ;
 
 deltaXsq = 1/(N+1)^2 ;
-% H(x) = 2 * deltaXsq * sinh( x(1:N) ) 
+hcoeff = 2 * deltaXsq ;
+% H(x) = hcoeff * sinh( x(1:N) ) 
 % F(x) = G * x - b + H(x)
-%      = G * x - b + 2 * deltaXsq * sinh( x(1:N) )
+%      = G * x - b + hcoeff * sinh( x(1:N) )
 
-fp = 2 * deltaXsq ;
+disp( 'i & lambda & max |x_i| & |F| & |dx| & |dx|/|x|' ) ;
 
-disp( 'i & alpha & max |x_i| & |F| & |dx| & |dx|/|x|' ) ;
-iter = 0 ;
-F = G * x - b + fp * sinh( x(1:N) ) ;
-dxSquared = 0 ;
-relDiffSqX = 0 ;
-normSqF = F.' * F ;
-
-while ( iter < maxIter )
-   JF = zeros( N ) ;
-   for i = 1:N
-      JF(i,i) = fp * cosh( x(i) ) ;
-   end
-   J = G + JF ;
-
-   delta = (-J)\F ;
-   
-%   Gdelta = G * delta ;
-%   Hprime = zeros(N, 1) ;
-%
-%   % can this statement be vectorized like sinh( x(1:N) ) ?
-%   for i = 1:N
-%      Hprime(i) = fp * x(i) * cosh( x(i) ) ;
-%   end
-%
-%   Fprime = Gdelta + Hprime ;
-%
-%   alpha = -(F.' * Fprime) / ( Gdelta.' * Fprime) ;
-alpha=1;
-
-%   if ( ( 0 == mod(iter, 50) ) || (iter < 10) )
-      disp( sprintf( '%d & %f & %f & %2.1e & %2.1e & %2.1e \\\\ \\hline', iter, alpha, max(abs(x)), norm(F), sqrt(dxSquared), sqrt(relDiffSqX) ) ) ;
-%   end
-
-   lastX = x ;
-   x = lastX + alpha * delta ;
-
-% If x(i) gets large (~800), this will trigger: isinf( sinh(800) ) = 1.
-   H = fp * sinh( x(1:N) ) ;
-
-   F = G * x - b + H ;
-   normSqF = F.' * F ;
-   iter = iter + 1 ;
-
-   dx = x - lastX ;
-   dxSquared = dx.' * dx ;
-   relDiffSqX = dxSquared/(lastX.' * lastX) ;
-   lastX = x ;
-
-   if ( (normSqF < tolF) && (dxSquared < tolX) && (relDiffSqX < tolRel) )
-      break ;
-   end
+if ( useStepping )
+   numSteps = 10 ;
+   lambdas = 1/10:1/10:1 ;
+else
+   lambdas = [ 1 ] ;
 end
 
-disp( sprintf( '%d & %f & %f & %2.1e & %2.1e & %2.1e \\\\ \\hline', iter, alpha, max(abs(x)), norm(F), sqrt(dxSquared), sqrt(relDiffSqX) ) ) ;
+iter = 0 ;
+totalIters = 0 ;
+for lambda = lambdas
+   F = G * x - lambda * b + hcoeff * sinh( x(1:N) ) ;
+   dxSquared = 0 ;
+   relDiffSqX = 0 ;
+   normSqF = F.' * F ;
+
+   while ( iter < maxIter )
+      JF = zeros( N ) ;
+      for i = 1:N
+         JF(i,i) = hcoeff * cosh( x(i) ) ;
+      end
+      J = G + JF ;
+
+      delta = (-J)\F ;
+      if ( 0 )
+   %      Gdelta = G * delta ;
+   %      Hprime = zeros(N, 1) ;
+   %
+   %      % can this statement be vectorized like sinh( x(1:N) ) ?
+   %      for i = 1:N
+   %         Hprime(i) = hcoeff * x(i) * cosh( x(i) ) ;
+   %      end
+   %
+   %      Fprime = Gdelta + Hprime ;
+   %
+   %      alpha = -(F.' * Fprime) / ( Gdelta.' * Fprime) ;
+
+         alpha = -F.' * F/(F.' * delta) ;
+      else
+         alpha = 1 ;
+      end
+
+   %   if ( ( 0 == mod(iter, 50) ) || (iter < 10) )
+         disp( sprintf( '%d & %f & %f & %2.1e & %2.1e & %2.1e \\\\ \\hline', iter, lambda, max(abs(x)), norm(F), sqrt(dxSquared), sqrt(relDiffSqX) ) ) ;
+   %   end
+
+      lastX = x ;
+      x = lastX + alpha * delta ;
+
+   % If x(i) gets large (~800), this will trigger: isinf( sinh(800) ) = 1.
+      H = hcoeff * sinh( x(1:N) ) ;
+
+      F = G * x - lambda * b + H ;
+      normSqF = F.' * F ;
+      iter = iter + 1 ;
+
+      dx = x - lastX ;
+      dxSquared = dx.' * dx ;
+      relDiffSqX = dxSquared/(lastX.' * lastX) ;
+      lastX = x ;
+
+      if ( (normSqF < tolF) && (dxSquared < tolX) && (relDiffSqX < tolRel) )
+         break ;
+      end
+   end
+
+   disp( sprintf( '%d & %f & %f & %2.1e & %2.1e & %2.1e \\\\ \\hline', iter, lambda, max(abs(x)), norm(F), sqrt(dxSquared), sqrt(relDiffSqX) ) ) ;
+
+   totalIters = totalIters + 1 ;
+end
