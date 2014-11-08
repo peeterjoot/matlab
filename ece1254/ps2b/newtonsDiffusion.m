@@ -55,10 +55,14 @@ hcoeff = 2 * deltaXsq ;
 % F(x) = G * x - b + H(x)
 %      = G * x - b + hcoeff * sinh( x(1:N) )
 
-%disp( 'i & lambda & alpha & max |x_i| & Newton |F| & Damped |F| & |dx| & |dx|/|x|' ) ;
-disp( 'i & lambda & alpha & max |x_i| & Newton |F| & |dx| & |dx|/|x|' ) ;
+disp( 'i & lambda & alpha & max |x_i| & |F| & |dx| & |dx|/|x|' ) ;
 
 lambdas = 1/numStepIntervals:1/numStepIntervals:1 ;
+
+beta = norm( full(inv(G)), 2 ) ;
+rho = hcoeff * V ;
+%maxForNewtons = 1/(beta^2 * rho) ;
+maxForNewtons = 1/(beta * rho) ;
 
 totalIters = 0 ;
 for lambda = lambdas
@@ -79,34 +83,22 @@ for lambda = lambdas
       % adjustment for standard Newton's:
       delta = (-J)\F ;
 
-      % damping adjustment if desirable:
-      %alpha = -normF^2/(F.' * delta) ;
-
       lastX = x ;
 
-      %dampedX = lastX + alpha * delta ;
-      %dampedH = hcoeff * sinh( dampedX(1:N) ) ;
-      %dampedF = G * dampedX - lambda * b + dampedH ;
-      %normDampedF = norm( dampedF ) ;
-
-      newtonsX = lastX + delta ;
-      newtonsH = hcoeff * sinh( newtonsX(1:N) ) ;
-      newtonsF = G * newtonsX - lambda * b + newtonsH ;
-      normNewtonsF = norm( newtonsF ) ;
-
-      %if ( normNewtonsF < normDampedF )
-         x = newtonsX ;
-         F = newtonsF ;
-         normF = normNewtonsF ;
+      if ( normF <= maxForNewtons )
          alpha = 1 ;
-      %else
-      %   x = dampedX ;
-      %   F = dampedF ;
-      %   normF = normDampedF ;
-      %end
+      else
+         alpha = maxForNewtons / normF ;
+      end
 
-      %disp( sprintf( '%d & %f & %f & %f & %2.1e & %2.1e & %2.1e & %2.1e \\\\ \\hline', iter, lambda, alpha, max(abs(x)), normNewtonsF, normDampedF, normDx, relDiffX ) ) ;
-      disp( sprintf( '%d & %f & %f & %f & %2.1e & %2.1e & %2.1e \\\\ \\hline', iter, lambda, alpha, max(abs(x)), normNewtonsF, normDx, relDiffX ) ) ;
+      x = lastX + alpha * delta ;
+      H = hcoeff * sinh( x(1:N) ) ;
+      F = G * x - lambda * b + H ;
+      normF = norm( F ) ;
+
+      if ( 0 == mod(iter, 50) || iter < 10 )
+         disp( sprintf( '%d & %f & %f & %f & %2.1e & %2.1e & %2.1e \\\\ \\hline', iter, lambda, alpha, max(abs(x)), normF, normDx, relDiffX ) ) ;
+      end
 
       iter = iter + 1 ;
       totalIters = totalIters + 1 ;
@@ -120,6 +112,5 @@ for lambda = lambdas
       end
    end
 
-   %disp( sprintf( '%d & %f & %f & %f & %2.1e & %2.1e & %2.1e & %2.1e \\\\ \\hline', iter, lambda, alpha, max(abs(x)), normNewtonsF, normDampedF, normDx, relDiffX ) ) ;
-   disp( sprintf( '%d & %f & %f & %f & %2.1e & %2.1e & %2.1e \\\\ \\hline', iter, lambda, alpha, max(abs(x)), normNewtonsF, normDx, relDiffX ) ) ;
+   disp( sprintf( '%d & %f & %f & %f & %2.1e & %2.1e & %2.1e \\\\ \\hline', iter, lambda, alpha, max(abs(x)), normF, normDx, relDiffX ) ) ;
 end
