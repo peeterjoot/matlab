@@ -55,7 +55,8 @@ hcoeff = 2 * deltaXsq ;
 % F(x) = G * x - b + H(x)
 %      = G * x - b + hcoeff * sinh( x(1:N) )
 
-disp( 'i & lambda & max |x_i| & |F| & |dx| & |dx|/|x|' ) ;
+%disp( 'i & lambda & alpha & max |x_i| & Newton |F| & Damped |F| & |dx| & |dx|/|x|' ) ;
+disp( 'i & lambda & alpha & max |x_i| & Newton |F| & |dx| & |dx|/|x|' ) ;
 
 lambdas = 1/numStepIntervals:1/numStepIntervals:1 ;
 
@@ -69,55 +70,56 @@ for lambda = lambdas
    iter = 0 ;
    while ( iter < maxIter )
       JF = zeros( N ) ;
+      % FIXME: how can this be vectorized?
       for i = 1:N
          JF(i,i) = hcoeff * cosh( x(i) ) ;
       end
       J = G + JF ;
 
+      % adjustment for standard Newton's:
       delta = (-J)\F ;
-      if ( 0 )
-   %      Gdelta = G * delta ;
-   %      Hprime = zeros(N, 1) ;
-   %
-   %      % can this statement be vectorized like sinh( x(1:N) ) ?
-   %      for i = 1:N
-   %         Hprime(i) = hcoeff * x(i) * cosh( x(i) ) ;
-   %      end
-   %
-   %      Fprime = Gdelta + Hprime ;
-   %
-   %      alpha = -(F.' * Fprime) / ( Gdelta.' * Fprime) ;
 
-         alpha = -F.' * F/(F.' * delta) ;
-      else
-         alpha = 1 ;
-      end
-
-   %   if ( ( 0 == mod(iter, 50) ) || (iter < 10) )
-         disp( sprintf( '%d & %f & %f & %2.1e & %2.1e & %2.1e \\\\ \\hline', iter, lambda, max(abs(x)), norm(F), normDx, relDiffX ) ) ;
-   %   end
+      % damping adjustment if desirable:
+      %alpha = -normF^2/(F.' * delta) ;
 
       lastX = x ;
-      x = lastX + alpha * delta ;
 
-   % If x(i) gets large (~800), this will trigger: isinf( sinh(800) ) = 1.
-      H = hcoeff * sinh( x(1:N) ) ;
+      %dampedX = lastX + alpha * delta ;
+      %dampedH = hcoeff * sinh( dampedX(1:N) ) ;
+      %dampedF = G * dampedX - lambda * b + dampedH ;
+      %normDampedF = norm( dampedF ) ;
 
-      F = G * x - lambda * b + H ;
-      normF = norm( F ) ;
+      newtonsX = lastX + delta ;
+      newtonsH = hcoeff * sinh( newtonsX(1:N) ) ;
+      newtonsF = G * newtonsX - lambda * b + newtonsH ;
+      normNewtonsF = norm( newtonsF ) ;
+
+      %if ( normNewtonsF < normDampedF )
+         x = newtonsX ;
+         F = newtonsF ;
+         normF = normNewtonsF ;
+         alpha = 1 ;
+      %else
+      %   x = dampedX ;
+      %   F = dampedF ;
+      %   normF = normDampedF ;
+      %end
+
+      %disp( sprintf( '%d & %f & %f & %f & %2.1e & %2.1e & %2.1e & %2.1e \\\\ \\hline', iter, lambda, alpha, max(abs(x)), normNewtonsF, normDampedF, normDx, relDiffX ) ) ;
+      disp( sprintf( '%d & %f & %f & %f & %2.1e & %2.1e & %2.1e \\\\ \\hline', iter, lambda, alpha, max(abs(x)), normNewtonsF, normDx, relDiffX ) ) ;
+
       iter = iter + 1 ;
       totalIters = totalIters + 1 ;
 
       dx = x - lastX ;
       normDx = norm( dx ) ;
       relDiffX = normDx/norm( lastX ) ;
-      lastX = x ;
 
       if ( (normF < tolF) && (normDx < tolX) && (relDiffX < tolRel) )
          break ;
       end
    end
 
-   disp( sprintf( '%d & %f & %f & %2.1e & %2.1e & %2.1e \\\\ \\hline', iter, lambda, max(abs(x)), normF, normDx, relDiffX ) ) ;
-
+   %disp( sprintf( '%d & %f & %f & %f & %2.1e & %2.1e & %2.1e & %2.1e \\\\ \\hline', iter, lambda, alpha, max(abs(x)), normNewtonsF, normDampedF, normDx, relDiffX ) ) ;
+   disp( sprintf( '%d & %f & %f & %f & %2.1e & %2.1e & %2.1e \\\\ \\hline', iter, lambda, alpha, max(abs(x)), normNewtonsF, normDx, relDiffX ) ) ;
 end
