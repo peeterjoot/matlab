@@ -1,18 +1,22 @@
-function [x, F, normF, normDx, totalIters, deltaX, beta, G] = newtonsDiffusion( N, V, tolF, tolX, tolRel, maxIter, numStepIntervals, noDamping )
+function [x, r] = newtonsDiffusion( N, V, tolF, tolX, tolRel, maxIter, numStepIntervals, noDamping )
 % sample calls:
 % 
-% V=1;ee=1e-6;[x, F, nF, dx, i, d, nj] = newtonsDiffusion( 100, V, ee, ee, ee, 50, 1, 0 ) ; y = [ -V;x;V ] ; plot( 0:d:1, y )
-% (. iters)
+% V=1;ee=1e-6;[x, r] = newtonsDiffusion( 100, V, ee, ee, ee, 500, 1, 1 ) ; y = [ -V;x;V ] ; plot( 0:r.deltaX:1, y ) ; xlabel( 'x' ) ; ylabel( '\psi(x)' ) ;
+% (4 iters)
 %
-% V=20;ee=1e-6;[x, F, nF, dx, i, d, nj] = newtonsDiffusion( 100, V, ee, ee, ee, 50, 1, 0 ) ; y = [ -V;x;V ] ; plot( 0:d:1, y )
-% (. iters)
+% V=20;ee=1e-6;[x, r] = newtonsDiffusion( 100, V, ee, ee, ee, 500, 1, 0 ) ; y = [ -V;x;V ] ; plot( 0:r.deltaX:1, y )
+% (8 iters)
+% V=20;ee=1e-6;[x, r] = newtonsDiffusion( 100, V, ee, ee, ee, 500, 1, 1 ) ; y = [ -V;x;V ] ; plot( 0:r.deltaX:1, y )
+% (16 iters)
 %
-% V=100;ee=1e-6;[x, F, nF, dx, i, d, nj] = newtonsDiffusion( 100, V, ee, ee, ee, 500, 1, 0 ) ; y = [ -V;x;V ] ; plot( 0:d:1, y )
-% (. iters)
-% V=100;ee=1e-6;[x, F, nF, dx, i, d, nj] = newtonsDiffusion( 100, V, ee, ee, ee, 500, 5, 0 ) ; y = [ -V;x;V ] ; plot( 0:d:1, y )
-% (. iters)
-% V=100;ee=1e-6;[x, F, nF, dx, i, d, nj] = newtonsDiffusion( 100, V, ee, ee, ee, 500, 5, 1 ) ; y = [ -V;x;V ] ; plot( 0:d:1, y )
-% (. iters)
+% V=100;ee=1e-6;[x, r] = newtonsDiffusion( 100, V, ee, ee, ee, 500, 1, 1 ) ; y = [ -V;x;V ] ; plot( 0:r.deltaX:1, y )
+% (91 iters)
+% V=100;ee=1e-6;[x, r] = newtonsDiffusion( 100, V, ee, ee, ee, 500, 1, 0 ) ; y = [ -V;x;V ] ; plot( 0:r.deltaX:1, y )
+% (89 iters)
+% V=100;ee=1e-6;[x, r] = newtonsDiffusion( 100, V, ee, ee, ee, 500, 5, 0 ) ; y = [ -V;x;V ] ; plot( 0:r.deltaX:1, y )
+% (100 iters)
+% V=100;ee=1e-6;[x, r] = newtonsDiffusion( 100, V, ee, ee, ee, 500, 5, 1 ) ; y = [ -V;x;V ] ; plot( 0:r.deltaX:1, y )
+% (37 iters)
 %
 % solve: F(x) = G * x - b + 2 [sinh(x_i)]_i
 %        b(1) = -V, b(N) = V, b({else}) = 0.
@@ -39,43 +43,46 @@ function [x, F, normF, normDx, totalIters, deltaX, beta, G] = newtonsDiffusion( 
 %
 % returns:
 %    x: solution vector.
-%    F: value of (vector) function at end of the iteration.
-%    iter: last number of iterations
-%    normF: ||F(x)|| at the end of the iteration.
-%    normDx: ||x|| at the end of the iteration.
-%    beta: damping factor
-%    G: linear portion of the nodal matrix.
+%    r: A struct of various auxillary things to return of potential interest
+%       r.F: value of (vector) function at end of the iteration.
+%       r.totalIterations: total number of iterations
+%       r.normF: ||F(x)|| at the end of the iteration.
+%       r.normDx: ||x|| at the end of the iteration.
+%       r.beta: damping factor
+%       r.G: linear portion of the nodal matrix.
+
+r = struct( 'allX', {} ) ;
 
 nOnes = ones( N, 1 ) ;
 G = sparse( diag(2 * nOnes, 0) - diag(nOnes(1:N-1), -1) - diag(nOnes(1:N-1), 1) ) ;
 b = zeros( N, 1 ) ;
 x = b ;
+r(1).allX = x ;
 
 b(1,1) = -V ;
 b(N,1) = V ;
 
-deltaX = 1/(N+1) ;
-deltaXsq = deltaX * deltaX ;
+r.deltaX = 1/(N+1) ;
+deltaXsq = r.deltaX * r.deltaX ;
 hcoeff = 2 * deltaXsq ;
 % H(x) = hcoeff * sinh( x(1:N) ) 
 % F(x) = G * x - b + H(x)
 %      = G * x - b + hcoeff * sinh( x(1:N) )
 
-disp( 'i & lambda & alpha & max |x_i| & |F| & |dx| & |dx|/|x|' ) ;
+trace( 'i & lambda & alpha & max |x_i| & |F| & |dx| & |dx|/|x|' ) ;
 
 lambdas = 1/numStepIntervals:1/numStepIntervals:1 ;
 
-beta = sqrt(norm( full(inv(G)), 2 )) ;
+r.beta = sqrt(norm( full(inv(G)), 2 )) ;
 rho = hcoeff * V ;
-%maxForNewtons = 1/(beta^2 * rho) ;
-maxForNewtons = 1/(beta * rho) ;
+maxForNewtons = 1/(r.beta * rho) ;
 
-totalIters = 0 ;
+r.totalIterations = 0 ;
 for lambda = lambdas
    F = G * x - lambda * b + hcoeff * sinh( x(1:N) ) ;
-   normDx = 0 ;
-   relDiffX = 0 ;
-   normF = norm( F ) ;
+   r.normDx = 0 ;
+   r.relDiffX = 0 ;
+   r.normF = norm( F ) ;
 
    iter = 0 ;
    while ( iter < maxIter )
@@ -91,32 +98,36 @@ for lambda = lambdas
 
       lastX = x ;
 
-      if ( (normF <= maxForNewtons) || noDamping )
+      if ( (r.normF <= maxForNewtons) || noDamping )
          alpha = 1 ;
       else
-         alpha = maxForNewtons / normF ;
+         alpha = maxForNewtons / r.normF ;
       end
 
       x = lastX + alpha * delta ;
+      r.allX(:,end+1) = x ;
       H = hcoeff * sinh( x(1:N) ) ;
       F = G * x - lambda * b + H ;
-      normF = norm( F ) ;
+      r.normF = norm( F ) ;
 
-%      if ( 0 == mod(iter, 50) || iter < 10 )
-         disp( sprintf( '%d & %f & %f & %f & %2.1e & %2.1e & %2.1e \\\\ \\hline', iter, lambda, alpha, max(abs(x)), normF, normDx, relDiffX ) ) ;
-%      end
+      if ( 0 == mod(iter, 10) || iter < 10 || iter > 80 )
+         trace( sprintf( '%d & %f & %f & %f & %2.1e & %2.1e & %2.1e \\\\ \\hline', iter, lambda, alpha, max(abs(x)), r.normF, r.normDx, r.relDiffX ) ) ;
+      end
 
       iter = iter + 1 ;
-      totalIters = totalIters + 1 ;
+      r.totalIterations = r.totalIterations + 1 ;
 
       dx = x - lastX ;
-      normDx = norm( dx ) ;
-      relDiffX = normDx/norm( lastX ) ;
+      r.normDx = norm( dx ) ;
+      r.relDiffX = r.normDx/norm( lastX ) ;
 
-      if ( (normF < tolF) && (normDx < tolX) && (relDiffX < tolRel) )
+      if ( (r.normF < tolF) && (r.normDx < tolX) && (r.relDiffX < tolRel) )
          break ;
       end
    end
 
-   disp( sprintf( '%d & %f & %f & %f & %2.1e & %2.1e & %2.1e \\\\ \\hline', iter, lambda, alpha, max(abs(x)), normF, normDx, relDiffX ) ) ;
+   trace( sprintf( '%d & %f & %f & %f & %2.1e & %2.1e & %2.1e \\\\ \\hline', iter, lambda, alpha, max(abs(x)), r.normF, r.normDx, r.relDiffX ) ) ;
 end
+
+r.F = F ;
+r.G = G ;
