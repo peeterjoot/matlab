@@ -1,0 +1,228 @@
+{
+   DATE => 'Nov 2, 2014',
+   path => 'ece1254/ps1/backSubst.m',
+   WHAT => qq(backSubst performs a back substitution returning x for the system U x = b, where U is upper triangular and has no zeros on the diagonal.)
+},
+{
+   DATE => 'Oct 11, 2014',
+   path => 'ece1254/ps1/changeDebug.m',
+   WHAT => qq(enable or disable trace)
+},
+{
+   DATE => 'Oct 11, 2014',
+   path => 'ece1254/ps1/changeTrace.m',
+   WHAT => qq(enable or disable trace)
+},
+{
+   DATE => 'Oct 11, 2014',
+   path => 'ece1254/ps1/disableDebug.m',
+   WHAT => qq(disable debug mode.  This sets a global debug variable to zero so that calls to trace don't print anything.)
+},
+{
+   DATE => 'Oct 11, 2014',
+   path => 'ece1254/ps1/disableTrace.m',
+   WHAT => qq(disable debug tracing.
+Sets a global trace variable to zero so that calls to trace don't print anything.
+)
+},
+{
+   DATE => 'Oct 11, 2014',
+   path => 'ece1254/ps1/enableDebug.m',
+   WHAT => qq(
+enable debug mode.
+Sets a global debug variable to non-zero so that calls to verify( ... ) don't print anything.)
+},
+{
+   DATE => 'Oct 11, 2014',
+   path => 'ece1254/ps1/enableTrace.m',
+   WHAT => qq(enable debug tracing.
+Sets a global trace variable to non-zero so that calls to trace( ... ) don't print anything.)
+},
+{
+   DATE => 'Oct 11, 2014',
+   path => 'ece1254/ps1/findMaxIndexOfColumnMatrix.m',
+   WHAT => qq(findMaxIndexOfColumnMatrix finds the index of the pivot element, the element with the biggest absolute value.)
+},
+{
+   DATE => 'Nov 2, 2014',
+   path => 'ece1254/ps1/forwardSubst.m',
+   WHAT => qq(forwardSubst performs a back substitution returning x for the system L x = b, where L is lower triangular and has no zeros on the diagonal.)
+},
+{
+   DATE => 'Oct 14, 2014',
+   path => 'ece1254/ps1/generateHeatNetlist.m',
+   WHAT => qq(A small matlab function that generates a netlist for the heat network in ps1 p3a.)
+},
+{
+   DATE => 'Oct 14, 2014',
+   path => 'ece1254/ps1/generateResistorGridNetlist.m',
+   WHAT => qq(a small matlab function that generates a netlist for a network made by:
+N x N square grid of resistors of value R, where N is the number of...)
+},
+{
+   DATE => 'Oct 11, 2014',
+   path => 'ece1254/ps1/isDebugEnabled.m',
+   WHAT => qq(check if debug mode is enabled.  If neither enableDebug nor disableDebug has been called, this 
+disable debug modes.)
+},
+{
+   DATE => 'Oct 14, 2014',
+   path => 'ece1254/ps1/NodalAnalysis.m',
+   WHAT => qq(NodalAnalysis generates the MNA, modified nodal analysis, equations from a text file.)
+},
+{
+   DATE => 'Nov 2, 2014',
+   path => 'ece1254/ps1/noPivotLU.m',
+   WHAT => qq(noPivotLU performs a, not in place, LU factorization of the input matrix, producing the factors: M = L U,
+where L and U are lower and upper triangular respectively.)
+},
+{
+   DATE => 'Oct 14, 2014',
+   path => 'ece1254/ps1/plotHeatQ.m',
+   WHAT => qq(plot the netlist results for ps1 p3b, and p3d.)
+},
+{
+   DATE => 'Oct 14, 2014',
+   path => 'ece1254/ps1/problem2driver.m',
+   WHAT => qq(driver for ps1 problem 2, part a and b.)
+},
+{
+   DATE => 'Oct 14, 2014',
+   path => 'ece1254/ps1/ps1d.m',
+   WHAT => qq(driver that calculates an LU factorization based solution for ps3.p1, and compares to the direct matlab solution)
+},
+{
+   DATE => 'Oct 11, 2014',
+   path => 'ece1254/ps1/tests/fit.m',
+   WHAT => qq(polynomial fitting experimental code)
+},
+{
+   DATE => 'Oct 11, 2014',
+   path => 'ece1254/ps1/tests/verifyUpperTriangular.m',
+   WHAT => qq(unit tests for verifyUpperTriangular function)
+},
+{
+   DATE => 'Oct 11, 2014',
+   path => 'ece1254/ps1/tests/withPivotLU.m',
+   WHAT => qq(unit tests for withPivotLU function)
+},
+{
+   DATE => 'Oct 11, 2014',
+   path => 'ece1254/ps1/trace.m',
+   WHAT => qq(trace a string.  If enableTrace has been called, and disableTrace has not, then the value of the string will be printed following a 'debug: ' prefix.)
+},
+{
+   DATE => 'Oct 11, 2014',
+   path => 'ece1254/ps1/verifyUpperTriangular.m',
+   WHAT => qq(verifyUpperTriangular produces an error if the matrix U is not upper triangular within precision epsilon.)
+},
+{
+   DATE => 'Oct 14, 2014',
+   path => 'ece1254/ps1/withPivotLU.m',
+   WHAT => qq(withPivotLU performs a not in place LU factorization of the input matrix, producing the factors: M = L U, where L' = P L and U are lower and upper triangular respectively, and P is a permutation matrix.)
+},
+{
+   DATE => 'Nov 2, 2014',
+   path => 'ece1254/ps2a/compareBD.m',
+   WHAT => qq(compare the solutions for the transformed and original circuits of ps2 parts b and d.)
+},
+{
+   DATE => 'Oct 31, 2014',
+   path => 'ece1254/ps2a/conjgrad.m',
+   WHAT => qq(conjgrad)
+},
+{
+   DATE => 'Nov 2, 2014',
+   path => 'ece1254/ps2a/conjugateGradientPainlessB2.m',
+   WHAT => qq(conjugateGradientPainlessB2)
+},
+{
+   DATE => 'Oct 31, 2014',
+   path => 'ece1254/ps2a/conjugateGradientPainlessB3.m',
+   WHAT => qq(conjugateGradientPainlessB3)
+},
+{
+   DATE => 'Nov 2, 2014',
+   path => 'ece1254/ps2a/conjugateGradientQuarteroniPrecond.m',
+   WHAT => qq(conjugateGradientQuarteroniPrecond)
+},
+{
+   DATE => 'Nov 2, 2014',
+   path => 'ece1254/ps2a/generateNodalEquationsPartEH.m',
+   WHAT => qq(generateNodalEquationsPartEH)
+},
+{
+   DATE => 'Nov 2, 2014',
+   path => 'ece1254/ps2a/generateResistorGridNetlist.m',
+   WHAT => qq(generateResistorGridNetlist)
+},
+{
+   DATE => 'Oct 29, 2014',
+   path => 'ece1254/ps2a/NodalAnalysis.m',
+   WHAT => qq(NodalAnalysis)
+},
+{
+   DATE => 'Nov 2, 2014',
+   path => 'ece1254/ps2a/partEcollectTimings.m',
+   WHAT => qq(partEcollectTimings)
+},
+{
+   DATE => 'Nov 2, 2014',
+   path => 'ece1254/ps2a/partH.m',
+   WHAT => qq(partH)
+},
+{
+   DATE => 'Nov 2, 2014',
+   path => 'ece1254/ps2a/tests/lutest.m',
+   WHAT => qq(lutest)
+},
+{
+   DATE => 'Nov 2, 2014',
+   path => 'ece1254/ps2a/tridiagonal.m',
+   WHAT => qq(tridiagonal)
+},
+{
+   DATE => 'Nov 2, 2014',
+   path => 'ece1254/ps2a/usenetlistProblemBD.m',
+   WHAT => qq(usenetlistProblemBD)
+},
+{
+   DATE => 'Nov 9, 2014',
+   path => 'ece1254/ps2b/countItersAndPlot.m',
+   WHAT => qq(countItersAndPlot)
+},
+{
+   DATE => 'Nov 3, 2014',
+   path => 'ece1254/ps2b/ddiode.m',
+   WHAT => qq(ddiode)
+},
+{
+   DATE => 'Nov 3, 2014',
+   path => 'ece1254/ps2b/diode.m',
+   WHAT => qq(diode)
+},
+{
+   DATE => 'Nov 2, 2014',
+   path => 'ece1254/ps2b/dplot.m',
+   WHAT => qq(dplot)
+},
+{
+   DATE => 'Nov 9, 2014',
+   path => 'ece1254/ps2b/newtonsDiffusion.m',
+   WHAT => qq(newtonsDiffusion)
+},
+{
+   DATE => 'Nov 4, 2014',
+   path => 'ece1254/ps2b/newtonsDiode.m',
+   WHAT => qq(newtonsDiode)
+},
+{
+   DATE => 'Nov 5, 2014',
+   path => 'ece1254/ps2b/newtonsSquareroot.m',
+   WHAT => qq(newtonsSquareroot)
+},
+{
+   DATE => 'Nov 9, 2014',
+   path => 'ece1254/ps2b/quadraticDifferences.m',
+   WHAT => qq(quadraticDifferences)
+},
