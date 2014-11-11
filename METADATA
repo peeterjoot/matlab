@@ -1,3 +1,8 @@
+# generate this sort of template with:
+# ~/bin/mtcheck */*.m | tee x ; # say
+
+my @matlab =
+(
 {
    DATE => 'Nov 2, 2014',
    path => 'ece1254/ps1/backSubst.m',
@@ -51,12 +56,12 @@ Sets a global trace variable to non-zero so that calls to trace( ... ) don't pri
 {
    DATE => 'Oct 14, 2014',
    path => 'ece1254/ps1/generateHeatNetlist.m',
-   WHAT => qq(A small matlab function that generates a netlist for the heat network in ps1 p3a.)
+   WHAT => qq(A small Matlab function that generates a netlist for the heat network in ps1 p3a.)
 },
 {
    DATE => 'Oct 14, 2014',
    path => 'ece1254/ps1/generateResistorGridNetlist.m',
-   WHAT => qq(a small matlab function that generates a netlist for a network made by:
+   WHAT => qq(a small Matlab function that generates a netlist for a network made by:
 N x N square grid of resistors of value R, where N is the number of...)
 },
 {
@@ -89,7 +94,7 @@ where L and U are lower and upper triangular respectively.)
 {
    DATE => 'Oct 14, 2014',
    path => 'ece1254/ps1/ps1d.m',
-   WHAT => qq(driver that calculates an LU factorization based solution for ps3.p1, and compares to the direct matlab solution)
+   WHAT => qq(driver that calculates an LU factorization based solution for ps3.p1, and compares to the direct Matlab solution)
 },
 {
    DATE => 'Oct 11, 2014',
@@ -129,100 +134,109 @@ where L and U are lower and upper triangular respectively.)
 {
    DATE => 'Oct 31, 2014',
    path => 'ece1254/ps2a/conjgrad.m',
-   WHAT => qq(conjgrad)
+   WHAT => qq(A conjugate gradient implementation taken directly from 'Numerical Mathematics')
 },
 {
    DATE => 'Nov 2, 2014',
    path => 'ece1254/ps2a/conjugateGradientPainlessB2.m',
-   WHAT => qq(conjugateGradientPainlessB2)
+   WHAT => qq(A conjugate gradient implementation based on the pseudocode algorithm from Shewchuk's
+"An Introduction to the Conjugate Gradient Method Without the Agonizing Pain" appendix B.2)
 },
 {
    DATE => 'Oct 31, 2014',
    path => 'ece1254/ps2a/conjugateGradientPainlessB3.m',
-   WHAT => qq(conjugateGradientPainlessB3)
+   WHAT => qq(A conjugate gradient implementation based on the pseudocode algorithm from Shewchuk's
+"An Introduction to the Conjugate Gradient Method Without the Agonizing Pain" appendix B.3)
 },
 {
    DATE => 'Nov 2, 2014',
    path => 'ece1254/ps2a/conjugateGradientQuarteroniPrecond.m',
-   WHAT => qq(conjugateGradientQuarteroniPrecond)
+   WHAT => qq(A conjugate gradient implementation with preconditioning based on the algorithm from
+the algorithm in Quarteroni, et al's "Numerical Mathematics")
 },
 {
    DATE => 'Nov 2, 2014',
    path => 'ece1254/ps2a/generateNodalEquationsPartEH.m',
-   WHAT => qq(generateNodalEquationsPartEH)
+   WHAT => qq(Generate the modified nodal analysis equations G x = b, for the grid specified in ps2 problem 1 part a)
 },
 {
    DATE => 'Nov 2, 2014',
    path => 'ece1254/ps2a/generateResistorGridNetlist.m',
-   WHAT => qq(generateResistorGridNetlist)
+   WHAT => qq(Generate a resistor grid network for the problem of ps2a.  Relative to the network of the previous problem set, this one has a resistance from each node to ground, and also has a series resistance on the voltage source to ground.  An option to use a Norton equivalent current source for the voltage source is also provided, which allows the MNA matrix to be symmetric, which in turn allows CG methods to be used to solve)
 },
 {
    DATE => 'Oct 29, 2014',
    path => 'ece1254/ps2a/NodalAnalysis.m',
-   WHAT => qq(NodalAnalysis)
+   WHAT => qq(Based on NodalAnalysis.m from ps1, but generalized to allow alphanumeric labels)
 },
 {
    DATE => 'Nov 2, 2014',
    path => 'ece1254/ps2a/partEcollectTimings.m',
-   WHAT => qq(partEcollectTimings)
+   WHAT => qq(collect and plot timing info for all the different solution methods: CG, LU, ...)
 },
 {
    DATE => 'Nov 2, 2014',
    path => 'ece1254/ps2a/partH.m',
-   WHAT => qq(partH)
+   WHAT => qq(collect timing data for each of the part e solution methods with and without preconditioning, and optionally plotting the Gershgorin circles)
 },
 {
    DATE => 'Nov 2, 2014',
    path => 'ece1254/ps2a/tests/lutest.m',
-   WHAT => qq(lutest)
+   WHAT => qq(test driver to try Matlab builtin lu function.)
 },
 {
    DATE => 'Nov 2, 2014',
    path => 'ece1254/ps2a/tridiagonal.m',
-   WHAT => qq(tridiagonal)
+   WHAT => qq(extract just the tridiagonal subset of the matrix a, returning the result in sparse form)
 },
 {
    DATE => 'Nov 2, 2014',
    path => 'ece1254/ps2a/usenetlistProblemBD.m',
-   WHAT => qq(usenetlistProblemBD)
+   WHAT => qq(Solve the ps2a netlist with various methods)
 },
 {
    DATE => 'Nov 9, 2014',
    path => 'ece1254/ps2b/countItersAndPlot.m',
-   WHAT => qq(countItersAndPlot)
+   WHAT => qq(count the Newton's method iterations required to solve the ps2b diffusion problem 2.)
 },
 {
    DATE => 'Nov 3, 2014',
    path => 'ece1254/ps2b/ddiode.m',
-   WHAT => qq(ddiode)
+   WHAT => qq(derivative of the diode Newton's method function for ps2b problem 1.)
 },
 {
    DATE => 'Nov 3, 2014',
    path => 'ece1254/ps2b/diode.m',
-   WHAT => qq(diode)
+   WHAT => qq(The diode Newton's method function for ps2b problem 1.)
 },
 {
    DATE => 'Nov 2, 2014',
    path => 'ece1254/ps2b/dplot.m',
-   WHAT => qq(dplot)
+   WHAT => qq(Attempt to plot the diode function with Matlab.  Gave up and plotted it with Mathematica instead.)
 },
 {
    DATE => 'Nov 9, 2014',
    path => 'ece1254/ps2b/newtonsDiffusion.m',
-   WHAT => qq(newtonsDiffusion)
+   WHAT => qq(Implementation of Newton's method with and without stepping and damping for problem 2 of ps2b.)
 },
 {
    DATE => 'Nov 4, 2014',
    path => 'ece1254/ps2b/newtonsDiode.m',
-   WHAT => qq(newtonsDiode)
+   WHAT => qq(Implementation of Newton's method with and without stepping for problem 1 of ps2b.)
 },
 {
    DATE => 'Nov 5, 2014',
    path => 'ece1254/ps2b/newtonsSquareroot.m',
-   WHAT => qq(newtonsSquareroot)
+   WHAT => qq(Reference implementation of Newton's method for a square root computation.)
 },
 {
    DATE => 'Nov 9, 2014',
    path => 'ece1254/ps2b/quadraticDifferences.m',
-   WHAT => qq(quadraticDifferences)
+   WHAT => qq(Demonstrate quadratic convergence for the multivariable Newton's method of ps2b problem 2.)
 },
+) ; # @matlab
+
+   return @matlab ;
+}
+
+1 ;
