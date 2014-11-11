@@ -1,6 +1,8 @@
 # generate this sort of template with:
 # ~/bin/mtcheck */*.m | tee x ; # say
 
+sub matlabMeta
+{
 my @matlab =
 (
 {
