@@ -276,6 +276,7 @@ C = [] ;
 
    % have to adjust these sizes for sources, and voltage control sources
    G = zeros( maxNode + numAdditionalSources, maxNode + numAdditionalSources ) ;
+   C = zeros( maxNode + numAdditionalSources, maxNode + numAdditionalSources ) ;
    b = zeros( maxNode + numAdditionalSources, 1 ) ;
 
    % process the resistor lines:
@@ -300,6 +301,30 @@ C = [] ;
       end
       if ( minusNode )
          G( minusNode, minusNode ) = G( minusNode, minusNode ) + z ;
+      end
+   end
+
+   % process the capacitor lines:
+   labelNumber = 0 ;
+   for c = capLines
+      labelNumber = labelNumber + 1 ;
+      label     = capLables{labelNumber} ;
+      plusNode  = c(1) ;
+      minusNode = c(2) ;
+      cv        = c(3) ;
+
+      trace( sprintf( '%s %d,%d -> %d\n', label, plusNode, minusNode, cv ) ) ;
+
+      % insert the stamp:
+      if ( plusNode )
+         C( plusNode, plusNode ) = C( plusNode, plusNode ) + c ;
+         if ( minusNode )
+            C( plusNode, minusNode ) = C( plusNode, minusNode ) - c ;
+            C( minusNode, plusNode ) = C( minusNode, plusNode ) - c ;
+         end
+      end
+      if ( minusNode )
+         C( minusNode, minusNode ) = C( minusNode, minusNode ) + c ;
       end
    end
 
