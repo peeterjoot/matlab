@@ -23,13 +23,13 @@ my @matlab =
 {
    DATE => 'Oct 11, 2014',
    path => 'ece1254/ps1/disableDebug.m',
-   WHAT => qq(disable debug mode.  This sets a global debug variable to zero so that calls to trace don't print anything.)
+   WHAT => qq(disable debug mode.  This sets a global debug variable to zero so that calls to traceit don't print anything.)
 },
 {
    DATE => 'Oct 11, 2014',
    path => 'ece1254/ps1/disableTrace.m',
    WHAT => qq(disable debug tracing.
-Sets a global trace variable to zero so that calls to trace don't print anything.
+Sets a global trace variable to zero so that calls to traceit don't print anything.
 )
 },
 {
@@ -43,7 +43,7 @@ Sets a global debug variable to non-zero so that calls to verify( ... ) don't pr
    DATE => 'Oct 11, 2014',
    path => 'ece1254/ps1/enableTrace.m',
    WHAT => qq(enable debug tracing.
-Sets a global trace variable to non-zero so that calls to trace( ... ) don't print anything.)
+Sets a global trace variable to non-zero so that calls to traceit( ... ) don't print anything.)
 },
 {
    DATE => 'Oct 11, 2014',
@@ -115,7 +115,7 @@ where L and U are lower and upper triangular respectively.)
 },
 {
    DATE => 'Oct 11, 2014',
-   path => 'ece1254/ps1/trace.m',
+   path => 'ece1254/ps1/traceit.m',
    WHAT => qq(trace a string.  If enableTrace has been called, and disableTrace has not, then the value of the string will be printed following a 'debug: ' prefix.)
 },
 {
