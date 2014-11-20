@@ -47,7 +47,7 @@ function [G, C, B, xnames] = NodalAnalysis(filename)
 % 
 %   and current flows from node1 to node2.  Note that DC is just a keyword.
 %   Here value, a floating point numbrer, can be interpreted as a constant amplitude for the current,
-#   as scaled by a time dependent component of the full source vector u(t).
+%   as scaled by a time dependent component of the full source vector u(t).
 %
 % - A voltage source connected between the nodes node+ and node- is specified by the line
 % 
@@ -345,14 +345,14 @@ function [G, C, B, xnames] = NodalAnalysis(filename)
 
       % insert the stamp:
       if ( plusNode )
-         C( plusNode, plusNode ) = C( plusNode, plusNode ) + c ;
+         C( plusNode, plusNode ) = C( plusNode, plusNode ) + cv ;
          if ( minusNode )
-            C( plusNode, minusNode ) = C( plusNode, minusNode ) - c ;
-            C( minusNode, plusNode ) = C( minusNode, plusNode ) - c ;
+            C( plusNode, minusNode ) = C( plusNode, minusNode ) - cv ;
+            C( minusNode, plusNode ) = C( minusNode, plusNode ) - cv ;
          end
       end
       if ( minusNode )
-         C( minusNode, minusNode ) = C( minusNode, minusNode ) + c ;
+         C( minusNode, minusNode ) = C( minusNode, minusNode ) + cv ;
       end
    end
 
