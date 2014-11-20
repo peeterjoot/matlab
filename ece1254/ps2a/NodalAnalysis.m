@@ -46,7 +46,7 @@ function [G,b] = NodalAnalysis(filename)
 % and the last argument is the source gain.
 
    %enableTrace() ;
-   trace( ['filename: ', filename] ) ;
+   traceit( ['filename: ', filename] ) ;
 
    currentLines   = [] ;
    resistorLines  = [] ;
@@ -75,7 +75,7 @@ function [G,b] = NodalAnalysis(filename)
    while ~feof( fh )
       line = fgetl( fh ) ;
 
-      trace( ['line: ', line] ) ;
+      traceit( ['line: ', line] ) ;
 
       switch line(1:1)
       case 'R'
@@ -151,7 +151,7 @@ function [G,b] = NodalAnalysis(filename)
          voltageLines(:,end+1) = a ;
          voltageLables{end+1} = tmp{1} ;
       case '#'
-         trace( ['comment line: ', line ] ) ;
+         traceit( ['comment line: ', line ] ) ;
       case '.'
          if ( 0 == strncmp( line, '.end', 4 ) )
             error( 'NodalAnalysis:parseline', 'unexpected line "%s"', line ) ;
@@ -175,31 +175,31 @@ function [G,b] = NodalAnalysis(filename)
 %enableTrace() ;
    sz = size( resistorLines, 2 ) ;
    if ( sz )
-      trace( sprintf( 'resistorLines: %d', sz ) ) ;
+      traceit( sprintf( 'resistorLines: %d', sz ) ) ;
 
       allnodes = horzcat( allnodes, resistorLines(1:2, :) ) ;
    end
    sz = size( currentLines, 2 ) ;
    if ( sz )
-      trace( sprintf( 'currentLines: %d', sz ) ) ;
+      traceit( sprintf( 'currentLines: %d', sz ) ) ;
 
       allnodes = horzcat( allnodes, currentLines(1:2, :) ) ;
    end
    sz = size( voltageLines, 2 ) ;
    if ( sz )
-      trace( sprintf( 'voltageLines: %d', sz ) ) ;
+      traceit( sprintf( 'voltageLines: %d', sz ) ) ;
 
       allnodes = horzcat( allnodes, voltageLines(1:2, :) ) ;
    end
    sz = size( ampLines, 2 ) ;
    if ( sz )
-      trace( sprintf( 'ampLines: %d', sz ) ) ;
+      traceit( sprintf( 'ampLines: %d', sz ) ) ;
 
       allnodes = horzcat( allnodes, ampLines(1:2, :), ampLines(3:4, :) ) ;
    end
 %disableTrace() ;
    maxNode = max( max( allnodes ) ) ;
-   trace( [ 'maxnode: ', sprintf('%d', maxNode) ] ) ;
+   traceit( [ 'maxnode: ', sprintf('%d', maxNode) ] ) ;
 
    %
    % Done parsing the netlist file.
@@ -225,7 +225,7 @@ function [G,b] = NodalAnalysis(filename)
       minusNode = r(2) ;
       z         = 1/r(3) ;
 
-      trace( sprintf( '%s %d,%d -> %d\n', label, plusNode, minusNode, 1/z ) ) ;
+      traceit( sprintf( '%s %d,%d -> %d\n', label, plusNode, minusNode, 1/z ) ) ;
 
       % insert the stamp:
       if ( plusNode )
@@ -251,7 +251,7 @@ function [G,b] = NodalAnalysis(filename)
       minusNode   = v(2) ;
       value       = v(3) ;
   
-      trace( sprintf( '%s %d,%d -> %d\n', label, plusNode, minusNode, value ) ) ;
+      traceit( sprintf( '%s %d,%d -> %d\n', label, plusNode, minusNode, value ) ) ;
 
       if ( plusNode )
          G( r, plusNode ) = 1 ;
@@ -279,7 +279,7 @@ function [G,b] = NodalAnalysis(filename)
       minusControlNodeNum  = a(4) ;
       gain                 = a(5) ;
 
-      trace( sprintf( '%s %d,%d (%d,%d) -> %d\n', label, plusNodeNum, minusNodeNum, plusControlNodeNum, minusControlNodeNum, gain ) ) ;
+      traceit( sprintf( '%s %d,%d (%d,%d) -> %d\n', label, plusNodeNum, minusNodeNum, plusControlNodeNum, minusControlNodeNum, gain ) ) ;
 
       if ( minusNodeNum )
          G( r, minusNodeNum ) = 1 ;
@@ -306,7 +306,7 @@ function [G,b] = NodalAnalysis(filename)
       minusNode   = i(2) ;
       value       = i(3) ;
 
-      trace( sprintf( '%s %d,%d -> %d\n', label, plusNode, minusNode, value ) ) ;
+      traceit( sprintf( '%s %d,%d -> %d\n', label, plusNode, minusNode, value ) ) ;
 
       if ( plusNode )
          b( plusNode ) = b( plusNode ) - value ;

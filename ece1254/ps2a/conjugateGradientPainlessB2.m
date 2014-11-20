@@ -44,7 +44,7 @@ if ( size(P, 1) ~= 0 )
    b = pHalfInverse * b ;
 end
 
-trace( sprintf( 'N: %d', m ) ) ;
+traceit( sprintf( 'N: %d', m ) ) ;
 
 iMax = m ;
 r = b - G * x ;
@@ -82,7 +82,7 @@ while ( (i < iMax) && (relativeErr > epsilon) )
    i = i + 1 ; 
 
 %   if ( mod( i, 200 ) == 0 )
-%      trace( sprintf( '%d: deltaNew: %f, relErr: %f', i, deltaNew, relativeErr ) ) ;
+%      traceit( sprintf( '%d: deltaNew: %f, relErr: %f', i, deltaNew, relativeErr ) ) ;
 %   end
 end
 

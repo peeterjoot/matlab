@@ -4,7 +4,7 @@ function generateHeatNetlist(filename, N, doProblemA, withSineSource )
 % For details see the ps1 pdf.
 %
    %enableTrace() ;
-   trace( ['filename: ', filename] ) ;
+   traceit( ['filename: ', filename] ) ;
 
 % ps3.d.
 % attempt 1) commit: 44ff3320a9b53aaa2656d9e2b89cdd7b75f4c73a
@@ -77,7 +77,7 @@ function generateHeatNetlist(filename, N, doProblemA, withSineSource )
          si = 1 ;
       end
 
-      trace( sprintf('i: %d, xi: %f, si: %f, H/\\kappa_m = %f', i, xi, si, hAmp/ kappaM ) ) ;
+      traceit( sprintf('i: %d, xi: %f, si: %f, H/\\kappa_m = %f', i, xi, si, hAmp/ kappaM ) ) ;
       current = hAmp * deltaX * si * si / kappaM ;
      
       fprintf( fh, 'I%d 0 %d DC %f\n', i, i, current ) ;

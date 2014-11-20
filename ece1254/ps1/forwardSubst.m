@@ -42,9 +42,9 @@ for i = 1:m
       % and not a matrix) :
       dotprod = dot( x(1:i-1), L(i, 1:i-1) ) ;
    end
-   %trace( sprintf('%d; dotprod=%g, b_i=%g, U_ii=%g\n', i, dotprod, bi, uii ) ) ;
+   %traceit( sprintf('%d; dotprod=%g, b_i=%g, U_ii=%g\n', i, dotprod, bi, uii ) ) ;
 
    x( i, 1 ) = (bi - dotprod)/uii ;
 
-   %trace( sprintf('%d; x_i = %g\n', i, x(i, 1) ) ) ;
+   %traceit( sprintf('%d; x_i = %g\n', i, x(i, 1) ) ) ;
 end

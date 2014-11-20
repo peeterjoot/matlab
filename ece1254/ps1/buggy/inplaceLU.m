@@ -38,7 +38,7 @@ for i = 1:sz
    % - row 1, with columns ranging from 2:4 
    % - row 3, with columns ranging from 2:4 
 
-   trace( sprintf('i = %d, pivotRow = %d', i, rowContainingMaxElement) ) ;
+   traceit( sprintf('i = %d, pivotRow = %d', i, rowContainingMaxElement) ) ;
    if ( rowContainingMaxElement ~= i )
       % apply the operation to both U and the permutation matrix that is tracking the row exchanges.
 
@@ -47,7 +47,7 @@ for i = 1:sz
 
       permutationSign = -permutationSign ;
 
-      trace( sprintf( 'permutation sign: %d, pivot value: %d', permutationSign, M(i,i) ) ) ;
+      traceit( sprintf( 'permutation sign: %d, pivot value: %d', permutationSign, M(i,i) ) ) ;
    end 
 
    % now do the row operations:
@@ -59,7 +59,7 @@ for i = 1:sz
    for j = i+1:sz
       multiplier = M(j, i)/M(i, i) ;
 
-      trace( sprintf('iteration: %d, row %d, multiplier: %d', i, j, multiplier) ) ;
+      traceit( sprintf('iteration: %d, row %d, multiplier: %d', i, j, multiplier) ) ;
 
       M( j, i+1:sz ) = M( j, i+1:sz ) - multiplier * M( i, i+1:sz ) ;
       M( j, i ) = multiplier ;

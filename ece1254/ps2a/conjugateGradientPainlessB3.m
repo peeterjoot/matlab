@@ -22,7 +22,7 @@ end
 [mp, np] = size( P ) ;
 x = rand(m, 1) ;
 
-trace( sprintf( 'N: %d', m ) ) ;
+traceit( sprintf( 'N: %d', m ) ) ;
 
 % Algorithm from Shewchuk's
 % "An Introduction to the Conjugate Gradient Method Without the Agonizing Pain"
@@ -77,7 +77,7 @@ while ( (i < iMax) && (relativeErr > epsilon) )
    d = s + beta * d ;
 
    if ( mod( i, 200 ) == 0 )
-      trace( sprintf( '%d: deltaNew: %f, relErr: %f, deltaNought: %f', i, deltaNew, relativeErr, deltaNought ) ) ;
+      traceit( sprintf( '%d: deltaNew: %f, relErr: %f, deltaNought: %f', i, deltaNew, relativeErr, deltaNought ) ) ;
    end
 
    i = i + 1 ; 

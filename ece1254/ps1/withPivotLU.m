@@ -39,7 +39,7 @@ for i = 1:m-1
    % - row 1, with columns ranging from 2:4 
    % - row 3, with columns ranging from 2:4 
 
-   %trace( sprintf('i = %d, pivotRow = %d', i, rowContainingMaxElement) ) ;
+   %traceit( sprintf('i = %d, pivotRow = %d', i, rowContainingMaxElement) ) ;
    if ( rowContainingMaxElement ~= i )
       % apply the operation to both U and the permutation matrix that is tracking the row exchanges.
 
@@ -49,13 +49,13 @@ for i = 1:m-1
       L( 1:m, [ rowContainingMaxElement, i ] ) = L( 1:m, [ i, rowContainingMaxElement ] ) ;
       U( [ rowContainingMaxElement, i ], i:m ) = U( [ i, rowContainingMaxElement ], i:m ) ;
 
-      %%trace( sprintf('iter: %d.  pivot: %d <-> %d.  U = %s\n', i, rowContainingMaxElement, i, num2str( U ) ) ) ;
+      %%traceit( sprintf('iter: %d.  pivot: %d <-> %d.  U = %s\n', i, rowContainingMaxElement, i, num2str( U ) ) ) ;
 
       P( [ rowContainingMaxElement, i ], 1:m ) = P( [ i, rowContainingMaxElement ], 1:m ) ;
 
       permutationSign = -permutationSign ;
 
-      %trace( sprintf( 'permutation sign: %d, pivot value: %d', permutationSign, U(i,i) ) ) ;
+      %traceit( sprintf( 'permutation sign: %d, pivot value: %d', permutationSign, U(i,i) ) ) ;
    end 
 
    % now do the row operations:
@@ -68,7 +68,7 @@ for i = 1:m-1
       if ( abs(U(j, i)) > epsilon )
          multiplier = U(j, i)/U(i, i) ;
    
-         %trace( sprintf('iteration: %d, row %d, multiplier: %d', i, j, multiplier) ) ;
+         %traceit( sprintf('iteration: %d, row %d, multiplier: %d', i, j, multiplier) ) ;
   
          % rows: U_j -> U_j - m U_i 
          U( j, i ) = 0 ;
@@ -87,7 +87,7 @@ for i = 1:m-1
          end
 
       else
-         %trace( sprintf('iteration: %d, row %d, multiplier: <= epsilon', i, j) ) ;
+         %traceit( sprintf('iteration: %d, row %d, multiplier: <= epsilon', i, j) ) ;
       end
    end
 end

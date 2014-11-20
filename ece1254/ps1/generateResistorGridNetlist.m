@@ -15,7 +15,7 @@ function generateResistorGridNetlist(filename, N)
 %     http://www.solved-problems.com/circuits/circuits-articles/525/reference-node-node-voltages/
 
    %enableTrace() ;
-   trace( ['filename: ', filename] ) ;
+   traceit( ['filename: ', filename] ) ;
 
    resistorNumber = 0 ;
 
@@ -41,7 +41,7 @@ function generateResistorGridNetlist(filename, N)
    for j = 0:N-1
       resistorNumber = resistorNumber + 1 ;
       n = j * (N+1) + i ;
-      trace( sprintf('R%d: node: %d', resistorNumber, n) ) ;
+      traceit( sprintf('R%d: node: %d', resistorNumber, n) ) ;
 
       fprintf( fh, 'R%d %d %d 0.2\n', resistorNumber, n, n + N + 1 ) ;
    end

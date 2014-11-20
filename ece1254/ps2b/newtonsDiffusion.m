@@ -69,7 +69,7 @@ hcoeff = 2 * deltaXsq ;
 % F(x) = G * x - b + H(x)
 %      = G * x - b + hcoeff * sinh( x(1:N) )
 
-trace( 'i & lambda & alpha & max |x_i| & |F| & |dx| & |dx|/|x|' ) ;
+traceit( 'i & lambda & alpha & max |x_i| & |F| & |dx| & |dx|/|x|' ) ;
 
 lambdas = 1/numStepIntervals:1/numStepIntervals:1 ;
 
@@ -111,7 +111,7 @@ for lambda = lambdas
       r.normF = norm( F ) ;
 
       if ( 0 == mod(iter, 10) || iter < 10 || iter > 80 )
-         trace( sprintf( '%d & %f & %f & %f & %2.1e & %2.1e & %2.1e \\\\ \\hline', iter, lambda, alpha, max(abs(x)), r.normF, r.normDx, r.relDiffX ) ) ;
+         traceit( sprintf( '%d & %f & %f & %f & %2.1e & %2.1e & %2.1e \\\\ \\hline', iter, lambda, alpha, max(abs(x)), r.normF, r.normDx, r.relDiffX ) ) ;
       end
 
       iter = iter + 1 ;
@@ -126,7 +126,7 @@ for lambda = lambdas
       end
    end
 
-   trace( sprintf( '%d & %f & %f & %f & %2.1e & %2.1e & %2.1e \\\\ \\hline', iter, lambda, alpha, max(abs(x)), r.normF, r.normDx, r.relDiffX ) ) ;
+   traceit( sprintf( '%d & %f & %f & %f & %2.1e & %2.1e & %2.1e \\\\ \\hline', iter, lambda, alpha, max(abs(x)), r.normF, r.normDx, r.relDiffX ) ) ;
 end
 
 r.F = F ;

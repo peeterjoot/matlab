@@ -1,4 +1,4 @@
-FROMPS1 := changeTrace.m disableTrace.m enableTrace.m trace.m isDebugEnabled.m
+FROMPS1 := changeTrace.m disableTrace.m enableTrace.m traceit.m isDebugEnabled.m
 
 all : $(FROMPS1)
 
@@ -14,7 +14,7 @@ disableTrace.m : ../ps1/disableTrace.m
 enableTrace.m : ../ps1/enableTrace.m
 	cp $^ $@
 
-trace.m : ../ps1/trace.m
+traceit.m : ../ps1/traceit.m
 	cp $^ $@
 
 isDebugEnabled.m : ../ps1/isDebugEnabled.m
