@@ -2,75 +2,84 @@
 %
 % Assumptions (many of which would be probably be invalid for more general spice netlist files).
 %
-% 1) .end terminates the netlist
-% 2) The first line of netlist is a (title) comment unless it starts with R, I, V, E.
-% 3) The netlist file will always include a 0 (ground) node.  I haven't tried to check that.
-% 4) There are no gaps in the node numbers.
-% 5) I seem to recall that spice files allowed the constants to be specified with k, m, M modifiers.
-%    I haven't tried to support that.
-%
-
-function [G,C,b] = NodalAnalysis(filename)
+function [G, C, B, xnames] = NodalAnalysis(filename)
 % NodalAnalysis generates the modified nodal analysis (MNA) equations from a text file
 %
-% Write a MATLAB routine [G,b]=NodalAnalysis(filename)
-% that generates the modified nodal analysis (MNA) equations
-% Gx = b (1)
-% 
-% from a text file (netlist) that describes an electrical circuit made of resis-
-% tors, independent current sources, independent voltage sources, voltage-
-% controlled voltage sources. For the netlist, we use the widely-adopted
-% SPICE syntax. For each resistor, the file will contain a line in the form
-% 
-% Rlabel node1 node2 value
-% 
-% where "value" is the resistance value. Current sources are specified with
-% the line
-% 
-% Ilabel node1 node2 DC value
-% 
-% and current flows from node1 to node2. Note that DC is just a keyword.
-% A voltage source connected between the nodes node+ and node- is spec-
-% ified by the line
-% 
-% Vlabel node+ node- DC value
-% 
-% where node+ and node- identify, respectively, the node where the posi-
-% tive and "negative" terminal is connected to. A voltage-controlled volt-
-% age source, connected between the nodesnode+ and node-, is specified
-% by the line
-% 
-% Elabel node+ node- nodectrl+ nodectrl- gain
-% 
-% The controlling voltage is between the nodes nodectrl+ and nodectrl-,
-% and the last argument is the source gain.
-% 
-% --------------------
-% ps3a
-% --------------------
+% This routine [G, C, B, x] = NodalAnalysis(filename)
+% generates the modified nodal analysis (MNA) equations
 %
-% Modify the circuit simulator you developed for the previous assignments to handle capacitors
-% and inductors. The program should read a file with the list of: resistors, currents sources,
-% voltage sources, capacitors, and inductors. The syntax for specifying a capacitor is:
+%    G x(t) + C \dot{x}(t)= B u(t).
+%
+% Here the column vector u(t) contains all sources, and x(t) is a vector of all the sources.
+%
+% The returned value:
+%
+%   xnames
+%
+% is an array of strings representing the voltage, voltage source currents,
+% voltage controlled voltage source currents, and the inductor currents.
+%
+% These matrices are generated from a text file (netlist) that describes an
+% electrical circuit made of resistors, independent current sources,
+% independent voltage sources, voltage-controlled voltage sources, capacitors, and inductors. 
+%
+% For the netlist, we use the widely-adopted SPICE syntax, as simplified with the following assumptions:
+%
+%   - .end terminates the netlist
+%   - The first line of netlist is a (title) comment unless it starts with R, I, V, E, C, or L.
+%   - The netlist file will always include a 0 (ground) node.  There is no error checking to ensure that
+%     at least one element is connected to a ground node.
+%   - There are no gaps in the node numbers.
+%   - I seem to recall that spice files allowed the constants to be specified with k, m, M modifiers.
+%     I haven't tried to support that.
+%
+% The netlist elements lines are specified as follows:
+%
+% - For each resistor, the file will contain a line in the form
+% 
+%     Rlabel node1 node2 value
+% 
+%   where "value" is the resistance value.
+%
+% - Current sources are specified with the line
+% 
+%     Ilabel node1 node2 DC value
+% 
+%   and current flows from node1 to node2.  Note that DC is just a keyword.
+%   Here value, a floating point numbrer, can be interpreted as a constant amplitude for the current,
+#   as scaled by a time dependent component of the full source vector u(t).
+%
+% - A voltage source connected between the nodes node+ and node- is specified by the line
+% 
+%     Vlabel node+ node- DC value
+% 
+%   where node+ and node- identify, respectively, the node where the positive
+%   and "negative" terminal is connected to, and value is the constant amplitude
+%   of the voltage source (a floating point value), which may be scaled by a time dependent
+%   component of the full source vector u(t).
+%
+% - A voltage-controlled voltage source,
+%   connected between the nodesnode+ and node-, is specified by the line
+% 
+%     Elabel node+ node- nodectrl+ nodectrl- gain
+% 
+%   The controlling voltage is between the nodes nodectrl+ and nodectrl-,
+%   and the last argument is the source gain (a floating point number).
+% 
+% - The syntax for specifying a capacitor is:
 % 
 %     Clabel node1 node2 val
-% 
-% where label is an arbitrary label, node1 and node2 are integer circuit node numbers, and val is
-% the capacitance (a floating point number). The syntax for specifying an inductor is:
+%
+%   where label is an arbitrary label, node1 and node2 are integer circuit node numbers, and val is
+%   the capacitance (a floating point number).
+%
+% - The syntax for specifying an inductor is:
 % 
 %     Llabel node1 node2 val
 % 
-% where label is an arbitrary label, node1 and node2 are integer circuit node numbers, and val
-% is the inductance (a floating point number). Explain how you handle inductors, and which
-% stamp can be proposed to include them into the modified nodal analysis equations written in
-% the form
+%   where label is an arbitrary label, node1 and node2 are integer circuit node numbers, and val
+%   is the inductance (a floating point number).
 %
-%     G x(t)+ C x(t) = B u(t)
-%
-% where the column vector u(t) contains all sources.
-%
-
-C = [] ;
 
    %enableTrace() ;
    trace( ['filename: ', filename] ) ;
@@ -260,9 +269,22 @@ C = [] ;
 
       allnodes = horzcat( allnodes, ampLines(1:2, :), ampLines(3:4, :) ) ;
    end
+   sz = size( capLines, 2 ) ;
+   if ( sz )
+      trace( sprintf( 'capLines: %d', sz ) ) ;
+
+      allnodes = horzcat( allnodes, capLines(1:2, :) ) ;
+   end
+   sz = size( indLines, 2 ) ;
+   if ( sz )
+      trace( sprintf( 'indLines: %d', sz ) ) ;
+
+      allnodes = horzcat( allnodes, indLines(1:2, :) ) ;
+   end
 %disableTrace() ;
-   maxNode = max( max( allnodes ) ) ;
-   trace( [ 'maxnode: ', sprintf('%d', maxNode) ] ) ;
+
+   biggestNodeNumber = max( max( allnodes ) ) ;
+   trace( [ 'maxnode: ', sprintf('%d', biggestNodeNumber) ] ) ;
 
    %
    % Done parsing the netlist file.
@@ -271,13 +293,19 @@ C = [] ;
 
    numVoltageSources = size( voltageLines, 2 ) ;
    numAmpSources = size( ampLines, 2 ) ;
+   numIndSources = size( indLines, 2 ) ;
 
-   numAdditionalSources = numVoltageSources + numAmpSources ;
+   numAdditionalSources = numVoltageSources + numAmpSources + numIndSources ;
 
    % have to adjust these sizes for sources, and voltage control sources
-   G = zeros( maxNode + numAdditionalSources, maxNode + numAdditionalSources ) ;
-   C = zeros( maxNode + numAdditionalSources, maxNode + numAdditionalSources ) ;
-   b = zeros( maxNode + numAdditionalSources, 1 ) ;
+   G = zeros( biggestNodeNumber + numAdditionalSources, biggestNodeNumber + numAdditionalSources ) ;
+   C = zeros( biggestNodeNumber + numAdditionalSources, biggestNodeNumber + numAdditionalSources ) ;
+   B = zeros( biggestNodeNumber + numAdditionalSources, biggestNodeNumber + numAdditionalSources ) ;
+
+   xnames = cell( biggestNodeNumber + numAdditionalSources, 1 ) ;
+   for i = [1:biggestNodeNumber]
+      xnames{i} = sprintf( 'V_%d', i ) ;
+   end
 
    % process the resistor lines:
    % note: matlab for loop appears to iterate over matrix by assigning each column to a temp variable
@@ -329,7 +357,7 @@ C = [] ;
    end
 
    % process the voltage sources:
-   r = maxNode ;
+   r = biggestNodeNumber ;
    labelNumber = 0 ;
    for v = voltageLines
       r = r + 1 ;
@@ -340,6 +368,7 @@ C = [] ;
       value       = v(3) ;
   
       trace( sprintf( '%s %d,%d -> %d\n', label, plusNode, minusNode, value ) ) ;
+      xnames{r} = sprintf( 'i_{vs_{%d,%d}}', plusNode, minusNode ) ;
 
       if ( plusNode )
          G( r, plusNode ) = 1 ;
@@ -350,11 +379,11 @@ C = [] ;
          G( minusNode, r ) = 1 ;
       end
 
-      b( r,1 ) = value ;
+      B( r, r ) = value ;
    end
 
    % value for r (fall through from loop above)
-   % process the voltage controled lines
+   % process the voltage controlled lines
    labelNumber = 0 ;
    for a = ampLines
       r = r + 1 ;
@@ -383,6 +412,34 @@ C = [] ;
       if ( minusControlNodeNum )
          G( r, minusControlNodeNum ) = -gain ;
       end
+
+      xnames{r} = sprintf( 'i_{ve_{%d,%d}}', plusNodeNum, minusNodeNum ) ;
+   end
+
+   % value for r (fall through from loop above)
+   % process the inductors:
+   labelNumber = 0 ;
+   for i = indLines
+      r = r + 1 ;
+      labelNumber = labelNumber + 1 ;
+      label       = indLables{labelNumber} ;
+      plusNode    = i(1) ;
+      minusNode   = i(2) ;
+      value       = i(3) ;
+  
+      trace( sprintf( '%s %d,%d -> %d\n', label, plusNode, minusNode, value ) ) ;
+      xnames{r} = sprintf( 'i_{L_{%d,%d}}', plusNode, minusNode ) ;
+
+      if ( plusNode )
+         G( r, plusNode ) = 1 ;
+         G( plusNode, r ) = -1 ;
+      end
+      if ( minusNode )
+         G( r, minusNode ) = -1 ;
+         G( minusNode, r ) = 1 ;
+      end
+
+      C( r, r ) = value ;
    end
 
    % process the current sources:
@@ -397,10 +454,10 @@ C = [] ;
       trace( sprintf( '%s %d,%d -> %d\n', label, plusNode, minusNode, value ) ) ;
 
       if ( plusNode )
-         b( plusNode ) = b( plusNode ) - value ;
+         B( plusNode, plusNode ) = B( plusNode, plusNode ) - value ;
       end
       if ( minusNode )
-         b( minusNode ) = b( minusNode ) + value ;
+         B( minusNode, minusNode ) = B( minusNode, minusNode ) + value ;
       end
    end
 end
