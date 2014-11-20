@@ -368,7 +368,7 @@ function [G, C, B, xnames] = NodalAnalysis(filename)
       value       = v(3) ;
   
       trace( sprintf( '%s %d,%d -> %d\n', label, plusNode, minusNode, value ) ) ;
-      xnames{r} = sprintf( 'i_{vs_{%d,%d}}', plusNode, minusNode ) ;
+      xnames{r} = sprintf( 'i_{%s_{%d,%d}}', label, minusNode, plusNode ) ;
 
       if ( plusNode )
          G( r, plusNode ) = 1 ;
@@ -413,7 +413,7 @@ function [G, C, B, xnames] = NodalAnalysis(filename)
          G( r, minusControlNodeNum ) = -gain ;
       end
 
-      xnames{r} = sprintf( 'i_{ve_{%d,%d}}', plusNodeNum, minusNodeNum ) ;
+      xnames{r} = sprintf( 'i_{%s_{%d,%d}}', label, plusNodeNum, minusNodeNum ) ;
    end
 
    % value for r (fall through from loop above)
@@ -428,18 +428,19 @@ function [G, C, B, xnames] = NodalAnalysis(filename)
       value       = i(3) ;
   
       trace( sprintf( '%s %d,%d -> %d\n', label, plusNode, minusNode, value ) ) ;
-      xnames{r} = sprintf( 'i_{L_{%d,%d}}', plusNode, minusNode ) ;
 
       if ( plusNode )
-         G( r, plusNode ) = 1 ;
-         G( plusNode, r ) = -1 ;
+         G( r, plusNode ) = -1 ;
+         G( plusNode, r ) = 1 ;
       end
       if ( minusNode )
-         G( r, minusNode ) = -1 ;
-         G( minusNode, r ) = 1 ;
+         G( r, minusNode ) = 1 ;
+         G( minusNode, r ) = -1 ;
       end
 
       C( r, r ) = value ;
+
+      xnames{r} = sprintf( 'i_{%s_{%d,%d}}', label, plusNode, minusNode ) ;
    end
 
    % process the current sources:

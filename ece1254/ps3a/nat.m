@@ -8,6 +8,9 @@ clear all ;
 % ps3a: example 1:
 [G, C, B, x] = NodalAnalysis( 'testdata/ps3a_sample1.netlist' ) ;
 
+% ps3a: example 2:
+[G, C, B, x] = NodalAnalysis( 'testdata/ps3a_sample2.netlist' ) ;
+
 % constant voltage source test case:
 [G, C, B, x] = NodalAnalysis( '../ps1/testdata/test3.netlist' ) ;
 
