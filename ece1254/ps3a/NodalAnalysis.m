@@ -1,7 +1,5 @@
 % Based on NodalAnalysis.m from ps2, generalized to add capacitance and inductance support.
 %
-% Assumptions (many of which would be probably be invalid for more general spice netlist files).
-%
 function [G, C, B, xnames] = NodalAnalysis(filename)
 % NodalAnalysis generates the modified nodal analysis (MNA) equations from a text file
 %
@@ -32,6 +30,16 @@ function [G, C, B, xnames] = NodalAnalysis(filename)
 %   - There are no gaps in the node numbers.
 %   - I seem to recall that spice files allowed the constants to be specified with k, m, M modifiers.
 %     I haven't tried to support that.
+%   - comment lines (starting with *) as described in:
+%     http://jjc.hydrus.net/jjc/technical/ee/documents/spicehowto.pdf 
+%     are not supported.
+%   - trailing comments (; and anything after that) as described in:
+%     https://www.csupomona.edu/~prnelson/courses/ece220/220-spice-notes.pdf
+%     are not supported.
+%
+% as a test, compare to results from:
+%
+%  http://embedded.eecs.berkeley.edu/pubs/downloads/spice/spice3f5.tar.gz
 %
 % The netlist elements lines are specified as follows:
 %

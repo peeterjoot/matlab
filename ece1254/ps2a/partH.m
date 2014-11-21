@@ -37,43 +37,53 @@ for r = R
    end
 
    if ( plotGershgorinCircles )
+
+      showSymmetryDebug = 0 ;
+
       if ( withPreconditioning )
          pInvHalf = inv( sqrt( P ) ) ;
 
-         %disp( G - G.' )
-         %disp( P - P.' )
-         disp( pInvHalf - pInvHalf.' )
+         if ( showSymmetryDebug )
+            disp( r ) ;
+            disp( max(max(abs(full(G - G.')))) ) ;
+            disp( max(max(abs(full(P - P.')))) ) ;
+            disp( max(max(abs( pInvHalf - pInvHalf.' ))) ) ;
+         end
 
          G = full( pInvHalf * G * pInvHalf ) ;
-         %disp( G - G.' )
 
+         if ( showSymmetryDebug )
+            disp( max(max(abs(full(G - G.')))) ) ;
+         end
       end
 
-      e = eig( G ) ;
+      if ( ~showSymmetryDebug )
+         e = eig( G ) ;
 
-      f = figure ; 
-      scatter( real(e), imag(e), 'r.' ) ;
-      hold on ;
-      xlabel( 'Re({\lambda})' ) ;
-      ylabel( 'Im({\lambda})' ) ;
-      title( sprintf( 'R = %g', r ) ) ;
+         f = figure ; 
+         scatter( real(e), imag(e), 'r.' ) ;
+         hold on ;
+         xlabel( 'Re({\lambda})' ) ;
+         ylabel( 'Im({\lambda})' ) ;
+         title( sprintf( 'R = %g', r ) ) ;
 
-      sz = size(G, 1) ;
-      for i = 1:sz
-         % Gershgorin:
-         % | \lambda - G_ii | < sum_{j\ne i} | G_ij |
+         sz = size(G, 1) ;
+         for i = 1:sz
+            % Gershgorin:
+            % | \lambda - G_ii | < sum_{j\ne i} | G_ij |
 
-         gii = G(i,i) ;
-         radius = sum(abs(G(i,:))) - abs(G(i,i)) ;
+            gii = G(i,i) ;
+            radius = sum(abs(G(i,:))) - abs(G(i,i)) ;
 
-         z = gii + radius * exp(1j * 2 * pi * ((1:np+1) - 1)/ np) ;
-         plot( real(z), imag( z ) ) ;
-      end
+            z = gii + radius * exp(1j * 2 * pi * ((1:np+1) - 1)/ np) ;
+            plot( real(z), imag( z ) ) ;
+         end
 
-      if ( withPreconditioning )
-         saveas( f, sprintf( 'gershgorinPlotPreconditionedR%dFig%d.png', r, fignum ) ) ;
-      else
-         saveas( f, sprintf( 'gershgorinPlotR%dFig%d.png', r, fignum ) ) ;
+         if ( withPreconditioning )
+            saveas( f, sprintf( 'gershgorinPlotPreconditionedR%dFig%d.png', r, fignum ) ) ;
+         else
+            saveas( f, sprintf( 'gershgorinPlotR%dFig%d.png', r, fignum ) ) ;
+         end
       end
    else
       [t, stats, residuals] = conjugateGradientQuarteroniPrecond( G, b, P, 1e-3 ) ;
