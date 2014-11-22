@@ -246,6 +246,21 @@ the algorithm in Quarteroni, et al's "Numerical Mathematics")
    path => 'ece1254/ps3a/tests/nat.m',
    WHAT => qq(test cases for NodalAnalysis.m)
 },
+{
+   DATE => 'Nov 22, 2014',
+   path => 'ece1254/ps3a/generateNetlist.m',
+   WHAT => qq(Generates the netlist for part b, and returns the table of RLC values and the numbers of these RLC segments for each level.)
+},
+{
+   DATE => 'Nov 22, 2014',
+   path => 'ece1254/ps3a/generateNetlistSegment.m',
+   WHAT => qq(A helper function that generates a sequence of serially connected RLC segments for one branch of the clock distribution network.)
+},
+{
+   DATE => 'Nov 22, 2014',
+   path => 'ece1254/ps3a/generateNetlistSegmentForLevel.m',
+   WHAT => qq(For a given level greater than 1, call generateNetlistSegment for each fork of the clock distribution network in this level)
+},
 ) ; # @matlab
 
    return @matlab ;
