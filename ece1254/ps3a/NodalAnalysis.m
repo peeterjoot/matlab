@@ -1,7 +1,10 @@
-% Based on NodalAnalysis.m from ps2, generalized to add capacitance and inductance support.
-%
 function [G, C, B, xnames] = NodalAnalysis(filename)
 % NodalAnalysis generates the modified nodal analysis (MNA) equations from a text file
+%
+% Based on NodalAnalysis.m from ps2, generalized to add capacitance and inductance support.
+% also adds:
+%   - comment lines (starting with *) as described in:
+%     http://jjc.hydrus.net/jjc/technical/ee/documents/spicehowto.pdf 
 %
 % This routine [G, C, B, x] = NodalAnalysis(filename)
 % generates the modified nodal analysis (MNA) equations
@@ -30,9 +33,6 @@ function [G, C, B, xnames] = NodalAnalysis(filename)
 %   - There are no gaps in the node numbers.
 %   - I seem to recall that spice files allowed the constants to be specified with k, m, M modifiers.
 %     I haven't tried to support that.
-%   - comment lines (starting with *) as described in:
-%     http://jjc.hydrus.net/jjc/technical/ee/documents/spicehowto.pdf 
-%     are not supported.
 %   - trailing comments (; and anything after that) as described in:
 %     https://www.csupomona.edu/~prnelson/courses/ece220/220-spice-notes.pdf
 %     are not supported.
@@ -230,7 +230,7 @@ function [G, C, B, xnames] = NodalAnalysis(filename)
 
          voltageLines(:,end+1) = a ;
          voltageLables{end+1} = tmp{1} ;
-      case '#'
+      case '*'
          traceit( ['comment line: ', line ] ) ;
       case '.'
          if ( 0 == strncmp( line, '.end', 4 ) )

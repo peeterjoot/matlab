@@ -1,11 +1,13 @@
 function r = generateNetlist( filename )
 
-LengthsMM          = [ 0.05 ; 0.05 ; 0.05 ; 0.05 ] ;
-%LengthsMM          = [ 0.2 ; 0.15 ; 0.1 ; 0.05 ] ;
+% for testing.  use less node numbers to verify the netlist node placement manually.
+%LengthsMM          = [ 0.05 ; 0.05 ; 0.05 ; 0.05 ] ;
+LengthsMM          = [ 0.15 ; 0.15 ; 0.15 ; 0.15 ] ;
+
 %LengthsMM          = [ 6 ; 4 ; 3 ; 2 ] ;
 ResistancePerCM    = [ 25 ; 35.7 ; 51.0 ; 51.0 ] ;
-InductancePerCM    = [ 5 ; 7.14 ; 10.2 ; 10.2 ] ;
-CapacitancePerCM   = [ 2 ; 1.4 ; 0.98 ; 0.98 ] ;
+InductancePerCM    = [ 5 ; 7.14 ; 10.2 ; 10.2 ] * 1e-9 ; % nH
+CapacitancePerCM   = [ 2 ; 1.4 ; 0.98 ; 0.98 ] * 1e-12 ; % 1 pF (picofarad, one trillionth (10−12) of a farad)
 DeltaZMM           = 0.05 ;
 
 ResistancePerMM  = ResistancePerCM / 10 ;
@@ -28,16 +30,26 @@ end
 vssNode = 1 ;
 
 % The first segment has no forks.
-[currentSegmentNumber, lastNodeNumber] = generateNetlistSegment( fh, vssNode, vssNode + 1, 1, r, 1 ) ;
+[ns, nx, nn] = generateNetlistSegment( fh, vssNode, vssNode + 1, 1, r, 1 ) ;
 
-startNodeNumbers = [lastNodeNumber] ;
-for level = [2:2]
-% FIXME: have to pass in the next node number available.
-   [endpoints, currentSegmentNumber] = generateNetlistSegmentForLevel( fh, startNodeNumbers, currentSegmentNumber, r ) ;
+startNodeNumbers = [ns] ;
+for level = [2:4]
+   [endpoints, nn] = generateNetlistSegmentForLevel( fh, level, startNodeNumbers, max( startNodeNumbers ) + 1, nn, r ) ;
 
    traceit( sprintf('endpoints: %s\n', mat2str(endpoints)) );
 
    startNodeNumbers = endpoints ;
+end
+
+chipRes = 5e3 ;
+chipCap = 5e-15 ;
+
+fprintf( fh, '* chip blocks:\n' ) ;
+for ns = startNodeNumbers
+   fprintf( fh, 'R%d %d 0 %e\n', nn, ns, chipRes ) ;
+   fprintf( fh, 'C%d %d 0 %e\n', nn, ns, chipCap ) ;
+
+   nn = nn + 1 ;
 end
 
 fclose( fh ) ;
