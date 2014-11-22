@@ -6,6 +6,8 @@ function traceit(string)
    global g_bTraceOn ;
    
    if g_bTraceOn
-       fprintf( 'debug: %s\n', string ) ;
+       [ST,I] = dbstack( 1 );
+
+       fprintf( 'debug: %s:%d: %s\n', ST(1).name, ST(1).line, string ) ;
    end
 end

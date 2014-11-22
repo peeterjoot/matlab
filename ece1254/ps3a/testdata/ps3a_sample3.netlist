@@ -1,0 +1,7 @@
+Is 0 1 DC 3
+R1 1 0 0.5
+C1 2 0 5
+L1 2 1 7
+.end
+
+This is the circuit 'A final RLC circuit' in the problem set. (example 3 for how to handle inductors).
