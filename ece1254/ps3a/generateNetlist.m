@@ -1,6 +1,6 @@
 function r = generateNetlist( filename )
 
-if ( 1 )
+if ( 0 )
    % for testing.  use less node numbers to verify the netlist node placement manually.
    LengthsMM          = [ 0.05 ; 0.05 ; 0.05 ; 0.05 ] ;
    %LengthsMM          = [ 0.15 ; 0.15 ; 0.15 ; 0.15 ] ;
