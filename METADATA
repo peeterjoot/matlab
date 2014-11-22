@@ -116,7 +116,7 @@ where L and U are lower and upper triangular respectively.)
 {
    DATE => 'Oct 11, 2014',
    path => 'ece1254/ps1/traceit.m',
-   WHAT => qq(trace a string.  If enableTrace has been called, and disableTrace has not, then the value of the string will be printed following a 'debug: ' prefix.)
+   WHAT => qq(trace a string, along with the name/line of the caller.  This is done if enableTrace has been called, and disableTrace has not, then the value of the string will be printed following a 'debug: function:line: ' prefix.)
 },
 {
    DATE => 'Oct 11, 2014',
