@@ -1,10 +1,17 @@
 function r = generateNetlist( filename )
 
-% for testing.  use less node numbers to verify the netlist node placement manually.
-%LengthsMM          = [ 0.05 ; 0.05 ; 0.05 ; 0.05 ] ;
-LengthsMM          = [ 0.15 ; 0.15 ; 0.15 ; 0.15 ] ;
+if ( 1 )
+   % for testing.  use less node numbers to verify the netlist node placement manually.
+   LengthsMM          = [ 0.05 ; 0.05 ; 0.05 ; 0.05 ] ;
+   %LengthsMM          = [ 0.15 ; 0.15 ; 0.15 ; 0.15 ] ;
 
-%LengthsMM          = [ 6 ; 4 ; 3 ; 2 ] ;
+   maxLevel = 2 ;
+else
+   LengthsMM          = [ 6 ; 4 ; 3 ; 2 ] ;
+
+   maxLevel = 4 ;
+end
+
 ResistancePerCM    = [ 25 ; 35.7 ; 51.0 ; 51.0 ] ;
 InductancePerCM    = [ 5 ; 7.14 ; 10.2 ; 10.2 ] * 1e-9 ; % nH
 CapacitancePerCM   = [ 2 ; 1.4 ; 0.98 ; 0.98 ] * 1e-12 ; % 1 pF (picofarad, one trillionth (10−12) of a farad)
@@ -33,7 +40,7 @@ vssNode = 1 ;
 [ns, nx, nn] = generateNetlistSegment( fh, vssNode, vssNode + 1, 1, r, 1 ) ;
 
 startNodeNumbers = [ns] ;
-for level = [2:4]
+for level = [2:maxLevel]
    [endpoints, nn] = generateNetlistSegmentForLevel( fh, level, startNodeNumbers, max( startNodeNumbers ) + 1, nn, r ) ;
 
    traceit( sprintf('endpoints: %s\n', mat2str(endpoints)) );
@@ -51,5 +58,7 @@ for ns = startNodeNumbers
 
    nn = nn + 1 ;
 end
+
+fprintf( fh, '* scale this by the oscillatory voltage:\nV1 1 0 DC 1\n' ) ;
 
 fclose( fh ) ;

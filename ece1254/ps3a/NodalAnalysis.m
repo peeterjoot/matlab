@@ -1,4 +1,4 @@
-function [G, C, B, xnames] = NodalAnalysis(filename)
+function [G, C, b, xnames] = NodalAnalysis(filename)
 % NodalAnalysis generates the modified nodal analysis (MNA) equations from a text file
 %
 % Based on NodalAnalysis.m from ps2, generalized to add capacitance and inductance support.
@@ -6,12 +6,26 @@ function [G, C, B, xnames] = NodalAnalysis(filename)
 %   - comment lines (starting with *) as described in:
 %     http://jjc.hydrus.net/jjc/technical/ee/documents/spicehowto.pdf 
 %
-% This routine [G, C, B, x] = NodalAnalysis(filename)
+% This routine [G, C, b, x] = NodalAnalysis(filename)
 % generates the modified nodal analysis (MNA) equations
 %
-%    G x(t) + C \dot{x}(t)= B u(t).
+%    G x(t) + C \dot{x}(t)= B u(t) = b(t)
 %
 % Here the column vector u(t) contains all sources, and x(t) is a vector of all the sources.
+%
+%---------------------------------------------------------------------------------------
+%
+% Deviations from the problem specification:
+%
+% The problem specification said to use B u(t) instead of b(t), but there's no
+% real need for factoring out a matrix B for the use of this problem, so I've opted for a
+% representation that uses less space for now.
+%
+% Also note that the syntax of the .netlist parser has not been modified to allow non-DC
+% sources.  For ps3a, we have only a single source, so we can scale the returned constant
+% vector b by whatever time dependent signal we desire.
+%
+%---------------------------------------------------------------------------------------
 %
 % The returned value:
 %
@@ -308,7 +322,8 @@ function [G, C, B, xnames] = NodalAnalysis(filename)
    % have to adjust these sizes for sources, and voltage control sources
    G = zeros( biggestNodeNumber + numAdditionalSources, biggestNodeNumber + numAdditionalSources ) ;
    C = zeros( biggestNodeNumber + numAdditionalSources, biggestNodeNumber + numAdditionalSources ) ;
-   B = zeros( biggestNodeNumber + numAdditionalSources, biggestNodeNumber + numAdditionalSources ) ;
+   %B = zeros( biggestNodeNumber + numAdditionalSources, biggestNodeNumber + numAdditionalSources ) ;
+   b = zeros( biggestNodeNumber + numAdditionalSources, 1 ) ;
 
    xnames = cell( biggestNodeNumber + numAdditionalSources, 1 ) ;
    for i = [1:biggestNodeNumber]
@@ -387,7 +402,8 @@ function [G, C, B, xnames] = NodalAnalysis(filename)
          G( minusNode, r ) = 1 ;
       end
 
-      B( r, r ) = value ;
+      %B( r, r ) = value ;
+      b( r, 1 ) = value ;
    end
 
    % value for r (fall through from loop above)
@@ -463,10 +479,12 @@ function [G, C, B, xnames] = NodalAnalysis(filename)
       traceit( sprintf( '%s %d,%d -> %d\n', label, plusNode, minusNode, value ) ) ;
 
       if ( plusNode )
-         B( plusNode, plusNode ) = B( plusNode, plusNode ) - value ;
+         %B( plusNode, plusNode ) = B( plusNode, plusNode ) - value ;
+         B( plusNode, 1 ) = B( plusNode, 1 ) - value ;
       end
       if ( minusNode )
-         B( minusNode, minusNode ) = B( minusNode, minusNode ) + value ;
+         %B( minusNode, minusNode ) = B( minusNode, minusNode ) + value ;
+         B( minusNode, 1 ) = B( minusNode, 1 ) + value ;
       end
    end
 end
