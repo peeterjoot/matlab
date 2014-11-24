@@ -2,19 +2,19 @@ function [G, C, b, xnames, s] = driver()
 
 filename = 'a.netlist' ;
 
-%[r, endpoints] = generateNetlist( filename, [0.05 ; 0.05] ) ;
-[r, endpoints] = generateNetlist( filename ) ;
+[r, endpoints] = generateNetlist( filename, [0.05 ; 0.05] ) ;
+%[r, endpoints] = generateNetlist( filename ) ;
 
 [G, C, b, xnames] = NodalAnalysis( filename ) ;
 
-%deltaT = 0.5 ;
-%deltaT = 0.1 ;
-deltaT = 0.01 ;
-%deltaT = 0.005 ;
-%deltaT = 0.001 ;
+%deltaT = 0.5e-9 ;
+%deltaT = 0.1e-9 ;
+deltaT = 0.01e-9 ;
+%deltaT = 0.005e-9 ;
+%deltaT = 0.001e-9 ;
 
 %discreteTimes = [0:deltaT:0.25] ;
-discreteTimes = [0:deltaT:5] ;
+discreteTimes = [0:deltaT:5e-9] ;
 
 v = vclock(0) ;
 bv = b * v ;
@@ -22,6 +22,9 @@ bv = b * v ;
 s = [] ;
 
 CoverDeltaT = C/ deltaT ;
+disp( G ) ;
+disp( CoverDeltaT ) ;
+disp( b ) ;
 A = G + CoverDeltaT ;
 x = zeros( size(b) ) ;
 s(:,end+1) = x ;
@@ -46,4 +49,7 @@ end
 %disp( size(discreteTimes) ) ;
 %disp( size(s) ) ;
 %disp( s( 5, : ) ) ;
-plot( discreteTimes, s( endpoints(1), : ).' ) ;
+for e = endpoints
+   plot( discreteTimes, s( e, : ).' ) ;
+   hold on ;
+end
