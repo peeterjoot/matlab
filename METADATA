@@ -1,5 +1,5 @@
 # generate this sort of template with:
-# ~/bin/mtcheck */*.m | tee x ; # say
+# ~/bin/mtcheck ece1254/ps3a/*.m | tee x ; # say
 
 sub matlabMeta
 {
@@ -260,6 +260,16 @@ the algorithm in Quarteroni, et al's "Numerical Mathematics")
    DATE => 'Nov 22, 2014',
    path => 'ece1254/ps3a/generateNetlistSegmentForLevel.m',
    WHAT => qq(For a given level greater than 1, call generateNetlistSegment for each fork of the clock distribution network in this level)
+},
+{
+   DATE => 'Nov 23, 2014',
+   path => 'ece1254/ps3a/tests/checkvclock.m',
+   WHAT => qq(Test vclock function by plotting and visual verification)
+},
+{
+   DATE => 'Nov 23, 2014',
+   path => 'ece1254/ps3a/vclock.m',
+   WHAT => qq(Implement a function for the specified clock signal)
 },
 ) ; # @matlab
 
