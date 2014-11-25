@@ -273,8 +273,13 @@ the algorithm in Quarteroni, et al's "Numerical Mathematics")
 },
 {
    DATE => 'Nov 24, 2014',
+   path => 'ece1254/ps3a/plotSolutionIterations.m',
+   WHAT => qq(Calculate and cache the netlist file for the circuit and the associated MNA equations.  Calculate and plot the BE discretized solution for a given timestep.)
+},
+{
+   DATE => 'Nov 25, 2014',
    path => 'ece1254/ps3a/driver.m',
-   WHAT => qq(High level driver for ps3a p1.  Calculate and cache the netlist file for the circuit and the associated MNA equations.  Calculate and plot the BE discretized solution for a heuristically picked timestep.)
+   WHAT => qq(High level driver for the plots.  Calls plotSolutionIterations as appropriate to generate the figures for part c, d.)
 },
 ) ; # @matlab
 
