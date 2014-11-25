@@ -1,7 +1,7 @@
 function v = vclock(t)
 % Model the clock source with a periodic voltage source with the following characteristics: amplitude 1 V, rise/fall time 100 ps, period 2 ns, duty cycle 50%, initial delay 100 ps.
 %
-% [in]: scalar t >= 0 [in] (nanoseconds)
+% [in]: scalar t >= 0 [in] (seconds)
 % [out]: scalar v (volts) 
 %
 
@@ -9,7 +9,8 @@ if ( t < 0 )
    error( 'vclock:', 'error opening file "%s"', filename ) ;
 end
 
-t = mod( t, 2 ) ;
+ns = 1e-9 ;
+t = mod( t / ns, 2 ) ;
 
 % 100ps == 0.1 ns.
 if ( t < 0.1 )
