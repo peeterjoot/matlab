@@ -1,35 +1,62 @@
-function driver( doMultiPlot )
+function driver( doMultiPlot, withBE )
 
-if ( doMultiPlot )
-   savepath = 'ps3aBEFig2.png' ;
-%   savepath = '../../../figures/ece1254/ps3aBEFig2.png' ;
+withTR = ~withBE ;
 
-   labels = {} ;
-   [p, f, lt] = plotSolutionIterations( 0.05, 1 ) ;
-   labels{end+1} = lt(1) ;
-   labels{end+1} = lt(2) ;
+%if ( withFigure )
+%   f = figure ;
+%   hold on ;
+%else
+%   f = 0 ;
+%end
+%
+%p = [] ;
+%labels = {} ;
+%
+%if ( withFigure )
+%   data = timeseries( v, discreteTimes ) ;
+%   p( end + 1 ) = plot( data ) ;
+%end
 
-   [pt, fIgnore, lt] = plotSolutionIterations( 0.01, 0 ) ;
-   p(end+1) = pt ;
-   labels{end+1} = lt(1) ;
-
-   [pt, fIgnore, lt] = plotSolutionIterations( 0.005, 0 ) ;
-   p(end+1) = pt ;
-   labels{end+1} = lt(1) ;
-
-   [pt, fIgnore, lt] = plotSolutionIterations( 0.001, 0 ) ;
-   p(end+1) = pt ;
-   labels{end+1} = lt(1) ;
-
-% get 'Cell array argument must be a cell array of strings.' :
-%   disp( labels ) ;
-%'v_{chip}'    'v_{clk} (\Delta ...'    {1x1 cell}    {1x1 cell}    {1x1 cell}
-%legend({'v_{clk}', 'v_{chip} (ts = 50 ps)', 'v_{chip} (ts = 10 ps)', 'v_{chip} (ts = 5 ps)', 'v_{chip} (ts = 1 ps)'}) ;
+data = timeseries( s, discreteTimes ) ;
+p( end + 1 ) = plot( data ) ;
+if ( withBE )
+   thisLabel = sprintf( 'v_{clk} (BE, \\Delta t = %d ps)', 1000 * deltaTinNanoseconds ) ;
 else
-   [p, f, labels] = plotSolutionIterations( 0.005, 1 ) ;
+   thisLabel = sprintf( 'v_{clk} (TR, \\Delta t = %d ps)', 1000 * deltaTinNanoseconds ) ;
+end
+if ( 1 )
+   labels = { 'v_{chip}' } ;
 
-   savepath = 'ps3aBEFig1.png' ;
-%   savepath = '../../../figures/ece1254/ps3aBEFig1.png' ;
+   [p, f, lt, s] = plotSolutionIterations( 0.001, 1, 0 ) ;
+   labels{end+1} = lt ;
+
+   [pt, fIgnore, lt, s] = plotSolutionIterations( 0.001, 0, 1 ) ;
+   p(end+1) = pt ;
+   labels{end+1} = lt ;
+elseif ( doMultiPlot )
+   savePath = sprintf( 'ps3aBEFig%d.png', 2 + withTR * 2 ) ;
+
+   labels = { 'v_{chip}' } ;
+   [p, f, lt, s] = plotSolutionIterations( 0.05, 1, withBE ) ;
+   labels{end+1} = lt ;
+
+   [pt, fIgnore, lt, s] = plotSolutionIterations( 0.01, 0, withBE ) ;
+   p(end+1) = pt ;
+   labels{end+1} = lt ;
+
+   [pt, fIgnore, lt, s] = plotSolutionIterations( 0.005, 0, withBE ) ;
+   p(end+1) = pt ;
+   labels{end+1} = lt ;
+
+   [pt, fIgnore, lt, s] = plotSolutionIterations( 0.001, 0, withBE ) ;
+   p(end+1) = pt ;
+   labels{end+1} = lt ;
+
+else
+   [p, f, thisLabel, s] = plotSolutionIterations( 0.005, 1, withBE ) ;
+   labels = { 'v_{chip}', thisLabel } ;
+
+   savePath = sprintf( 'ps3aBEFig%d.png', 1 + withTR * 2 ) ;
 end
 
 xlabel( 'time (s)' ) ;
@@ -38,6 +65,6 @@ legend( labels ) ;
 
 hold off ;
 
-if ( ~exist( savepath, 'file' ) )
-   saveas( f, savepath ) ;
-end
+%if ( ~exist( savePath, 'file' ) )
+%   saveas( f, savePath ) ;
+%end

@@ -4,7 +4,8 @@ FROMPS1 += enableTrace.m
 FROMPS1 += traceit.m
 FROMPS1 += isDebugEnabled.m
 CLEAN += a.netlist
-CLEAN += a.mat
+CLEAN += *.mat
+CLEAN += *.png
 
 all : $(FROMPS1)
 

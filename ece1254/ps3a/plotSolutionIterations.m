@@ -1,4 +1,4 @@
-function [p, f, labels] = plotSolutionIterations( deltaTinNanoseconds, withFigure )
+function [discreteTimes, v, s] = plotSolutionIterations( deltaTinNanoseconds, withBE )
 
 filename = 'a.netlist' ;
 cachefilename = 'a.mat' ;
@@ -16,68 +16,93 @@ end
 
 deltaTinSeconds = deltaTinNanoseconds * 1e-9 ;
 
-p = [] ;
-labels = {} ;
-
-if ( withFigure )
-   f = figure ;
-   hold on ;
+if ( withBE )
+   lupCachePath = sprintf( 'be.LUPdeltaTps_%d.mat', deltaTinNanoseconds * 1000 ) ;
 else
-   f = 0 ;
+   lupCachePath = sprintf( 'tr.LUPdeltaTps_%d.mat', deltaTinNanoseconds * 1000 ) ;
 end
-
-discreteTimes = [0:deltaTinSeconds:5e-9] ;
-
-v = vclock(0) ;
-bv = b * v ;
-
-s = [] ;
-
-lupCachePath = sprintf( 'be.deltaTps_%d.mat', deltaTinNanoseconds * 1000 ) ;
 
 if ( exist( lupCachePath, 'file' ) )
    load( lupCachePath ) ;
 else
    cOverDeltaT = C/ deltaTinSeconds ;
-   A = G + cOverDeltaT ;
 
-   % prep for solving A\r
-   [ L, U, P ] = lu( A ) ;
+   if ( withBE )
+      A = cOverDeltaT + G ;
 
-   save( lupCachePath, 'A', 'cOverDeltaT', 'L', 'U', 'P' ) ;
+      % prep for solving A\r
+      [ L, U, P ] = lu( A ) ;
+
+      save( lupCachePath, 'A', 'cOverDeltaT', 'L', 'U', 'P' ) ;
+   else
+      cOverDeltaT = 2 * cOverDeltaT ;
+
+      B = cOverDeltaT - G ;
+      A = cOverDeltaT + G ;
+
+      [ L, U, P ] = lu( A ) ;
+
+      save( lupCachePath, 'A', 'B', 'L', 'U', 'P' ) ;
+   end
 end
 
-x = zeros( size(b) ) ;
+if ( withBE )
+   voltageCachePath = sprintf( 'be.VoltageDeltaTps_%d.mat', deltaTinNanoseconds * 1000 ) ;
+else
+   voltageCachePath = sprintf( 'tr.VoltageDeltaTps_%d.mat', deltaTinNanoseconds * 1000 ) ;
+end
 
-% for the plot, only the voltages at the chip load node have to be saved
-e = endpoints( 1 ) ;
-s(end+1) = x( e ) ;
+if ( exist( voltageCachePath, 'file' ) )
+   load( voltageCachePath ) ;
+else
+   s = [] ;
 
-vclk = [ 0 ] ;
+   x = zeros( size(b) ) ;
 
-for t = discreteTimes(2:end)
-   newV = vclock( t ) ;
-   vclk(:, end+1) = newV ;
+   % for the plot or the error calculations, only the voltages at the chip load node have to be saved
+   e = endpoints( 1 ) ;
+   s( end + 1 ) = x( e ) ;
 
-   if ( newV ~= v )
-      v = newV ;
-      bv = b * v ;
+   vv = 0 ;
+   bv = 0 ;
+   discreteTimes = [0:deltaTinSeconds:5e-9] ;
+
+   v = vclock( discreteTimes ) ;
+
+   if ( withBE )
+      i = 1 ;
+      for t = discreteTimes(2:end)
+         newV = v( i ) ;
+
+         if ( newV ~= vv )
+            vv = newV ;
+            bv = b * vv ;
+         end
+
+         r = P * (cOverDeltaT * x + bv) ;
+         y = L\r ;
+         x = U\y ;
+         s( end + 1 ) = x( e ) ;
+
+         i = i + 1 ;
+      end
+   else
+      i = 1 ;
+      lastV = vv ;
+      for t = discreteTimes(2:end)
+         newV = v( i ) ;
+
+         c = b * ( newV + lastV ) ;
+         lastV = newV ;
+
+         r = P * (B * x + c) ;
+         y = L\r ;
+         x = U\y ;
+         s( end + 1 ) = x( e ) ;
+
+         i = i + 1 ;
+      end
    end
 
-   r = P * (cOverDeltaT * x + bv) ;
-   y = L\r ;
-   x = U\y ;
-   s(end+1) = x(e) ;
+   save( voltageCachePath, 'discreteTimes', 'v', 's' ) ;
 end
-
-if ( withFigure )
-   data = timeseries( vclk, discreteTimes ) ;
-   p( end + 1 ) = plot( data ) ;
-   labels = { 'v_{chip}' } ;
-end
-
-data = timeseries( s, discreteTimes ) ;
-p( end + 1 ) = plot( data ) ;
-thisLabel = sprintf( 'v_{clk} (\\Delta t = %d ps)', 1000 * deltaTinNanoseconds ) ;
-
-labels{ end + 1 } = thisLabel ;
