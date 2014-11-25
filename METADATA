@@ -269,7 +269,7 @@ the algorithm in Quarteroni, et al's "Numerical Mathematics")
 {
    DATE => 'Nov 23, 2014',
    path => 'ece1254/ps3a/vclock.m',
-   WHAT => qq(Implement a function for the specified clock signal)
+   WHAT => qq(Implement a function for the specified clock signal.  This function is vectorized and uses vclk to calculate the voltage for a single, scalar, point in time.)
 },
 {
    DATE => 'Nov 24, 2014',
@@ -280,6 +280,11 @@ the algorithm in Quarteroni, et al's "Numerical Mathematics")
    DATE => 'Nov 25, 2014',
    path => 'ece1254/ps3a/driver.m',
    WHAT => qq(High level driver for the plots.  Calls plotSolutionIterations as appropriate to generate the figures for part c, d.)
+},
+{
+   DATE => 'Nov 25, 2014',
+   path => 'ece1254/ps3a/clk.m',
+   WHAT => qq(split out piecewise clock function for scalar value to allow for vectorized vclock implementation.)
 },
 ) ; # @matlab
 
