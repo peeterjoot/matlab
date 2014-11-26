@@ -74,7 +74,7 @@ if ( what == 1 )
          std(cpuTR50, 1) ] ;
    { n, e, c, s }
 
-   if ( 0 )
+   if ( 1 )
       f = figure ;
       hold on ;
 
@@ -92,7 +92,7 @@ if ( what == 1 )
       saveas( f, savePath ) ;
    end
 
-   if ( 0 )
+   if ( 1 )
       f2 = figure ;
       hold on ;
 
@@ -129,6 +129,9 @@ if ( what == 1 )
    end
 
 elseif ( what == 2 )
+   f = figure ;
+   hold on ;
+
    labels = { 'v_{clk}' } ;
    p = [] ;
    [t, v, s, cpu] = calculateSolutionForTimestep( 0.05, withBE ) ;
@@ -156,9 +159,13 @@ elseif ( what == 2 )
    savePath = sprintf( 'ps3a%sFig%d.png', methodStr, 2 + withTR * 2 ) ;
    saveas( f, savePath ) ;
 else
+   f = figure ;
+   hold on ;
+
    [t, v, s, cpu] = calculateSolutionForTimestep( 0.005, withBE ) ;
    labels = { 'v_{clk}' } ;
    p = [] ;
+   p(end+1) = plot( t, v ) ;
    p(end+1) = plot( t, s ) ;
    labels{end+1} = sprintf( '%s, \\Delta t = 5 ps', methodStr ) ;
 
