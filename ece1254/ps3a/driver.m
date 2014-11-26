@@ -117,11 +117,35 @@ if ( what == 1 )
       eTR = e(5:7) ;
       tTR = [ 5 ; 10 ; 50 ] ;
 
-      loglog( tBE, eBE, '-.ob' ) ;
-      hold on ;
-      loglog( tTR, eTR, '-.xr' ) ;
-      xlabel( 'timestep (ps)' ) ;
-      ylabel( 'Error (V)' ) ;
+      if ( 1 )
+         logtBE = log(tBE) ;
+         logeBE = log(eBE) ;
+         logtTR = log(tTR) ;
+         logeTR = log(eTR) ;
+
+         % loglog() output is confusing.
+         plot( logtBE, logeBE, '-.ob' ) ;
+         hold on ;
+         plot( logtTR, logeTR, '-.xr' ) ;
+         xlabel( 'Log timestep (ps)' ) ;
+         ylabel( 'Log Error (V)' ) ;
+         legend( {'BE', 'TR'} ) ;
+
+         pBE = polyfit( logtBE, logeBE, 1 ) ;
+         bBE = pBE(2)
+         mBE = pBE(1) 
+
+         pTR = polyfit( logtTR, logeTR, 1 ) ;
+         bTR = pTR(2) 
+         mTR = pTR(1) 
+
+      else
+         loglog( tBE, eBE, '-.ob' ) ;
+         hold on ;
+         loglog( tTR, eTR, '-.xr' ) ;
+         xlabel( 'timestep (ps)' ) ;
+         ylabel( 'Error (V)' ) ;
+      end
       legend( {'BE', 'TR'} ) ;
 
       savePath = sprintf( 'ps3a%sFig%d.png', 'LogLogError', 7 ) ;
