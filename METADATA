@@ -1,5 +1,5 @@
 # generate this sort of template with:
-# ~/bin/mtcheck ece1254/ps3a/*.m | tee x ; # say
+# ~/bin/mtcheck ece1254/ps3b/*.m | tee x ; # say
 
 sub matlabMeta
 {
@@ -295,6 +295,18 @@ the algorithm in Quarteroni, et al's "Numerical Mathematics")
    DATE => 'Nov 25, 2014',
    path => 'ece1254/ps3a/loglogExponential.m',
    WHAT => qq(Plot the order relationships measured for N vs error for BE and TR.)
+},
+{
+   DATE => 'Nov 27, 2014',
+   path => 'ece1254/ps3b/PlotFreqResp.m',
+   WHAT => qq(A Matlab routine PlotFreqResp(omegaSet,G,C,B,L) which takes in omegaSet, G,C, B, L as input and
+plots the system frequency response. Here omegaSet is a vector of frequencies in rad/s.
+)
+},
+{
+   DATE => 'Nov 27, 2014',
+   path => 'ece1254/ps3b/testPlotFreqResp.m',
+   WHAT => qq(Simple test case for PlotFreqResp)
 },
 ) ; # @matlab
 

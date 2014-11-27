@@ -3,10 +3,12 @@ FROMPS1 += disableTrace.m
 FROMPS1 += enableTrace.m
 FROMPS1 += traceit.m
 FROMPS1 += isDebugEnabled.m
+FROMPS2a += tridiagonal.m
 #CLEAN += *.mat
 #CLEAN += *.png
 
-all : $(FROMPS1)
+all :: $(FROMPS1)
+all :: $(FROMPS2a)
 
 clean: 
 	rm -f $(FROMPS1) $(CLEAN)
@@ -28,5 +30,8 @@ traceit.m : ../ps1/traceit.m
 	cp $^ $@
 
 isDebugEnabled.m : ../ps1/isDebugEnabled.m
+	cp $^ $@
+
+tridiagonal.m : ../ps2a/tridiagonal.m
 	cp $^ $@
 
