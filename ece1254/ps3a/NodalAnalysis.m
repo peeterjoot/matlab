@@ -480,11 +480,11 @@ function [G, C, b, xnames] = NodalAnalysis(filename)
 
       if ( plusNode )
          %B( plusNode, plusNode ) = B( plusNode, plusNode ) - value ;
-         B( plusNode, 1 ) = B( plusNode, 1 ) - value ;
+         b( plusNode, 1 ) = b( plusNode, 1 ) - value ;
       end
       if ( minusNode )
          %B( minusNode, minusNode ) = B( minusNode, minusNode ) + value ;
-         B( minusNode, 1 ) = B( minusNode, 1 ) + value ;
+         b( minusNode, 1 ) = b( minusNode, 1 ) + value ;
       end
    end
 end

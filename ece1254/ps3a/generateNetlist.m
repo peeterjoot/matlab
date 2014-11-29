@@ -71,7 +71,7 @@ r = [n, ResistancePerSegment, InductancePerSegment, CapacitancePerSegment] ;
 
 fh = fopen( filename, 'w+' ) ;
 if ( -1 == fh )
-   error( 'NodalAnalysis:fopen', 'error opening file "%s"', filename ) ;
+   error( 'generateNetlist:fopen', 'error opening file "%s"', filename ) ;
 end
 
 vssNode = 1 ;
