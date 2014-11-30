@@ -1,5 +1,9 @@
-function [G, C, b, xnames] = NodalAnalysis(filename)
+function [G, C, b, xnames] = NodalAnalysis(filename, useSquareB)
 % NodalAnalysis generates the modified nodal analysis (MNA) equations from a text file
+%
+% parameters:
+%    filename: netlist source file to read.
+%    useSquareB: 1 to generate output as vector 
 %
 % Based on NodalAnalysis.m from ps2, generalized to add capacitance and inductance support.
 % also adds:
@@ -18,8 +22,9 @@ function [G, C, b, xnames] = NodalAnalysis(filename)
 % Deviations from the problem specification:
 %
 % The problem specification said to use B u(t) instead of b(t), but there's no
-% real need for factoring out a matrix B for the use of this problem, so I've opted for a
-% representation that uses less space for now.
+% real need for factoring out a matrix B for the use of this problem, so I initially opted for a
+% representation that uses less space.  The optional parameter useSquareB provides control
+% that allows for either.
 %
 % Also note that the syntax of the .netlist parser has not been modified to allow non-DC
 % sources.  For ps3a, we have only a single source, so we can scale the returned constant
@@ -105,6 +110,10 @@ function [G, C, b, xnames] = NodalAnalysis(filename)
 
    %enableTrace() ;
    traceit( ['filename: ', filename] ) ;
+
+   if ( nargin < 2 )
+      useSquareB = 0 ;
+   end
 
    currentLines   = [] ;
    resistorLines  = [] ;
@@ -322,8 +331,12 @@ function [G, C, b, xnames] = NodalAnalysis(filename)
    % have to adjust these sizes for sources, and voltage control sources
    G = zeros( biggestNodeNumber + numAdditionalSources, biggestNodeNumber + numAdditionalSources ) ;
    C = zeros( biggestNodeNumber + numAdditionalSources, biggestNodeNumber + numAdditionalSources ) ;
-   %B = zeros( biggestNodeNumber + numAdditionalSources, biggestNodeNumber + numAdditionalSources ) ;
-   b = zeros( biggestNodeNumber + numAdditionalSources, 1 ) ;
+
+   if ( useSquareB )
+      b = zeros( biggestNodeNumber + numAdditionalSources, biggestNodeNumber + numAdditionalSources ) ;
+   else
+      b = zeros( biggestNodeNumber + numAdditionalSources, 1 ) ;
+   end
 
    xnames = cell( biggestNodeNumber + numAdditionalSources, 1 ) ;
    for i = [1:biggestNodeNumber]
@@ -402,8 +415,11 @@ function [G, C, b, xnames] = NodalAnalysis(filename)
          G( minusNode, r ) = 1 ;
       end
 
-      %B( r, r ) = value ;
-      b( r, 1 ) = value ;
+      if ( useSquareB )
+         b( r, r ) = value ;
+      else
+         b( r, 1 ) = value ;
+      end
    end
 
    % value for r (fall through from loop above)
@@ -479,12 +495,18 @@ function [G, C, b, xnames] = NodalAnalysis(filename)
       traceit( sprintf( '%s %d,%d -> %d\n', label, plusNode, minusNode, value ) ) ;
 
       if ( plusNode )
-         %B( plusNode, plusNode ) = B( plusNode, plusNode ) - value ;
-         b( plusNode, 1 ) = b( plusNode, 1 ) - value ;
+         if ( useSquareB )
+            b( plusNode, plusNode ) = b( plusNode, plusNode ) - value ;
+         else
+            b( plusNode, 1 ) = b( plusNode, 1 ) - value ;
+         end
       end
       if ( minusNode )
-         %B( minusNode, minusNode ) = B( minusNode, minusNode ) + value ;
-         b( minusNode, 1 ) = b( minusNode, 1 ) + value ;
+         if ( useSquareB )
+            b( minusNode, minusNode ) = b( minusNode, minusNode ) + value ;
+         else
+            b( minusNode, 1 ) = b( minusNode, 1 ) + value ;
+         end
       end
    end
 end

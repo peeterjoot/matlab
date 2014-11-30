@@ -2,34 +2,26 @@ function plotFreqPartC( n, where )
 % pass 500,1 to use PlotFreqResp to plot N=500 case 1, for part (c).
 
 alpha = 0.01 ;
-np1 = n + 1 ;
-C = eye( np1 ) ;
+netlist = 'a.netlist' ;
 
-B = zeros( np1, 1 ) ; % h(x = 0) = 1
-B(1) = -1 ;
-L = zeros( np1, 1 ) ;
+L = zeros( n + 3, 1 ) ;
 L(where) = 1 ;
+if ( (where > (n+3)) || (where < 1) )
+   error( 'plotFreqPartC:where', 'value for where (%d) not in range', where ) ;
+end
 
-G = (alpha + 2 * n) * eye( np1 ) - n * ( diag( ones(1, n), -1 ) + diag( ones(1, n), 1 ) ) ;
+generateNetlist( netlist, n, alpha ) ;
 
-G(1,1) = alpha ;
-G(np1,np1) = alpha ;
-
-G(1, 1) = alpha ;
-%G(2, 1) = 0 ;
-%G(1, 2) = 0 ;
-
-%G(n+1, n) = 0 ;
-%G(n, n+1) = 0 ;
-G(n+1, n+1) = alpha ;
-
-G(2, 2) = alpha + n ;
-G(n, n) = alpha + n ;
+[G, C, B, xnames] = NodalAnalysis( netlist, 1 ) ;
 
 if ( n <= 10 )
-   disp(G) ;
+%   traceit( sprintf('G, C, B\n%s\n%s\n%s\n', mat2str( G ), mat2str( C ), mat2str( B ) ) ) ;
+   disp( G ) ;
+   disp( C ) ;
+   disp( B ) ;
+   disp( xnames ) ;
 end
 
 omega = logspace( -8, 4, n ) ;
 f = PlotFreqResp( omega, G, C, B, L ) ;
-%saveas( f, 'ps3bFreqResponsePartCFig1.png' ) ;
+saveas( f, 'ps3bFreqResponsePartCFig1.png' ) ;

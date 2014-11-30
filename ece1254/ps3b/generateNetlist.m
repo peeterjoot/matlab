@@ -18,9 +18,9 @@ fprintf( fh, 'V1 1 2 DC 0\n' ) ;
 fprintf( fh, 'V2 %d %d DC 0\n', n, n+1 ) ;
 
 for i = [1:n+1]
-   fprintf( fh, 'R%d %d 0 %e\n', n, n, rg ) ;
-   fprintf( fh, 'C%d %d 0 %e\n', n, n, capValue ) ;
-   fprintf( fh, 'I%d %d 0 DC %e\n', n, n, -deltaXsq ) ;
+   fprintf( fh, 'R%d %d 0 %e\n', i, i, rg ) ;
+   fprintf( fh, 'C%d %d 0 %e\n', i, i, capValue ) ;
+   fprintf( fh, 'I%d %d 0 DC %e\n', i, i, -deltaXsq ) ;
 end
 
 rn = n + 2 ;

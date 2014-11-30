@@ -313,6 +313,11 @@ plots the system frequency response. Here omegaSet is a vector of frequencies in
    path => 'ece1254/ps3b/plotFreqPartC.m',
    WHAT => qq(Plot the N=500 frequency responce for part c)
 },
+{
+   DATE => 'Nov 29, 2014',
+   path => 'ece1254/ps3b/generateNetlist.m',
+   WHAT => qq(generate the netlist to use in the part C N=500 frequency response plot)
+},
 ) ; # @matlab
 
    return @matlab ;
