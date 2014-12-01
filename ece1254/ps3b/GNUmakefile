@@ -5,7 +5,7 @@ FROMPS1 += traceit.m
 FROMPS1 += isDebugEnabled.m
 FROMPS2a += tridiagonal.m
 FROMPS3a += NodalAnalysis.m
-#CLEAN += *.mat
+CLEAN += *.mat
 CLEAN += *.png
 
 all :: $(FROMPS1)
