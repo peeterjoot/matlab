@@ -15,7 +15,7 @@ if ( (where > (n+3)) || (where < 1) )
 end
 
 nodalCacheName = sprintf('nodal%d_%d_%d.mat', n, where, withOpenCircuitEndpoints ) ;
-if ( exist(nodalCacheName, 'file' )
+if ( exist( nodalCacheName, 'file' ) )
    load( nodalCacheName ) ;
 else
    alpha = 0.01 ;
@@ -36,58 +36,80 @@ else
    save( nodalCacheName, 'G', 'C', 'B', 'xnames' ) ;
 end
 
+omega = logspace( -8, 4, n ) ;
+fullResp = computeFreqResp( omega, G, C, B, L ) ;
+
 if ( 0 )
-   omega = logspace( -8, 4, n ) ;
-   f = PlotFreqResp( omega, G, C, B, L ) ;
-   %saveas( f, 'ps3bFreqResponsePartCFig1.png' ) ;
+   f = figure ;
+   semilogx( omega, real(fullResp), 'b' ) ;
+   xlabel( '\omega' ) ;
+   hold on ;
+   semilogx( omega, imag(fullResp), 'r' ) ;
+   legend( {'Real', 'Imag'} ) ;
+   hold off ;
+
+   saveas( f, 'ps3bFreqResponsePartCFig1.png' ) ;
 end
 
-stateSpaceCacheName = sprintf('statespace%d_%d_%d.mat', n, where, withOpenCircuitEndpoints ) ;
-if ( exist(stateSpaceCacheName, 'file' )
-   load( stateSpaceCacheName ) ;
-else
+if ( 1 )
+%   p = [] ;
 
-   invC = inv(C) ;
-   A = -inv(C) * G ;
-   [V, D] = sorteig( A ) ;
+   stateSpaceCacheName = sprintf('statespace%d_%d_%d.mat', n, where, withOpenCircuitEndpoints ) ;
+   if ( exist( stateSpaceCacheName, 'file' ) )
+      load( stateSpaceCacheName ) ;
+   else
 
-   b = inv(V) * invC * B ;
+      q = [1 2 4 10 50] ;
+%      q = [10] ;
+%      q = [1] ;
+%      q = [50] ;
 
-   omega = logspace( -8, 4, n ) ;
-   PlotFreqResp( omega, G, C, B, L ) ;
+      invC = inv(C) ;
+      A = -inv(C) * G ;
+      [V, D] = sorteig( A, 'descend' ) ;
       
+      u = ones( size(B, 1), 1 ) ;
+      b = inv(V) * invC * B * u ;
+      % w' = D w + b
+      % y = L^T V w = (V^T L)^T w
+
+if ( 0 ) 
+   f = figure ;
+   semilogx( 1:size(D, 1), log10( -diag(D) ), '-.ob' ) ;
+   ylabel( 'log_{10}(-\lambda_i)' ) ;
+   xlabel( 'i' ) ;
+   saveas( f, 'ps3bEigenvaluesFig1.png' ) ;
+
+   diag(D)
+end
+
+      ii = 0 ;
+      for qq = q
+         ii = ii + 1 ;
+         ee = diag( D ) ;
+         ee = ee( [1:qq] ) ;
+         GG = -diag( ee ) ;
+if ( 1 )
+         bb = b( [1:qq] ) ;
+         BB = diag( bb ) ;
+
+         ll = V.' * L ;
+         LL = ll( [1:qq] ) ;
+
+         f = figure ;
+         response = computeFreqResp( omega, GG, eye( size(GG) ), BB, LL ) ;
+%fullResp
+%response 
+
+         semilogx( omega, real(fullResp), omega, real(response), omega, imag(fullResp), omega, imag(response) ) ;
+         legend( { 'Real (full)',
+                   sprintf('Real (q = %d)', qq),
+                   'Imag (full)',
+                   sprintf('Imag (q = %d)', qq) 
+               } ) ;
+         xlabel( '\omega' ) ;
+         saveas( f, sprintf('ps3bFreqResponsePartCq%dFig%d.png', qq, ii ) ) ;
+end
+      end
+   end 
 end 
-
-%Cinv = inv( C ) ;
-% how to select from eigenvalues:
-%>> [B,I] = sort(abs(diag(D)))
-%
-%B =
-%
-%   193.5728e-018
-%   147.9757e-003
-%   174.0316e-003
-%     1.4678e+000
-%     6.5262e+000
-%
-%
-%I =
-%
-%     4.0000e+000
-%     3.0000e+000
-%     5.0000e+000
-%     2.0000e+000
-%     1.0000e+000
-%
-%>> abs(diag(D))
-%ans =
-%
-%     6.5262e+000
-%     1.4678e+000
-%   147.9757e-003
-%   193.5728e-018
-%   174.0316e-003
-
-% Cinv * G
-%Cinv * B
-
