@@ -1,6 +1,6 @@
 function plotFreqPartC( n, where, withOpenCircuitEndpoints )
-% pass 500,1,0 to use PlotFreqResp to plot N=500 case 1, for part (c).
-% pass 500,1,1 to use PlotFreqResp to plot N=500 case 1, for part (d).
+% pass 500,501,0 to use PlotFreqResp to plot N=500 case 1, for part (c).
+% pass 500,501,1 to use PlotFreqResp to plot N=500 case 1, for part (d).
 %
 % parameters:
 % n [integer] : number of discretization intervals to use (500 for the problem)
@@ -39,13 +39,13 @@ else
       disp( xnames ) ;
    end
 
-   save( nodalCacheName, 'G', 'C', 'B', 'bu', 'xnames' ) ;
+   save( nodalCacheName, 'G', 'C', 'B', 'bu', 'xnames', 'L' ) ;
 end
 
 omega = logspace( -8, 4, n ) ;
 fullResp = computeFreqResp( omega, G, C, B, L ) ;
 
-if ( 0 )
+if ( 1 )
    f = figure ;
    semilogx( omega, real(fullResp), 'b' ) ;
    xlabel( '\omega' ) ;
@@ -99,7 +99,7 @@ if ( 1 )
       ll = V.' * L ;
       LL = ll( [1:qq] ) ;
 
-      if ( 0 )
+      if ( 1 )
          f = figure ;
          response = computeFreqResp( omega, GG, CC, BB, LL ) ;
 

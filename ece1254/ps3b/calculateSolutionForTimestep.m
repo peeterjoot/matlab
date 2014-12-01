@@ -1,9 +1,19 @@
-function [discreteTimes, v, s, iterationTimes] = calculateSolutionForTimestep( q, deltaT, maxT, withBE )
+function [discreteTimes, v, s, iterationTimes] = calculateSolutionForTimestep( q, tn, maxT, withBE, withSine )
 %
 % Calculate and cache the netlist file for the circuit and the associated MNA equations.
 % Calculate the BE or TR discretized solution for a given timestep.
 %
 % This requires plotFreqPartC( 500, 501, 1 ) to have been run first.
+%
+% allowed values of q include:
+%
+% q = [1 2 4 10 50 501] ;
+
+if ( nargin < 4 )
+   withBE = 0 ; % use TR
+end
+
+deltaT = maxT/tn ;
 
 n = 500 ;
 where = 501 ;
@@ -24,47 +34,48 @@ else
    L = LL ;
 end
 
-%if ( withBE )
-%   lupCachePath = sprintf( 'be.LUPdeltaTps_%d.mat', deltaT * 1000 ) ;
-%else
-%   lupCachePath = sprintf( 'tr.LUPdeltaTps_%d.mat', deltaT * 1000 ) ;
-%end
+if ( withBE )
+   lupCachePath = sprintf( 'be.LUP_q%d_Tn_%d_maxT%d_Sine%d.mat', q, tn, maxT, withSine ) ;
+else
+   lupCachePath = sprintf( 'tr.LUP_q%d_Tn_%d_maxT%d_Sine%d.mat', q, tn, maxT, withSine ) ;
+end
 
-%if ( exist( lupCachePath, 'file' ) )
-%   load( lupCachePath ) ;
-%else
+if ( exist( lupCachePath, 'file' ) )
+   load( lupCachePath ) ;
+else
    cOverDeltaT = C/ deltaT ;
 
    if ( withBE )
       F = cOverDeltaT + G ;
+disp(F) ;
 
       % prep for solving F\r
-      [ luFL, luFU, luFP ] = lu( F ) ;
+      [ lowerFactor, upperFactor, permuteFactor ] = lu( F ) ;
 
-      %save( lupCachePath, 'F', 'cOverDeltaT', 'luFL', 'luFU', 'luFP' ) ;
+      save( lupCachePath, 'F', 'cOverDeltaT', 'lowerFactor', 'upperFactor', 'permuteFactor' ) ;
    else
       cOverDeltaT = 2 * cOverDeltaT ;
 
       B = cOverDeltaT - G ;
       F = cOverDeltaT + G ;
 
-      [ luFL, luFU, luFP ] = lu( F ) ;
+      [ lowerFactor, upperFactor, permuteFactor ] = lu( F ) ;
 
-      %save( lupCachePath, 'F', 'B', 'luFL', 'luFL', 'luFP' ) ;
+      save( lupCachePath, 'F', 'B', 'lowerFactor', 'upperFactor', 'permuteFactor' ) ;
    end
-%end
+end
 
-%if ( withBE )
-%   voltageCachePath = sprintf( 'be.VoltageDeltaTps_%d.mat', deltaT * 1000 ) ;
-%else
-%   voltageCachePath = sprintf( 'tr.VoltageDeltaTps_%d.mat', deltaT * 1000 ) ;
-%end
+if ( withBE )
+   voltageCachePath = sprintf( 'be.Voltage_q%d_Tn_%d_maxT%d_Sine%d.mat', q, tn, maxT, withSine ) ;
+else
+   voltageCachePath = sprintf( 'tr.Voltage_q%d_Tn_%d_maxT%d_Sine%d.mat', q, tn, maxT, withSine ) ;
+end
 
-%if ( exist( voltageCachePath, 'file' ) )
-%   load( voltageCachePath ) ;
-%else
-   %numCpuMeasurementSamples = 3 ;
-   numCpuMeasurementSamples = 1 ;
+if ( exist( voltageCachePath, 'file' ) )
+   load( voltageCachePath ) ;
+else
+   numCpuMeasurementSamples = 3 ;
+   %numCpuMeasurementSamples = 1 ;
    iterationTimes = [] ;
 
    % repeate the iteration calculation a couple times to measure the cpu cost (part e).  Then cache those costs as well as the solution
@@ -82,8 +93,11 @@ end
       bv = 0 ;
       discreteTimes = [0:deltaT:maxT] ;
 
-      v = ones( 1/deltaT + 1, 1 ) ;
-%      v = vclock( discreteTimes ) ;
+      if ( withSine )
+         v = sin( 0.01 * discreteTimes ) ;
+      else
+         v = ones( tn + 1, 1 ) ;
+      end
 
       if ( withBE )
          i = 1 ;
@@ -95,9 +109,9 @@ end
                bv = b * vv ;
             end
 
-            r = luFP * (cOverDeltaT * x + bv) ;
-            y = luFL\r ;
-            x = luFL\y ;
+            r = permuteFactor * (cOverDeltaT * x + bv) ;
+            y = lowerFactor\r ;
+            x = upperFactor\y ;
             s( end + 1 ) = L.' * x ;
 
             i = i + 1 ;
@@ -111,9 +125,9 @@ end
             c = b * ( newV + lastV ) ;
             lastV = newV ;
 
-            r = luFP * (B * x + c) ;
-            y = luFL\r ;
-            x = luFL\y ;
+            r = permuteFactor * (B * x + c) ;
+            y = lowerFactor\r ;
+            x = upperFactor\y ;
             s( end + 1 ) = L.' * x ;
 
             i = i + 1 ;
@@ -122,5 +136,7 @@ end
       iterationTimes(end+1) = toc ;
    end
 
-%   save( voltageCachePath, 'discreteTimes', 'v', 's', 'iterationTimes' ) ;
-%end
+   save( voltageCachePath, 'discreteTimes', 'v', 's', 'iterationTimes' ) ;
+end
+
+%plot( discreteTimes, s ) ;
