@@ -1,4 +1,4 @@
-function [f] = PlotFreqResp(omegaSet,G,C,B,L)
+function [pReal, pImag] = PlotFreqResp(omegaSet,G,C,B,L)
 % A Matlab routine PlotFreqResp(omegaSet,G,C,B,L) which takes in omegaSet, G,C, B, L as input and
 % plots the system frequency response. Here omegaSet is a vector of frequencies in rad/s.
 % 
@@ -36,10 +36,10 @@ for omega = omegaSet
    response(end+1) = f ; 
 end
 
-f = figure ;
-semilogx( omegaSet, real(response), 'b' ) ;
+%f = figure ;
+pReal = semilogx( omegaSet, real(response), 'b' ) ;
 xlabel( '\omega' ) ;
 hold on ;
-semilogx( omegaSet, imag(response), 'r' ) ;
+pImag = semilogx( omegaSet, imag(response), 'r' ) ;
 legend( {'Real', 'Imag'} ) ;
 hold off ;
