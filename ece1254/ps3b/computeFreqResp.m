@@ -9,7 +9,9 @@ function response = computeFreqResp( omegaSet, G, C, B, L )
 % for a impulse response (U(s) is all ones)
 
 bSize = size( B, 2 ) ;
-u = ones( bSize, 1 ) ;
+%u = ones( bSize, 1 ) ;
+u = zeros( bSize, 1 ) ;
+u(1) = 1 ;
 
 bu = B * u ;
 lt = L.' ;

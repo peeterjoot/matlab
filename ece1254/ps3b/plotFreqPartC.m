@@ -25,6 +25,12 @@ else
 
    [G, C, B, xnames] = NodalAnalysis( netlist, 1 ) ;
 
+   %u = ones( size(B, 1), 1 ) ;
+   u = zeros( size(B, 1), 1 ) ;
+   u(1) = 1 ;
+
+   bu = B * u ;
+
    if ( n <= 10 )
    %   traceit( sprintf('G, C, B\n%s\n%s\n%s\n', mat2str( G ), mat2str( C ), mat2str( B ) ) ) ;
       disp( G ) ;
@@ -33,7 +39,7 @@ else
       disp( xnames ) ;
    end
 
-   save( nodalCacheName, 'G', 'C', 'B', 'xnames' ) ;
+   save( nodalCacheName, 'G', 'C', 'B', 'bu', 'xnames' ) ;
 end
 
 omega = logspace( -8, 4, n ) ;
@@ -51,55 +57,51 @@ if ( 0 )
    saveas( f, 'ps3bFreqResponsePartCFig1.png' ) ;
 end
 
-if ( 1 )
-%   p = [] ;
+stateSpaceCacheName = sprintf('statespace%d_%d_%d.mat', n, where, withOpenCircuitEndpoints ) ;
+if ( exist( stateSpaceCacheName, 'file' ) )
+   load( stateSpaceCacheName ) ;
+else
+   invC = inv(C) ;
+   A = -invC * G ;
+   [V, D] = sorteig( A, 'descend' ) ;
+   
+   bt = inv(V) * invC * bu ; % \tilde{b}
+   % w' = D w + b
+   % y = L^T V w = (V^T L)^T w
 
-   stateSpaceCacheName = sprintf('statespace%d_%d_%d.mat', n, where, withOpenCircuitEndpoints ) ;
-   if ( exist( stateSpaceCacheName, 'file' ) )
-      load( stateSpaceCacheName ) ;
-   else
-
-      q = [1 2 4 10 50] ;
-%      q = [10] ;
-%      q = [1] ;
-%      q = [50] ;
-
-      invC = inv(C) ;
-      A = -inv(C) * G ;
-      [V, D] = sorteig( A, 'descend' ) ;
-      
-      u = ones( size(B, 1), 1 ) ;
-      b = inv(V) * invC * B * u ;
-      % w' = D w + b
-      % y = L^T V w = (V^T L)^T w
-
-if ( 0 ) 
    f = figure ;
    semilogx( 1:size(D, 1), log10( -diag(D) ), '-.ob' ) ;
    ylabel( 'log_{10}(-\lambda_i)' ) ;
    xlabel( 'i' ) ;
    saveas( f, 'ps3bEigenvaluesFig1.png' ) ;
 
-   diag(D)
+%   dd = diag(D) ; dd(1:20)
+
+   save( stateSpaceCacheName, 'A', 'invC', 'V', 'D', 'bt' ) ;
 end
 
-      ii = 0 ;
-      for qq = q
-         ii = ii + 1 ;
-         ee = diag( D ) ;
-         ee = ee( [1:qq] ) ;
-         GG = -diag( ee ) ;
+q = [1 2 4 10 50] ;
+
 if ( 1 )
-         bb = b( [1:qq] ) ;
-         BB = diag( bb ) ;
+   ii = 0 ;
+   for qq = q
+      ii = ii + 1 ;
 
-         ll = V.' * L ;
-         LL = ll( [1:qq] ) ;
+      ee = diag( D ) ;
+      ee = ee( [1:qq] ) ;
+      GG = -diag( ee ) ;
 
+      CC = eye( size(GG) ) ;
+
+      bb = bt( [1:qq] ) ;
+      BB = diag( bb ) ;
+
+      ll = V.' * L ;
+      LL = ll( [1:qq] ) ;
+
+      if ( 0 )
          f = figure ;
-         response = computeFreqResp( omega, GG, eye( size(GG) ), BB, LL ) ;
-%fullResp
-%response 
+         response = computeFreqResp( omega, GG, CC, BB, LL ) ;
 
          semilogx( omega, real(fullResp), omega, real(response), omega, imag(fullResp), omega, imag(response) ) ;
          legend( { 'Real (full)',
@@ -109,7 +111,10 @@ if ( 1 )
                } ) ;
          xlabel( '\omega' ) ;
          saveas( f, sprintf('ps3bFreqResponsePartCq%dFig%d.png', qq, ii ) ) ;
-end
       end
-   end 
+
+      qCache = sprintf('modalReduction_q%d_n%d_w%d_o%d.mat', qq, n, where, withOpenCircuitEndpoints ) ;
+
+      save( qCache, 'GG', 'CC', 'bb', 'LL' ) ;
+   end
 end 
