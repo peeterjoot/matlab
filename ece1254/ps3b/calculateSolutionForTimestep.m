@@ -1,4 +1,4 @@
-function [discreteTimes, v, s, iterationTimes] = calculateSolutionForTimestep( q, tn, maxT, withBE, withSine )
+function [discreteTimes, v, s, iterationTimes] = calculateSolutionForTimestep( q, tn, maxT, withBE, withSine, withPrima )
 %
 % Calculate and cache the netlist file for the circuit and the associated MNA equations.
 % Calculate the BE or TR discretized solution for a given timestep.
@@ -9,8 +9,8 @@ function [discreteTimes, v, s, iterationTimes] = calculateSolutionForTimestep( q
 %
 % q = [1 2 4 10 50 501] ;
 
-if ( nargin < 4 )
-   withBE = 0 ; % use TR
+if ( nargin < 6 )
+   withPrima = 0 ;
 end
 
 deltaT = maxT/tn ;
@@ -19,7 +19,7 @@ n = 500 ;
 where = 501 ;
 withOpenCircuitEndpoints = 1 ;
 
-if ( q == 501 )
+if ( (q == 501) || withPrima )
    nodalCacheName = sprintf('nodal%d_%d_%d.mat', n, where, withOpenCircuitEndpoints ) ;
    load( nodalCacheName ) ;
 
@@ -27,11 +27,22 @@ if ( q == 501 )
 else
    qCache = sprintf('modalReduction_q%d_n%d_w%d_o%d.mat', q, n, where, withOpenCircuitEndpoints ) ;
 
-   load( qCache ) ;
    G = GG ;
    C = CC ;
    b = bb ;
    L = LL ;
+end
+
+if ( withPrima )
+   qPrimaCache = sprintf('primaReduction_q%d_n%d_w%d_o%d.mat', q, n, where, withOpenCircuitEndpoints ) ;
+
+   if ( exist( qCache, 'file' ) )
+      load( qCache ) ;
+   else
+      [GG, CC, bb, LL, ~] = prima( G, C, bu, L, q ) ;
+
+      save( qCache, 'GG', 'CC', 'bb', 'LL' ) ;
+   end
 end
 
 if ( withBE )
@@ -47,7 +58,7 @@ else
 
    if ( withBE )
       F = cOverDeltaT + G ;
-disp(F) ;
+%disp(F) ;
 
       % prep for solving F\r
       [ lowerFactor, upperFactor, permuteFactor ] = lu( F ) ;
@@ -66,13 +77,13 @@ disp(F) ;
 end
 
 if ( withBE )
-   voltageCachePath = sprintf( 'be.Voltage_q%d_Tn_%d_maxT%d_Sine%d.mat', q, tn, maxT, withSine ) ;
+   outputCachePath = sprintf( 'be.Voltage_q%d_Tn_%d_maxT%d_Sine%d.mat', q, tn, maxT, withSine ) ;
 else
-   voltageCachePath = sprintf( 'tr.Voltage_q%d_Tn_%d_maxT%d_Sine%d.mat', q, tn, maxT, withSine ) ;
+   outputCachePath = sprintf( 'tr.Voltage_q%d_Tn_%d_maxT%d_Sine%d.mat', q, tn, maxT, withSine ) ;
 end
 
-if ( exist( voltageCachePath, 'file' ) )
-   load( voltageCachePath ) ;
+if ( exist( outputCachePath, 'file' ) )
+   load( outputCachePath ) ;
 else
    numCpuMeasurementSamples = 3 ;
    %numCpuMeasurementSamples = 1 ;
@@ -136,7 +147,7 @@ else
       iterationTimes(end+1) = toc ;
    end
 
-   save( voltageCachePath, 'discreteTimes', 'v', 's', 'iterationTimes' ) ;
+   save( outputCachePath, 'discreteTimes', 'v', 's', 'iterationTimes' ) ;
 end
 
 %plot( discreteTimes, s ) ;
