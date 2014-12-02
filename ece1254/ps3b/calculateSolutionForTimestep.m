@@ -27,22 +27,27 @@ if ( (q == 501) || withPrima )
 else
    qCache = sprintf('modalReduction_q%d_n%d_w%d_o%d.mat', q, n, where, withOpenCircuitEndpoints ) ;
 
-   G = GG ;
-   C = CC ;
-   b = bb ;
-   L = LL ;
+   G = Gq ;
+   C = Cq ;
+   b = bq ;
+   L = Lq ;
 end
 
 if ( withPrima )
    qPrimaCache = sprintf('primaReduction_q%d_n%d_w%d_o%d.mat', q, n, where, withOpenCircuitEndpoints ) ;
 
-   if ( exist( qCache, 'file' ) )
-      load( qCache ) ;
+   if ( exist( qPrimaCache, 'file' ) )
+      load( qPrimaCache ) ;
    else
-      [GG, CC, bb, LL, ~] = prima( G, C, bu, L, q ) ;
+      [Gq, Cq, bq, Lq, ~] = prima( G, C, bu, L, q ) ;
 
-      save( qCache, 'GG', 'CC', 'bb', 'LL' ) ;
+      save( qPrimaCache, 'Gq', 'Cq', 'bq', 'Lq' ) ;
    end
+
+   G = Gq ;
+   C = Cq ;
+   b = bq ;
+   L = Lq ;
 end
 
 if ( withBE )
@@ -58,7 +63,6 @@ else
 
    if ( withBE )
       F = cOverDeltaT + G ;
-%disp(F) ;
 
       % prep for solving F\r
       [ lowerFactor, upperFactor, permuteFactor ] = lu( F ) ;
@@ -149,5 +153,3 @@ else
 
    save( outputCachePath, 'discreteTimes', 'v', 's', 'iterationTimes' ) ;
 end
-
-%plot( discreteTimes, s ) ;

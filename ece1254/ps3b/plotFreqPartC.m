@@ -80,41 +80,41 @@ else
    save( stateSpaceCacheName, 'A', 'invC', 'V', 'D', 'bt' ) ;
 end
 
-q = [1 2 4 10 50] ;
+qs = [1 2 4 10 50] ;
 
 if ( 1 )
    ii = 0 ;
-   for qq = q
+   for q = qs
       ii = ii + 1 ;
 
       ee = diag( D ) ;
-      ee = ee( [1:qq] ) ;
-      GG = -diag( ee ) ;
+      ee = ee( [1:q] ) ;
+      Gq = -diag( ee ) ;
 
-      CC = eye( size(GG) ) ;
+      Cq = eye( size(Gq) ) ;
 
-      bb = bt( [1:qq] ) ;
-      BB = diag( bb ) ;
+      bq = bt( [1:q] ) ;
+      Bq = diag( bq ) ;
 
       ll = V.' * L ;
-      LL = ll( [1:qq] ) ;
+      Lq = ll( [1:q] ) ;
 
       if ( 1 )
          f = figure ;
-         response = computeFreqResp( omega, GG, CC, BB, LL ) ;
+         response = computeFreqResp( omega, Gq, Cq, Bq, Lq ) ;
 
          semilogx( omega, real(fullResp), omega, real(response), omega, imag(fullResp), omega, imag(response) ) ;
          legend( { 'Real (full)',
-                   sprintf('Real (q = %d)', qq),
+                   sprintf('Real (q = %d)', q),
                    'Imag (full)',
-                   sprintf('Imag (q = %d)', qq) 
+                   sprintf('Imag (q = %d)', q) 
                } ) ;
          xlabel( '\omega' ) ;
-         saveas( f, sprintf('ps3bFreqResponsePartCq%dFig%d.png', qq, ii ) ) ;
+         saveas( f, sprintf('ps3bFreqResponsePartCq%dFig%d.png', q, ii ) ) ;
       end
 
-      qCache = sprintf('modalReduction_q%d_n%d_w%d_o%d.mat', qq, n, where, withOpenCircuitEndpoints ) ;
+      qCache = sprintf('modalReduction_q%d_n%d_w%d_o%d.mat', q, n, where, withOpenCircuitEndpoints ) ;
 
-      save( qCache, 'GG', 'CC', 'bb', 'LL' ) ;
+      save( qCache, 'Gq', 'Cq', 'bq', 'Lq' ) ;
    end
 end 
