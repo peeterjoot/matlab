@@ -44,6 +44,8 @@ if ( (q == 501) || withPrima )
 else
    qCache = sprintf('modalReduction_q%d_n%d_w%d_o%d.mat', q, n, where, withOpenCircuitEndpoints ) ;
 
+   load( qCache ) ;
+
    G = Gq ;
    C = Cq ;
    b = bq ;
