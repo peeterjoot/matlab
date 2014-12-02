@@ -311,7 +311,7 @@ plots the system frequency response. Here omegaSet is a vector of frequencies in
 {
    DATE => 'Nov 29, 2014',
    path => 'ece1254/ps3b/plotFreqPartC.m',
-   WHAT => qq(Plot the N=500 frequency responce for part c.)
+   WHAT => qq(Plot the N=500 frequency response for part c.)
 },
 {
    DATE => 'Nov 29, 2014',
@@ -321,12 +321,12 @@ plots the system frequency response. Here omegaSet is a vector of frequencies in
 {
    DATE => 'Dec 1, 2014',
    path => 'ece1254/ps3b/displayOutputErrorAndCpuTimes.m',
-   WHAT => qq(Plot and save the time step output, error and cpu time plots.)
+   WHAT => qq(Plot and save the time step output, error and CPU time plots.)
 },
 {
    DATE => 'Dec 1, 2014',
    path => 'ece1254/ps3b/calculateSolutionForTimestep.m',
-   WHAT => qq(Implements TR or BE algorithms (based on ps3a time step solver).  Also collects cpu measurements for the time required.  The set of measured times and the solutions are cached for use in a variety of plots.)
+   WHAT => qq(Implements TR or BE algorithms (based on ps3a time step solver).  Also collects CPU measurements for the time required.  The set of measured times and the solutions are cached for use in a variety of plots.)
 },
 {
    DATE => 'Dec 1, 2014',
