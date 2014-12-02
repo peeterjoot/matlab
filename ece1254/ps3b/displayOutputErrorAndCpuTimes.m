@@ -1,7 +1,6 @@
 function displayOutputErrorAndCpuTimes()
 
    methodNames = { 'modal', 'prima' } ;
-   method = [ 0 1 ] ;
 
    qs = [1 2 4 10 50 501] ;
 
@@ -9,30 +8,37 @@ function displayOutputErrorAndCpuTimes()
    withSine = [ 1 0 ] ;
    names = { 'Sine', 'Unit' } ;
 
-   for withPrima = [1] 
+   %for withPrima = 0:1 
+   for withPrima = 1:1 
+
+      if ( withPrima )
+         qo = 2 ;
+      else
+         qo = 50 ;
+      end
 
       for ii = 1:2
          f = figure ;
 
          [discreteTimes, ~, s, ~] = calculateSolutionForTimestep( 501, 2000, tmax(ii), 0, withSine(ii), withPrima ) ;
          [~, ~, sq1, ~] = calculateSolutionForTimestep( 1, 2000, tmax(ii), 0, withSine(ii), withPrima ) ;
-         [~, ~, sq50, ~] = calculateSolutionForTimestep( 50, 2000, tmax(ii), 0, withSine(ii), withPrima ) ;
+         [~, ~, sqO, ~] = calculateSolutionForTimestep( qo, 2000, tmax(ii), 0, withSine(ii), withPrima ) ;
          hold on ;
          plot( discreteTimes, s - sq1) ;
-         plot( discreteTimes, s - sq50) ;
+         plot( discreteTimes, s - sqO) ;
          xlabel( 't [s]' ) ;
          ylabel( 'Temp [C]' ) ;
-         legend( { 'y(t) - y_{q = 1}(t)', 'y(t) - y_{q = 50}(t)'} ) ;
+         legend( { 'y(t) - y_{q = 1}(t)', sprintf('y(t) - y_{q = %d}(t)', qo) } ) ;
          hold off ;
 
-         saveas( f, sprintf( 'ps3b%sDriverError%sFig1.png', names{ii}, methodNames{withPrima} ) ) ;
+         saveas( f, sprintf( 'ps3b%sDriverError%sFig1.png', names{ii}, methodNames{withPrima+1} ) ) ;
 
          f = figure ;
          plot( discreteTimes, s ) ;
          xlabel( 't [s]' ) ;
          ylabel( 'y(t) [C]' ) ;
 
-         saveas( f, sprintf( 'ps3b%sDriverOutput%sFig1.png', names{ii}, methodNames{withPrima} ) ) ;
+         saveas( f, sprintf( 'ps3b%sDriverOutput%sFig1.png', names{ii}, methodNames{withPrima+1} ) ) ;
 
          f = figure ;
          hold on ;
@@ -57,38 +63,35 @@ function displayOutputErrorAndCpuTimes()
          ylabel( 'cpu time [s]' ) ;
 
          hold off ;
-         saveas( f, sprintf( 'ps3b%sDriverCpuTimes%sFig1.png', names{ii}, methodNames{withPrima} ) ) ;
+         saveas( f, sprintf( 'ps3b%sDriverCpuTimes%sFig1.png', names{ii}, methodNames{withPrima+1} ) ) ;
       end
 
 
 
 
 
-      % not interesting to plot more than one... no visible differences for any q (even q = 1, vs 501).
+      % for modal (and prima), not interesting to plot more than one... no visible differences for any q (even q = 1, vs 501).
       if ( 0 )
-         figure ;
+         for q = qs
+            [discreteTimes, ~, s, ~] = calculateSolutionForTimestep( q, 2000, 10000, 0, 1, withPrima ) ;
+            %hold on ;
 
-         for q = [1 501]
-            % 0.01 t = 2 pi  ; t = 200 pi
-            [discreteTimes, v, s, iterationTimes] = calculateSolutionForTimestep( q, 2000, 10000, 0, 1, withPrima ) ;
-            hold on ;
-            if ( q == 1 )
-               plot( discreteTimes, v ) ;
-            end
+            figure ;
             plot( discreteTimes, s ) ;
+            title( sprintf( 'q = %d', q ) ) ;
          end
-         plotFreqPartC.m:   legend( {'y(t), q = 1', 'y(t)'} ) ;
 
          figure ;
 
-         for q = [1 501]
-            [discreteTimes, v, s, iterationTimes] = calculateSolutionForTimestep( q, 2000, 700, 0, 0, withPrima ) ;
-            hold on ;
+         for q = qs
+            [discreteTimes, ~, s, ~] = calculateSolutionForTimestep( q, 2000, 700, 0, 0, withPrima ) ;
+            %hold on ;
+
+            figure ;
             plot( discreteTimes, s ) ;
+            title( sprintf( 'q = %d', q ) ) ;
          end
-         legend
-         plotFreqPartC.m:   legend( {'y(t), q = 1', 'y(t)'} ) ;
-         hold off ;
+         %hold off ;
       end
    end
 end

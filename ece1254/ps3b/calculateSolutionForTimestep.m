@@ -31,6 +31,8 @@ n = 500 ;
 where = 501 ;
 withOpenCircuitEndpoints = 1 ;
 
+
+
 % indexed by withPrima
 method = { 'modal', 'prima' } ;
 
@@ -61,13 +63,10 @@ if ( withPrima && (q ~= 501) )
       bq = cInv * bq ;
       Cq = eye( size(Cq) ) ;
 
-      A = invC * Gq ;
-      [V, D] = sorteig( A, 'descend' ) ;
+      [V, Gq] = sorteig( Gq, 'descend' ) ;
    
       bq = inv(V) * bq ;
       Lq = V.' * Lq ;
-
-      Gq = D ;
 
       save( qPrimaCache, 'Gq', 'Cq', 'bq', 'Lq' ) ;
    end
@@ -79,9 +78,9 @@ if ( withPrima && (q ~= 501) )
 end
 
 if ( withBE )
-   lupCachePath = sprintf( 'be.%s_LUP_q%d_Tn_%d_maxT%d_Sine%d.mat', method{withPrima}, q, tn, maxT, withSine ) ;
+   lupCachePath = sprintf( 'be.%s_LUP_q%d_Tn_%d_maxT%d_Sine%d.mat', method{withPrima+1}, q, tn, maxT, withSine ) ;
 else
-   lupCachePath = sprintf( 'tr.%s_LUP_q%d_Tn_%d_maxT%d_Sine%d.mat', method{withPrima}, q, tn, maxT, withSine ) ;
+   lupCachePath = sprintf( 'tr.%s_LUP_q%d_Tn_%d_maxT%d_Sine%d.mat', method{withPrima+1}, q, tn, maxT, withSine ) ;
 end
 
 if ( exist( lupCachePath, 'file' ) )
@@ -109,9 +108,9 @@ else
 end
 
 if ( withBE )
-   outputCachePath = sprintf( 'be.%s_Output_q%d_Tn_%d_maxT%d_Sine%d.mat', method{withPrima}, q, tn, maxT, withSine ) ;
+   outputCachePath = sprintf( 'be.%s_Output_q%d_Tn_%d_maxT%d_Sine%d.mat', method{withPrima+1}, q, tn, maxT, withSine ) ;
 else
-   outputCachePath = sprintf( 'tr.%s_Output_q%d_Tn_%d_maxT%d_Sine%d.mat', method{withPrima}, q, tn, maxT, withSine ) ;
+   outputCachePath = sprintf( 'tr.%s_Output_q%d_Tn_%d_maxT%d_Sine%d.mat', method{withPrima+1}, q, tn, maxT, withSine ) ;
 end
 
 if ( exist( outputCachePath, 'file' ) )
