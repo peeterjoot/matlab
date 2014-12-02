@@ -8,16 +8,31 @@ function [discreteTimes, v, s, iterationTimes] = calculateSolutionForTimestep( q
 % allowed values of q include:
 %
 % q = [1 2 4 10 50 501] ;
-
-if ( nargin < 6 )
-   withPrima = 0 ;
-end
+%
+% parameters:
+%
+% q         [integer]:        order of the modal reduction
+% tn        [integer > 0]:    number of timestep intervals to use.
+% maxT      [double > 0]:     end of time for iterations.
+% withBe    [boolean]:        specify 1,0 for BE or TR iteration methods respectively.
+% withSine  [boolean]:        specify 1,0 for sine or unit step driver input respectively.
+% withPrima [boolean]:        specify 1,0 for modal or prima reduction respectively.
+% 
+% outputs:
+%
+% discreteTimes  [array, double]: the times at which the output is calculated.
+% v              [array, double]: values of the driving function at each of the times above.
+% s              [array, double]: solutions at each of the times above.
+% iterationTimes [array, double]: cpu usage measurements for a few repeated attempts of the time step calculations.
 
 deltaT = maxT/tn ;
 
 n = 500 ;
 where = 501 ;
 withOpenCircuitEndpoints = 1 ;
+
+% indexed by withPrima
+method = { 'modal', 'prima' } ;
 
 if ( (q == 501) || withPrima )
    nodalCacheName = sprintf('nodal%d_%d_%d.mat', n, where, withOpenCircuitEndpoints ) ;
@@ -33,13 +48,26 @@ else
    L = Lq ;
 end
 
-if ( withPrima )
+if ( withPrima && (q ~= 501) )
    qPrimaCache = sprintf('primaReduction_q%d_n%d_w%d_o%d.mat', q, n, where, withOpenCircuitEndpoints ) ;
 
    if ( exist( qPrimaCache, 'file' ) )
       load( qPrimaCache ) ;
    else
       [Gq, Cq, bq, Lq, ~] = prima( G, C, bu, L, q ) ;
+
+      cInv = inv( Cq ) ;
+      Gq = cInv * Gq ;
+      bq = cInv * bq ;
+      Cq = eye( size(Cq) ) ;
+
+      A = invC * Gq ;
+      [V, D] = sorteig( A, 'descend' ) ;
+   
+      bq = inv(V) * bq ;
+      Lq = V.' * Lq ;
+
+      Gq = D ;
 
       save( qPrimaCache, 'Gq', 'Cq', 'bq', 'Lq' ) ;
    end
@@ -51,9 +79,9 @@ if ( withPrima )
 end
 
 if ( withBE )
-   lupCachePath = sprintf( 'be.LUP_q%d_Tn_%d_maxT%d_Sine%d.mat', q, tn, maxT, withSine ) ;
+   lupCachePath = sprintf( 'be.%s_LUP_q%d_Tn_%d_maxT%d_Sine%d.mat', method{withPrima}, q, tn, maxT, withSine ) ;
 else
-   lupCachePath = sprintf( 'tr.LUP_q%d_Tn_%d_maxT%d_Sine%d.mat', q, tn, maxT, withSine ) ;
+   lupCachePath = sprintf( 'tr.%s_LUP_q%d_Tn_%d_maxT%d_Sine%d.mat', method{withPrima}, q, tn, maxT, withSine ) ;
 end
 
 if ( exist( lupCachePath, 'file' ) )
@@ -81,9 +109,9 @@ else
 end
 
 if ( withBE )
-   outputCachePath = sprintf( 'be.Voltage_q%d_Tn_%d_maxT%d_Sine%d.mat', q, tn, maxT, withSine ) ;
+   outputCachePath = sprintf( 'be.%s_Output_q%d_Tn_%d_maxT%d_Sine%d.mat', method{withPrima}, q, tn, maxT, withSine ) ;
 else
-   outputCachePath = sprintf( 'tr.Voltage_q%d_Tn_%d_maxT%d_Sine%d.mat', q, tn, maxT, withSine ) ;
+   outputCachePath = sprintf( 'tr.%s_Output_q%d_Tn_%d_maxT%d_Sine%d.mat', method{withPrima}, q, tn, maxT, withSine ) ;
 end
 
 if ( exist( outputCachePath, 'file' ) )
