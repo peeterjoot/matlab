@@ -34,31 +34,36 @@ function [G, C, B, u, xnames] = NodalAnalysis(filename)
 %
 % The netlist elements lines are specified as follows:
 %
-% - For each resistor, the file will contain a line in the form
+% - The syntax for specifying a resistor is a line of the form:
 % 
 %     Rlabel node1 node2 value
 % 
 %   where "value" is the resistance value.
 %
-% - Current sources are specified with the line
+% - The syntax for specifying a current source is lines of the form:
 % 
 %     Ilabel node1 node2 DC value
+%     Ilabel node1 node2 AC value freq [phase]
 % 
-%   and current flows from node1 to node2.  Note that DC is just a keyword.
-%   Here value, a floating point numbrer, can be interpreted as a constant amplitude for the current,
-%   as scaled by a time dependent component of the full source vector u(t).
+%   and current flows from node1 to node2.
+%   Here value, a floating point number, is the amplitude of the current.
+%   A line with 'DC value' is equivalent to that of 'AC value 0'. The parameter
+%   freq is the frequency in Hertz of the input signal.
 %
-% - A voltage source connected between the nodes node+ and node- is specified by the line
+% - The syntax for specifying a voltage source connected between the nodes node+ and
+%   node- is one of:
 % 
 %     Vlabel node+ node- DC value
+%     Vlabel node+ node- AC value freq [phase]
 % 
 %   where node+ and node- identify, respectively, the node where the positive
-%   and "negative" terminal is connected to, and value is the constant amplitude
-%   of the voltage source (a floating point value), which may be scaled by a time dependent
-%   component of the full source vector u(t).
+%   and "negative" terminal is connected to, and value is the amplitude
+%   of the voltage source (a floating point value).
+%   A line with 'DC value' is equivalent to that of 'AC value 0'. The parameter
+%   freq is the frequency in Hertz of the input signal.
 %
-% - A voltage-controlled voltage source,
-%   connected between the nodesnode+ and node-, is specified by the line
+% - The syntax for specifying a voltage-controlled voltage source,
+%   connected between the nodesnode+ and node-, is:
 % 
 %     Elabel node+ node- nodectrl+ nodectrl- gain
 % 
@@ -79,6 +84,12 @@ function [G, C, B, u, xnames] = NodalAnalysis(filename)
 %   where label is an arbitrary label, node1 and node2 are integer circuit node numbers, and val
 %   is the inductance (a floating point number).
 % 
+% - The syntax for specifying a diode modelled by I_d = I_0 ( e^{V/V_t} - 1 ) is:
+%
+%     Dlabel node1 node2 I_0 V_T
+%
+%   where V = V_n1 - V_n2.
+%    
 % - Comment lines, starting with *, as described in the following, are allowed:
 %     http://jjc.hydrus.net/jjc/technical/ee/documents/spicehowto.pdf 
 %
@@ -132,18 +143,18 @@ function [G, C, B, u, xnames] = NodalAnalysis(filename)
    currentLines   = [] ;
    resistorLines  = [] ;
    voltageLines   = [] ;
-   currentLines   = [] ;
    ampLines       = [] ;
    capLines       = [] ;
    indLines       = [] ;
+   diodeLines     = [] ;
 
    currentLables  = {} ;
    resistorLables = {} ;
    voltageLables  = {} ;
-   currentLables  = {} ;
    ampLables      = {} ;
    capLables      = {} ;
    indLables      = {} ;
+   diodeLables    = {} ;
 
    %----------------------------------------------------------------------------
    %
@@ -229,41 +240,97 @@ function [G, C, B, u, xnames] = NodalAnalysis(filename)
 
          ampLines(:,end+1) = a ;
          ampLables{end+1} = tmp{1} ;
-      case 'I'
+      case 'D'
+         % Dlabel node1 node2 I_0 V_T
+
          firstLineRead = 1 ;
          tmp = strsplit( line ) ;
          sz = size( tmp, 2 ) ;
 
-         if sz ~= 5
-            error( 'NodalAnalysis:parseline:I', 'expected 5 fields, but read %d fields from current line "%s"', sz, line ) ;
+         if ( sz ~= 5 )
+            error( 'NodalAnalysis:parseline:D', 'expected 5 fields, but read %d fields from diode line "%s"', sz, line ) ;
          end
-         if ( ~strcmp( 'DC', tmp{4} ) )
-            error( 'NodalAnalysis:parseline:I', 'expected DC field in line "%s", found "%s"', line, tmp{4} ) ;
+
+         n1 = str2num( tmp{2} ) ;
+         n2 = str2num( tmp{3} ) ;
+         io = str2num( tmp{4} ) ;
+         vt = str2num( tmp{5} ) ;
+         a = [ n1 n2 io vt ] ;
+
+         diodeLines(:,end+1) = a ;
+         diodeLables{end+1} = tmp{1} ;
+      case 'I'
+         % Ilabel node1 node2 DC value
+         % Ilabel node1 node2 AC value freq [phase]
+
+         firstLineRead = 1 ;
+         tmp = strsplit( line ) ;
+         sz = size( tmp, 2 ) ;
+
+         if ( (sz < 5) || (sz > 7) )
+            error( 'NodalAnalysis:parseline:I', 'expected 5-7 fields, but read %d fields from current line "%s"', sz, line ) ;
+         end
+         if ( sz == 5 )
+            if ( ~strcmp( 'DC', tmp{4} ) )
+               error( 'NodalAnalysis:parseline:I', 'expected DC field in line "%s", found "%s"', line, tmp{4} ) ;
+            end
+         else
+            if ( ~strcmp( 'AC', tmp{4} ) )
+               error( 'NodalAnalysis:parseline:I', 'expected AC field in line "%s", found "%s"', line, tmp{4} ) ;
+            end
          end
 
          n1 = str2num( tmp{2} ) ;
          n2 = str2num( tmp{3} ) ;
          g = str2double( tmp{5} ) ;
-         a = [ n1 n2 g ] ;
+         if ( sz > 5 )
+            freq = str2num( tmp{6} ) ;
+         else
+            freq = 0 ;
+         end
+         if ( sz > 6 )
+            phase = str2num( tmp{7} ) ;
+         else
+            phase = 0 ;
+         end
+         a = [ n1 n2 g freq phase ] ;
 
          currentLines(:,end+1) = a ;
          currentLables{end+1} = tmp{1} ;
       case 'V'
+         % Vlabel node1 node2 DC value
+         % Vlabel node1 node2 AC value freq [phase]
          firstLineRead = 1 ;
          tmp = strsplit( line ) ;
          sz = size( tmp, 2 ) ;
 
-         if sz ~= 5
-            error( 'NodalAnalysis:parseline:V', 'expected 5 fields, but read %d fields from current line "%s"', sz, line ) ;
+         if ( (sz < 5) || (sz > 7) )
+            error( 'NodalAnalysis:parseline:V', 'expected 5-7 fields, but read %d fields from current line "%s"', sz, line ) ;
          end
-         if ( ~strcmp( 'DC', tmp{4} ) )
-            error( 'NodalAnalysis:parseline:V', 'expected DC field in line "%s", found "%s"', line, tmp{4} ) ;
+         if ( sz == 5 )
+            if ( ~strcmp( 'DC', tmp{4} ) )
+               error( 'NodalAnalysis:parseline:V', 'expected DC field in line "%s", found "%s"', line, tmp{4} ) ;
+            end
+         else
+            if ( ~strcmp( 'AC', tmp{4} ) )
+               error( 'NodalAnalysis:parseline:V', 'expected AC field in line "%s", found "%s"', line, tmp{4} ) ;
+            end
          end
 
          n1 = str2num( tmp{2} ) ;
          n2 = str2num( tmp{3} ) ;
          g = str2double( tmp{5} ) ;
-         a = [ n1 n2 g ] ;
+         if ( sz > 5 )
+            freq = str2num( tmp{6} ) ;
+         else
+            freq = 0 ;
+         end
+         if ( sz > 6 )
+            phase = str2num( tmp{7} ) ;
+         else
+            phase = 0 ;
+         end
+         a = [ n1 n2 g freq phase ] ;
 
          voltageLines(:,end+1) = a ;
          voltageLables{end+1} = tmp{1} ;
@@ -287,9 +354,10 @@ function [G, C, B, u, xnames] = NodalAnalysis(filename)
    % if we wanted to allow for gaps in the node numbers (like 1, 3, 4, 5), then we'd have to count the number of unique node numbers
    % instead of just taking a max, and map the matrix positions to the original node numbers later.
    % 
-   allnodes = zeros(2, 1) ;
+   allnodes = zeros(2, 1) ; % assume a zero node.
+   allfrequencies = zeros(1, 0) ; % don't assume a DC source
 
-%enableTrace() ;
+enableTrace() ;
    sz = size( resistorLines, 2 ) ;
    if ( sz )
       traceit( sprintf( 'resistorLines: %d', sz ) ) ;
@@ -301,12 +369,14 @@ function [G, C, B, u, xnames] = NodalAnalysis(filename)
       traceit( sprintf( 'currentLines: %d', sz ) ) ;
 
       allnodes = horzcat( allnodes, currentLines(1:2, :) ) ;
+      allfrequencies = horzcat( allfrequencies, currentLines(4, :) ) ;
    end
    sz = size( voltageLines, 2 ) ;
    if ( sz )
       traceit( sprintf( 'voltageLines: %d', sz ) ) ;
 
       allnodes = horzcat( allnodes, voltageLines(1:2, :) ) ;
+      allfrequencies = horzcat( allfrequencies, voltageLines(4, :) ) ;
    end
    sz = size( ampLines, 2 ) ;
    if ( sz )
@@ -326,10 +396,14 @@ function [G, C, B, u, xnames] = NodalAnalysis(filename)
 
       allnodes = horzcat( allnodes, indLines(1:2, :) ) ;
    end
-%disableTrace() ;
+disp( allfrequencies ) ;
+disableTrace() ;
 
    biggestNodeNumber = max( max( allnodes ) ) ;
    traceit( [ 'maxnode: ', sprintf('%d', biggestNodeNumber) ] ) ;
+
+% FIXME: phase terms in the current and voltage source lines are both currently ignored.
+% FIXME: diode lines are currently ignored.
 
    %
    % Done parsing the netlist file.
@@ -346,6 +420,7 @@ function [G, C, B, u, xnames] = NodalAnalysis(filename)
    G = zeros( biggestNodeNumber + numAdditionalSources, biggestNodeNumber + numAdditionalSources ) ;
    C = zeros( biggestNodeNumber + numAdditionalSources, biggestNodeNumber + numAdditionalSources ) ;
 
+% FIXME: adjust number of columns to the number of independent frequencies 
    B = zeros( biggestNodeNumber + numAdditionalSources, biggestNodeNumber + numAdditionalSources ) ;
 
    xnames = cell( biggestNodeNumber + numAdditionalSources, 1 ) ;
