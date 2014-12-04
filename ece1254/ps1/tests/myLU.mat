@@ -1,0 +1,23 @@
+clear all ;
+
+% requires two pivots:
+A = [0 0 1 ;
+     2 0 4 ;
+     1 1 1 ] ;
+[P, L, U, s] = myLU( A ) ;
+
+% requires no pivots:
+A = [2 0 4 ;
+     1 1 1 ;
+     0 0 1 ] ;
+[P, L, U, s] = myLU( A ) ;
+
+A = [1 1 1 ;
+     2 3 1 ;
+     3 2 1 ] ;
+[P, L, U, s] = myLU( A ) ;
+
+% t/c to trigger size checking error:
+A = [2 3 1 ;
+     3 2 1 ] ;
+[P, L, U, s] = myLU( A ) ;

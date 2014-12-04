@@ -1,0 +1,30 @@
+% hash-tables-in-matlab
+% http://stackoverflow.com/a/3592050/189270
+
+% Can we assume that the netlist file will always have a 0 node?
+% 
+% If we can't assume that, then we can push all the node numbers into a hash, grab the keys
+% and take the min (say), treating that as the ground node.
+% 
+% Having to nominate a node as ground would add complexity, but not too much.
+
+clear all ;
+
+nodesMap = containers.Map({0}, {0}) ;
+nodesMap(1) = 0 ;
+nodesMap(2) = 0 ;
+nodesMap.remove(0) ;
+
+keys = cell2mat( nodesMap.keys ) ;
+
+disp( min(keys) ) ;
+
+% alternately, could just push all the node numbers onto an array
+
+clear all ;
+nodes = [] ;
+% 'push' operation can be done with the 'end' index position.
+nodes(end+1) = 1 ;
+nodes(end+1) = 2 ;
+
+disp( min(nodes) ) ;

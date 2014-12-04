@@ -1,0 +1,6 @@
+clear all ;
+line = '1 2' ;
+[a, sz] = sscanf( line, '%d %d' ) ;
+disp(a) ;
+disp(sz) ;
+b = a' ;

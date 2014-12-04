@@ -1,0 +1,125 @@
+M = [ 4 4 ; 3 -3 ]
+
+>> load svd1.m
+ 
+>> M = [ 4 4 ; 3 -3 ]
+
+M =
+
+     4     4
+     3    -3
+
+>> M.'
+
+ans =
+
+     4     3
+     4    -3
+
+>> M . M.'
+ M . M.'
+     |
+Error: String is not terminated properly.
+ 
+>> M M.'
+ M M.'
+   |
+Error: String is not terminated properly.
+ 
+>> M.M.'
+Attempt to reference field of non-structure array.
+ 
+>> M
+
+M =
+
+     4     4
+     3    -3
+
+>> M.'
+
+ans =
+
+     4     3
+     4    -3
+
+>> T=M.'
+
+T =
+
+     4     3
+     4    -3
+
+>> M.T
+Attempt to reference field of non-structure array.
+ 
+>> M * T
+
+ans =
+
+    32     0
+     0    18
+
+>> M * (M.')
+
+ans =
+
+    32     0
+     0    18
+
+>> (M.') * M
+
+ans =
+
+    25     7
+     7    25
+
+>> sqrt(32)
+
+ans =
+
+    5.6569
+
+>> sigma = [ sqrt(32) 0 ; 0 sqrt(18) ]
+
+sigma =
+
+    5.6569         0
+         0    4.2426
+
+>> T * [ 1/sqrt(32) 0 ; 0 1/sqrt(18) ]
+
+ans =
+
+    0.7071    0.7071
+    0.7071   -0.7071
+
+>> sqrt(2)
+
+ans =
+
+    1.4142
+
+>> 1/sqrt(2)
+
+ans =
+
+    0.7071
+
+>> v = T * [ 1/sqrt(32) 0 ; 0 1/sqrt(18) ]
+
+v =
+
+    0.7071    0.7071
+    0.7071   -0.7071
+
+>> sigma * v
+
+ans =
+
+    4.0000    4.0000
+    3.0000   -3.0000
+
+>> history
+Undefined function or variable 'history'.
+ 

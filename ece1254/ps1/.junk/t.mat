@@ -1,0 +1,20 @@
+% initially for a stackoverflow post (simplified question)
+
+clear all ;
+
+line = 'R1 1 2 1' ;
+[a, sz] = sscanf( line(2:end), '%d %d %d %f' ) ;
+
+if ( sz ~= 4 )
+   error( 'blah', 'expected 4 fields, but read %d fields from resistor line "%s"', sz, line ) ;
+end
+
+%[label, n1, n2, value] = a ;
+
+label = a(1) ;
+n1    = a(2) ;
+n2    = a(3) ;
+value = a(4) ;
+
+s = sprintf( 'R:%d %d,%d -> %d\n', label, n1, n2, value )
+disp( s ) ;

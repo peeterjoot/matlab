@@ -1,0 +1,9 @@
+R1  1 2  0.5
+I1 2 3   DC 7
+V1 3 4  DC  11
+E1 4 1  1 1     17
+.end
+
+blah not seen
+
+This was a test case just to test the parser.

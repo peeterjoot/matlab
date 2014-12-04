@@ -1,0 +1,28 @@
+clear all ;
+
+m = [ 1  -1  0  0 ;
+  -1  2 -1  0 ;
+  0  -1  2  1 ;
+  0   0  -1 1 ]
+
+e = eig( m ) ;
+
+n = 30 ;
+z1 = zeros( n + 1, 1 ) ;
+z2 = zeros( n + 1, 1 ) ;
+
+for i = [ 1 : n + 1 ]
+   z1(i) = 2 + 2 * exp(j * 2 * pi * (i - 1)/ 30) ;
+   z2(i) = 1 + exp(j * 2 * pi * (i - 1)/ 30) ;
+end
+
+% http://stackoverflow.com/questions/17066501/line-thickness-when-plotting-discrete-points
+plot( real(z1), imag(z1), real(z2), imag(z2) ) ;
+hold on ;
+for i = [1:4]
+   plot( real(e(i)), imag(e(i)), 'k.', 'markersize', 10) ;
+   hold on ;
+end
+hold off ;
+
+% better way to do the above in: http://stackoverflow.com/questions/26515957/plot-discrete-points-and-some-circles-that-enclose-them-in-matlab

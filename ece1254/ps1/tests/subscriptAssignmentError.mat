@@ -1,0 +1,17 @@
+% syntax debugging code:
+%Subscripted assignment dimension mismatch.
+%
+%Error in backSubst (line 50)
+%   x( i, 1 ) = (bi - dotprod)/uii ;
+
+clear all ; 
+x = zeros(3, 1)
+bi = 1 ;
+dotprod=0 ;
+U=[1 2 3 ; 1 2 3 ; 1 2 3] ;
+uii=U(3,3) ;
+size(uii)
+
+x( i, 1 ) = (bi - dotprod)/uii
+% Subscript indices must either be real positive integers or logicals.
+

@@ -1,0 +1,15 @@
+# like ps1.circuit.netlist, but the numeric values have been changed
+# for code-debug/variable-inspection purposes, since the 
+# matlab display shows things as mostly zeros with the mix of big and
+# small numbers that end up in the array.
+# We could probably normalize the equations to deal with this.
+R1 1 2 1
+R2 2 0 3
+R3 2 3 4
+R4 2 4 8
+R5 3 5 3
+R6 5 0 4
+R7 4 5 2
+V1 1 0 DC 5
+E1 3 0 0 2 4
+E2 4 0 5 3 5

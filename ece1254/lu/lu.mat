@@ -1,0 +1,5 @@
+% checking a manually computed decomposition
+
+l = [ 1 0 0 ; 2/5 1 0 ; 3/5 2/13 1 ] ;
+u = [ 5 1 1 ; 0 13/5 18/5 ; 0 0 11/13 ] ;
+l * u

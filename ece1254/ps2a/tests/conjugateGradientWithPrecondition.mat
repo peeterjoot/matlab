@@ -1,0 +1,99 @@
+%disableTrace() ;
+%enableTrace() ;
+
+err = 1e-5 ;
+
+A = [ 1 2 ; 2 1 ] ;
+b1 = [ 1 ; 2 ] ;
+b2 = [ 1 ; 0 ] ;
+b3 = [ 0 ; 2 ] ;
+P = eye( 2 ) ;
+
+A\b1
+[x, stats, residuals] = conjugateGradientQuarteroniPrecond( A, b1, P, err )
+
+A\b2
+[x, stats, residuals] = conjugateGradientQuarteroniPrecond( A, b2, P, err )
+
+A\b3
+[x, stats, residuals] = conjugateGradientQuarteroniPrecond( A, b3, P, err )
+
+clear all ;
+
+err = 1e-5 ;
+A = [ 1 2 3 ; 2 0 1 ; 3 1 5 ] ;
+b1 = [ 1 ; 2 ; 3 ] ;
+b2 = [ 1 ; 0 ; 3 ] ;
+b3 = [ 0 ; 2 ; 3 ] ;
+P = eye( 3 ) ;
+
+A\b1
+[x, stats, residuals] = conjugateGradientQuarteroniPrecond( A, b1, P, err )
+
+A\b2
+[x, stats, residuals] = conjugateGradientQuarteroniPrecond( A, b2, P, err )
+
+A\b3
+[x, stats, residuals] = conjugateGradientQuarteroniPrecond( A, b3, P, err )
+
+% none of these conjugate gradient implementations do very well with N=100,50,25,15,12 but N=10 seems to
+% converge.
+clear all ;
+err = 1e-10 ;
+%enableTrace() ;
+
+N = 10 ;
+A = rand( N, N ) ;
+A = A + A.' ;
+b = rand( N, 1 ) ;
+P = zeros( N ) ;
+
+% is there a vectorized syntax for this assignment?
+for d = [1 : N]
+   P( d, d ) = 1/A( d, d ) ;
+end
+
+r = A\b ;
+s = conjugateGradientPainlessB2( A, b, [], err ) ;
+t = conjugateGradientPainlessB2( A, b, P, err ) ;
+u = conjugateGradientPainlessB3( A, b, [], err ) ;
+v = conjugateGradientPainlessB3( A, b, P, err ) ;
+[w, stats, residuals] = conjugateGradientQuarteroniPrecond( A, b, [], err ) ;
+[x, stats, residuals] = conjugateGradientQuarteroniPrecond( A, b, P, err ) ;
+[y, relres, iter, flag] = conjgrad( A, b, b, eye(N), N, err ) ;
+[z, relres, iter, flag] = conjgrad( A, b, b, P, N, err ) ;
+
+[ norm(A * r - b) ;
+norm(A * s - b) ;
+norm(A * t - b) ;
+norm(A * u - b) ;
+norm(A * v - b) ;
+norm(A * w - b) ;
+norm(A * x - b) ;
+norm(A * y - b) ;
+norm(A * z - b) ]
+
+clear all ;
+% a t/c with a tridiagonal preconditioner.
+% with N=50, the last iterations without and with were respectively:
+%debug: 18: delta: 0.008972, relErr: 0.000006
+%debug: 7: delta: 0.000627, relErr: 0.000008
+
+N = 50 ;
+s = sprandsym( N, 0.3, 1:N ) ;
+b = 10*rand(N, 1) ;
+d = spdiags(s, -1:1) ;
+P = diag(d(1:N-1,1), -1) + diag(d(:,2), 0) + diag(d(2:N,3), 1) ; 
+
+enableTrace() ;
+z = s\b
+[x, stats, residuals] = conjugateGradientQuarteroniPrecond( s, b, [], 1e-5 ) ;
+%x
+[y, stats, residuals] = conjugateGradientQuarteroniPrecond( s, b, P, 1e-5 ) ;
+%y
+
+[ norm(z - x) ; norm( z - y) ]
+
+%eig(s)  % 1:N
+q = inv( sqrt( P ) ) ;
+eig( q * s * q ) 

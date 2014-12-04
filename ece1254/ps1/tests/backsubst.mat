@@ -1,0 +1,38 @@
+clear all ;
+epsilon = eps(1.0) * 100 ;
+
+U = [2 2 2 ; 0 1 2 ; 0 0 2 ] ; 
+b = [ 1 ; 2 ; 3 ] ; 
+x = backSubst( U, b, epsilon ) ;
+expect = [ 0 ; -1 ; 3/2 ] ;
+
+if ( x ~= expect )
+   disp( x ) ;
+   disp( expect ) ;
+   error( 'backSubst:tc1', 'x != expect' ) ;
+end
+
+
+
+% t/c to trigger upper triangular checking error:
+U = [2 3 1 ; 0 2 1 ; 0 1 1 ] ;
+b = [ 1 ; 2 ; 3 ] ;
+x = backSubst( U, b, epsilon ) ;
+% expect:
+%Error using verifyUpperTriangular ...
+%Error in backSubst ...
+ 
+% t/c to trigger size checking error:
+U = [2 3 1 ; 0 2 1 ] ;
+b = [ 1 ; 2 ; 3 ] ;
+x = backSubst( U, b, epsilon ) ;
+% expect: matrix with dimensions 2,3 are not square
+
+% t/c to trigger size checking error:
+U = [2 3 1 ; 0 2 1 ; 0 0 1 ] ;
+b = [ 1 ; 2 ] ;
+x = backSubst( U, b, epsilon ) ;
+% expect: matrix dimensions 3,3 are not compatable with vector dimensions 2,1
+
+x = backSubst( U, U, epsilon ) ;
+% expect: vector with dimensions 3,3 is not a column vector

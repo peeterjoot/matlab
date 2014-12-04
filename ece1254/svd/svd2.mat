@@ -1,0 +1,75 @@
+>> m = [ 1 1 ; 2 2 ]
+
+m =
+
+     1     1
+     2     2
+
+>> m'
+
+ans =
+
+     1     2
+     1     2
+
+>> m' * m
+
+ans =
+
+     5     5
+     5     5
+
+>> eigenvalues(m' * m)
+Undefined function 'eigenvalues' for input arguments of type 'double'.
+ 
+>> help eigenvalues
+
+eigenvalues not found.
+
+Use the Help browser search field to search the documentation, or
+type "help help" for help command options, such as help for methods.
+
+>> linalg::eigenvalues( m' * m )
+ linalg::eigenvalues( m' * m )
+        |
+Error: Unexpected MATLAB operator.
+ 
+>> eigenvectors( m' * m)
+Undefined function 'eigenvectors' for input arguments of type 'double'.
+ 
+>> eig( m' * m)
+
+ans =
+
+     0
+    10
+
+>> [v,d] = eig( m' * m )
+
+v =
+
+   -0.7071    0.7071
+    0.7071    0.7071
+
+
+d =
+
+     0     0
+     0    10
+
+>> 
+
+>> v(:,1)
+
+ans =
+
+   -0.7071
+    0.7071
+
+>> v(:,2)
+
+ans =
+
+    0.7071
+    0.7071
+

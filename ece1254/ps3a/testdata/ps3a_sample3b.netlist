@@ -1,0 +1,7 @@
+Is 0 1 DC 3
+R1 1 0 0.5
+C1 2 0 5
+L1 1 2 7
+.end
+
+Same as ps3a_sample3b.netlist, but with the inductor current sign reversed.

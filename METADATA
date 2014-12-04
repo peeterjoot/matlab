@@ -1,0 +1,351 @@
+# generate this sort of template with:
+# ~/bin/mtcheck ece1254/ps3b/*.m | tee x ; # say
+
+sub matlabMeta
+{
+my @matlab =
+(
+{
+   DATE => 'Nov 2, 2014',
+   path => 'ece1254/ps1/backSubst.m',
+   WHAT => qq(backSubst performs a back substitution returning x for the system U x = b, where U is upper triangular and has no zeros on the diagonal.)
+},
+{
+   DATE => 'Oct 11, 2014',
+   path => 'ece1254/ps1/changeDebug.m',
+   WHAT => qq(enable or disable trace)
+},
+{
+   DATE => 'Oct 11, 2014',
+   path => 'ece1254/ps1/changeTrace.m',
+   WHAT => qq(enable or disable trace)
+},
+{
+   DATE => 'Oct 11, 2014',
+   path => 'ece1254/ps1/disableDebug.m',
+   WHAT => qq(disable debug mode.  This sets a global debug variable to zero so that calls to traceit don't print anything.)
+},
+{
+   DATE => 'Oct 11, 2014',
+   path => 'ece1254/ps1/disableTrace.m',
+   WHAT => qq(disable debug tracing.
+Sets a global trace variable to zero so that calls to traceit don't print anything.
+)
+},
+{
+   DATE => 'Oct 11, 2014',
+   path => 'ece1254/ps1/enableDebug.m',
+   WHAT => qq(
+enable debug mode.
+Sets a global debug variable to non-zero so that calls to verify( ... ) don't print anything.)
+},
+{
+   DATE => 'Oct 11, 2014',
+   path => 'ece1254/ps1/enableTrace.m',
+   WHAT => qq(enable debug tracing.
+Sets a global trace variable to non-zero so that calls to traceit( ... ) don't print anything.)
+},
+{
+   DATE => 'Oct 11, 2014',
+   path => 'ece1254/ps1/findMaxIndexOfColumnMatrix.m',
+   WHAT => qq(findMaxIndexOfColumnMatrix finds the index of the pivot element, the element with the biggest absolute value.)
+},
+{
+   DATE => 'Nov 2, 2014',
+   path => 'ece1254/ps1/forwardSubst.m',
+   WHAT => qq(forwardSubst performs a back substitution returning x for the system L x = b, where L is lower triangular and has no zeros on the diagonal.)
+},
+{
+   DATE => 'Oct 14, 2014',
+   path => 'ece1254/ps1/generateHeatNetlist.m',
+   WHAT => qq(A small Matlab function that generates a netlist for the heat network in ps1 p3a.)
+},
+{
+   DATE => 'Oct 14, 2014',
+   path => 'ece1254/ps1/generateResistorGridNetlist.m',
+   WHAT => qq(a small Matlab function that generates a netlist for a network made by:
+N x N square grid of resistors of value R, where N is the number of...)
+},
+{
+   DATE => 'Oct 11, 2014',
+   path => 'ece1254/ps1/isDebugEnabled.m',
+   WHAT => qq(check if debug mode is enabled.  If neither enableDebug nor disableDebug has been called, this 
+disable debug modes.)
+},
+{
+   DATE => 'Oct 14, 2014',
+   path => 'ece1254/ps1/NodalAnalysis.m',
+   WHAT => qq(NodalAnalysis generates the MNA, modified nodal analysis, equations from a text file.)
+},
+{
+   DATE => 'Nov 2, 2014',
+   path => 'ece1254/ps1/noPivotLU.m',
+   WHAT => qq(noPivotLU performs a, not in place, LU factorization of the input matrix, producing the factors: M = L U,
+where L and U are lower and upper triangular respectively.)
+},
+{
+   DATE => 'Oct 14, 2014',
+   path => 'ece1254/ps1/plotHeatQ.m',
+   WHAT => qq(plot the netlist results for ps1 p3b, and p3d.)
+},
+{
+   DATE => 'Oct 14, 2014',
+   path => 'ece1254/ps1/problem2driver.m',
+   WHAT => qq(driver for ps1 problem 2, part a and b.)
+},
+{
+   DATE => 'Oct 14, 2014',
+   path => 'ece1254/ps1/ps1d.m',
+   WHAT => qq(driver that calculates an LU factorization based solution for ps3.p1, and compares to the direct Matlab solution)
+},
+{
+   DATE => 'Oct 11, 2014',
+   path => 'ece1254/ps1/tests/fit.m',
+   WHAT => qq(polynomial fitting experimental code)
+},
+{
+   DATE => 'Oct 11, 2014',
+   path => 'ece1254/ps1/tests/verifyUpperTriangular.m',
+   WHAT => qq(unit tests for verifyUpperTriangular function)
+},
+{
+   DATE => 'Oct 11, 2014',
+   path => 'ece1254/ps1/tests/withPivotLU.m',
+   WHAT => qq(unit tests for withPivotLU function)
+},
+{
+   DATE => 'Oct 11, 2014',
+   path => 'ece1254/ps1/traceit.m',
+   WHAT => qq(trace a string, along with the name/line of the caller.  This is done if enableTrace has been called, and disableTrace has not, then the value of the string will be printed following a 'debug: function:line: ' prefix.)
+},
+{
+   DATE => 'Oct 11, 2014',
+   path => 'ece1254/ps1/verifyUpperTriangular.m',
+   WHAT => qq(verifyUpperTriangular produces an error if the matrix U is not upper triangular within precision epsilon.)
+},
+{
+   DATE => 'Oct 14, 2014',
+   path => 'ece1254/ps1/withPivotLU.m',
+   WHAT => qq(withPivotLU performs a not in place LU factorization of the input matrix, producing the factors: M = L U, where L' = P L and U are lower and upper triangular respectively, and P is a permutation matrix.)
+},
+{
+   DATE => 'Nov 2, 2014',
+   path => 'ece1254/ps2a/compareBD.m',
+   WHAT => qq(compare the solutions for the transformed and original circuits of ps2 parts b and d.)
+},
+{
+   DATE => 'Oct 31, 2014',
+   path => 'ece1254/ps2a/conjgrad.m',
+   WHAT => qq(A conjugate gradient implementation taken directly from 'Numerical Mathematics')
+},
+{
+   DATE => 'Nov 2, 2014',
+   path => 'ece1254/ps2a/conjugateGradientPainlessB2.m',
+   WHAT => qq(A conjugate gradient implementation based on the pseudocode algorithm from Shewchuk's
+"An Introduction to the Conjugate Gradient Method Without the Agonizing Pain" appendix B.2)
+},
+{
+   DATE => 'Oct 31, 2014',
+   path => 'ece1254/ps2a/conjugateGradientPainlessB3.m',
+   WHAT => qq(A conjugate gradient implementation based on the pseudocode algorithm from Shewchuk's
+"An Introduction to the Conjugate Gradient Method Without the Agonizing Pain" appendix B.3)
+},
+{
+   DATE => 'Nov 2, 2014',
+   path => 'ece1254/ps2a/conjugateGradientQuarteroniPrecond.m',
+   WHAT => qq(A conjugate gradient implementation with preconditioning based on the algorithm from
+the algorithm in Quarteroni, et al's "Numerical Mathematics")
+},
+{
+   DATE => 'Nov 2, 2014',
+   path => 'ece1254/ps2a/generateNodalEquationsPartEH.m',
+   WHAT => qq(Generate the modified nodal analysis equations G x = b, for the grid specified in ps2 problem 1 part a)
+},
+{
+   DATE => 'Nov 2, 2014',
+   path => 'ece1254/ps2a/generateResistorGridNetlist.m',
+   WHAT => qq(Generate a resistor grid network for the problem of ps2a.  Relative to the network of the previous problem set, this one has a resistance from each node to ground, and also has a series resistance on the voltage source to ground.  An option to use a Norton equivalent current source for the voltage source is also provided, which allows the MNA matrix to be symmetric, which in turn allows CG methods to be used to solve)
+},
+{
+   DATE => 'Oct 29, 2014',
+   path => 'ece1254/ps2a/NodalAnalysis.m',
+   WHAT => qq(Based on NodalAnalysis.m from ps1, but generalized to allow alphanumeric labels)
+},
+{
+   DATE => 'Nov 2, 2014',
+   path => 'ece1254/ps2a/partEcollectTimings.m',
+   WHAT => qq(collect and plot timing info for all the different solution methods: CG, LU, ...)
+},
+{
+   DATE => 'Nov 2, 2014',
+   path => 'ece1254/ps2a/partH.m',
+   WHAT => qq(collect timing data for each of the part e solution methods with and without preconditioning, and optionally plotting the Gershgorin circles)
+},
+{
+   DATE => 'Nov 2, 2014',
+   path => 'ece1254/ps2a/tests/lutest.m',
+   WHAT => qq(test driver to try Matlab builtin lu function.)
+},
+{
+   DATE => 'Nov 2, 2014',
+   path => 'ece1254/ps2a/tridiagonal.m',
+   WHAT => qq(extract just the tridiagonal subset of the matrix a, returning the result in sparse form)
+},
+{
+   DATE => 'Nov 2, 2014',
+   path => 'ece1254/ps2a/usenetlistProblemBD.m',
+   WHAT => qq(Solve the ps2a netlist with various methods)
+},
+{
+   DATE => 'Nov 9, 2014',
+   path => 'ece1254/ps2b/countItersAndPlot.m',
+   WHAT => qq(count the Newton's method iterations required to solve the ps2b diffusion problem 2.)
+},
+{
+   DATE => 'Nov 3, 2014',
+   path => 'ece1254/ps2b/ddiode.m',
+   WHAT => qq(derivative of the diode Newton's method function for ps2b problem 1.)
+},
+{
+   DATE => 'Nov 3, 2014',
+   path => 'ece1254/ps2b/diode.m',
+   WHAT => qq(The diode Newton's method function for ps2b problem 1.)
+},
+{
+   DATE => 'Nov 2, 2014',
+   path => 'ece1254/ps2b/dplot.m',
+   WHAT => qq(Attempt to plot the diode function with Matlab.  Gave up and plotted it with Mathematica instead.)
+},
+{
+   DATE => 'Nov 9, 2014',
+   path => 'ece1254/ps2b/newtonsDiffusion.m',
+   WHAT => qq(Implementation of Newton's method with and without stepping and damping for problem 2 of ps2b.)
+},
+{
+   DATE => 'Nov 4, 2014',
+   path => 'ece1254/ps2b/newtonsDiode.m',
+   WHAT => qq(Implementation of Newton's method with and without stepping for problem 1 of ps2b.)
+},
+{
+   DATE => 'Nov 5, 2014',
+   path => 'ece1254/ps2b/newtonsSquareroot.m',
+   WHAT => qq(Reference implementation of Newton's method for a square root computation.)
+},
+{
+   DATE => 'Nov 9, 2014',
+   path => 'ece1254/ps2b/quadraticDifferences.m',
+   WHAT => qq(Demonstrate quadratic convergence for the multivariable Newton's method of ps2b problem 2.)
+},
+{
+   DATE => 'Nov 19, 2014',
+   path => 'ece1254/ps3a/NodalAnalysis.m',
+   WHAT => qq(Generate MNA equations for systems that also include inductors and capacitors)
+},
+{
+   DATE => 'Nov 19, 2014',
+   path => 'ece1254/ps3a/tests/nat.m',
+   WHAT => qq(test cases for NodalAnalysis.m)
+},
+{
+   DATE => 'Nov 22, 2014',
+   path => 'ece1254/ps3a/generateNetlist.m',
+   WHAT => qq(Generates the netlist for part b, and returns the table of RLC values and the numbers of these RLC segments for each level.)
+},
+{
+   DATE => 'Nov 22, 2014',
+   path => 'ece1254/ps3a/generateNetlistSegment.m',
+   WHAT => qq(A helper function that generates a sequence of serially connected RLC segments for one branch of the clock distribution network.)
+},
+{
+   DATE => 'Nov 22, 2014',
+   path => 'ece1254/ps3a/generateNetlistSegmentForLevel.m',
+   WHAT => qq(For a given level greater than 1, call generateNetlistSegment for each fork of the clock distribution network in this level)
+},
+{
+   DATE => 'Nov 23, 2014',
+   path => 'ece1254/ps3a/tests/checkvclock.m',
+   WHAT => qq(Test vclock function by plotting and visual verification)
+},
+{
+   DATE => 'Nov 23, 2014',
+   path => 'ece1254/ps3a/vclock.m',
+   WHAT => qq(Implement a function for the specified clock signal.  This function is vectorized and uses vclk to calculate the voltage for a single, scalar, point in time.)
+},
+{
+   DATE => 'Nov 24, 2014',
+   path => 'ece1254/ps3a/calculateSolutionForTimestep.m',
+   WHAT => qq(Calculate and cache the netlist file for the circuit and the associated MNA equations.  Calculate the BE or TR discretized solution for a given timestep.)
+},
+{
+   DATE => 'Nov 25, 2014',
+   path => 'ece1254/ps3a/driver.m',
+   WHAT => qq(High level driver for the plots.  Calls plotSolutionIterations as appropriate to generate the figures for part c, d.)
+},
+{
+   DATE => 'Nov 25, 2014',
+   path => 'ece1254/ps3a/clk.m',
+   WHAT => qq(split out piecewise clock function for scalar value to allow for vectorized vclock implementation.)
+},
+{
+   DATE => 'Nov 25, 2014',
+   path => 'ece1254/ps3a/interpolate.m',
+   WHAT => qq(Given a set of values v measured at all the points in [0, maxT] separated by timestep inputDeltaT: A set of interpolated values for v are computed using a different, presumably finer granularity, timestep size newDeltaT.)
+},
+{
+   DATE => 'Nov 25, 2014',
+   path => 'ece1254/ps3a/loglogExponential.m',
+   WHAT => qq(Plot the order relationships measured for N vs error for BE and TR.)
+},
+{
+   DATE => 'Nov 27, 2014',
+   path => 'ece1254/ps3b/PlotFreqResp.m',
+   WHAT => qq(Implements a Matlab routine PlotFreqResp(omegaSet,G,C,B,L) which takes in omegaSet, G,C, B, L as input and
+plots the system frequency response. Here omegaSet is a vector of frequencies in rad/s.
+)
+},
+{
+   DATE => 'Nov 27, 2014',
+   path => 'ece1254/ps3b/testPlotFreqResp.m',
+   WHAT => qq(Simple test case for PlotFreqResp().)
+},
+{
+   DATE => 'Nov 29, 2014',
+   path => 'ece1254/ps3b/plotFreqPartC.m',
+   WHAT => qq(Plot the N=500 frequency response for part c.)
+},
+{
+   DATE => 'Nov 29, 2014',
+   path => 'ece1254/ps3b/generateNetlist.m',
+   WHAT => qq(Generate the netlist to use in the part c N=500 frequency response plot.)
+},
+{
+   DATE => 'Dec 1, 2014',
+   path => 'ece1254/ps3b/displayOutputErrorAndCpuTimes.m',
+   WHAT => qq(Plot and save the time step output, error and CPU time plots.)
+},
+{
+   DATE => 'Dec 1, 2014',
+   path => 'ece1254/ps3b/calculateSolutionForTimestep.m',
+   WHAT => qq(Implements TR or BE algorithms (based on ps3a time step solver).  Also collects CPU measurements for the time required.  The set of measured times and the solutions are cached for use in a variety of plots.)
+},
+{
+   DATE => 'Dec 1, 2014',
+   path => 'ece1254/ps3b/computeFreqResp.m',
+   WHAT => qq(Compute the frequency response curve for use in PlotFreqResp().)
+},
+{
+   DATE => 'Nov 30, 2014',
+   path => 'ece1254/ps3b/sorteig.m',
+   WHAT => qq(Get the eigenvalues and vectors for an input matrix, and sort them as desired.  Apply the same sort to the columns of the eigenvector matrix.)
+},
+{
+   DATE => 'Nov 30, 2014',
+   path => 'ece1254/ps3b/testsorteig.m',
+   WHAT => qq(Test code for sorteig().)
+},
+) ; # @matlab
+
+   return @matlab ;
+}
+
+1 ;
