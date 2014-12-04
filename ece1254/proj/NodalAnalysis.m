@@ -98,7 +98,8 @@ function [G, C, B, u, xnames] = NodalAnalysis(filename)
 % INPUT PARAMETERS:
 %
 % - filename [string]:
-%   netlist source file to read.
+%
+%     netlist source file to read.
 %
 %------------------------------------------------
 %
@@ -134,8 +135,6 @@ function [G, C, B, u, xnames] = NodalAnalysis(filename)
 %   controlled voltage source, as well as any inductor currents.
 % 
 %------------------------------------------------
-
-   u = [] ; % dummy.  FIXME: implement.  B columns are also not implemented properly (a square matrix is being returned).
 
    %enableTrace() ;
    traceit( ['filename: ', filename] ) ;
@@ -357,7 +356,7 @@ function [G, C, B, u, xnames] = NodalAnalysis(filename)
    allnodes = zeros(2, 1) ; % assume a zero node.
    allfrequencies = zeros(1, 0) ; % don't assume a DC source
 
-enableTrace() ;
+%enableTrace() ;
    sz = size( resistorLines, 2 ) ;
    if ( sz )
       traceit( sprintf( 'resistorLines: %d', sz ) ) ;
@@ -396,8 +395,10 @@ enableTrace() ;
 
       allnodes = horzcat( allnodes, indLines(1:2, :) ) ;
    end
-disp( allfrequencies ) ;
-disableTrace() ;
+%disableTrace() ;
+
+   u = unique( allfrequencies ) ; % note: unique sorts by default
+   u = u.' ; % convert to Mx1
 
    biggestNodeNumber = max( max( allnodes ) ) ;
    traceit( [ 'maxnode: ', sprintf('%d', biggestNodeNumber) ] ) ;
@@ -420,8 +421,10 @@ disableTrace() ;
    G = zeros( biggestNodeNumber + numAdditionalSources, biggestNodeNumber + numAdditionalSources ) ;
    C = zeros( biggestNodeNumber + numAdditionalSources, biggestNodeNumber + numAdditionalSources ) ;
 
-% FIXME: adjust number of columns to the number of independent frequencies 
-   B = zeros( biggestNodeNumber + numAdditionalSources, biggestNodeNumber + numAdditionalSources ) ;
+   numFrequencies = size( allfrequencies, 2 ) ;
+
+% FIXME: adjust all the uses of this var.  Have switched it from a square matrix to a rectangular (with the number of columns equal to the number of frequencies).
+   B = zeros( biggestNodeNumber + numAdditionalSources, numFrequencies ) ;
 
    xnames = cell( biggestNodeNumber + numAdditionalSources, 1 ) ;
    for i = [1:biggestNodeNumber]
