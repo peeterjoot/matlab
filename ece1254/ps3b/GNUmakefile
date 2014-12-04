@@ -14,7 +14,7 @@ all :: $(FROMPS2a)
 all :: $(FROMPS3a)
 
 clean: 
-	rm -f $(FROMPS1) $(CLEAN)
+	rm -f $(FROMPS1) $(FROMPS2a) $(FROMPS3a) $(CLEAN)
 
 # why is this recursing?  hacked around this by copying each manually below
 #%.m : ../ps1/%.m

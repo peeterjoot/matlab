@@ -6,12 +6,14 @@ FROMPS1 += isDebugEnabled.m
 FROMPS2a += tridiagonal.m
 CLEAN += *.mat
 CLEAN += *.png
+CLEAN += $(FROMPS1)
+CLEAN += $(FROMPS2a)
 
 all :: $(FROMPS1)
 all :: $(FROMPS2a)
 
 clean: 
-	rm -f $(FROMPS1) $(CLEAN)
+	rm -f $(CLEAN)
 
 # why is this recursing?  hacked around this by copying each manually below
 #%.m : ../ps1/%.m
