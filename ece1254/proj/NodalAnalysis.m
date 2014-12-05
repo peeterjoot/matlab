@@ -1,7 +1,7 @@
-function [G, C, B, u, xnames] = NodalAnalysis(filename)
+function [G, C, B, bdiode, u, xnames] = NodalAnalysis(filename)
 % NodalAnalysis generates the modified nodal analysis (MNA) equations from a text file
 %
-% This is based on NodalAnalysis.m from ps3a (which included RLC support), and has been (FIXME: will be) generalized to add support
+% This is based on NodalAnalysis.m from ps3a (which included RLC support), and has been generalized to add support
 % for non-DC sources and diodes.
 %
 % This routine [G, C, B, u, x] = NodalAnalysis(filename)
@@ -88,7 +88,7 @@ function [G, C, B, u, xnames] = NodalAnalysis(filename)
 %
 %     Dlabel node1 node2 I_0 V_T
 %
-%   where V = V_n1 - V_n2.
+%   where V = V_n1 - V_n2, and the current flows from n1 to n2.
 %    
 % - Comment lines, starting with *, as described in the following, are allowed:
 %     http://jjc.hydrus.net/jjc/technical/ee/documents/spicehowto.pdf 
@@ -370,6 +370,13 @@ function [G, C, B, u, xnames] = NodalAnalysis(filename)
       allnodes = horzcat( allnodes, currentLines(1:2, :) ) ;
       allfrequencies = horzcat( allfrequencies, currentLines(4, :) ) ;
    end
+   sz = size( diodeLines, 2 ) ;
+   if ( sz )
+      traceit( sprintf( 'diodeLines: %d', sz ) ) ;
+
+      allnodes = horzcat( allnodes, diodeLines(1:2, :) ) ;
+      allfrequencies = horzcat( allfrequencies, 0 ) ;
+   end
    sz = size( voltageLines, 2 ) ;
    if ( sz )
       traceit( sprintf( 'voltageLines: %d', sz ) ) ;
@@ -403,9 +410,6 @@ function [G, C, B, u, xnames] = NodalAnalysis(filename)
    biggestNodeNumber = max( max( allnodes ) ) ;
    traceit( [ 'maxnode: ', sprintf('%d', biggestNodeNumber) ] ) ;
 
-% FIXME: phase terms in the current and voltage source lines are both currently ignored.
-% FIXME: diode lines are currently ignored.
-
    %
    % Done parsing the netlist file.
    % 
@@ -423,7 +427,6 @@ function [G, C, B, u, xnames] = NodalAnalysis(filename)
 
    numFrequencies = size( allfrequencies, 2 ) ;
 
-% FIXME: adjust all the uses of this var.  Have switched it from a square matrix to a rectangular (with the number of columns equal to the number of frequencies).
    B = zeros( biggestNodeNumber + numAdditionalSources, numFrequencies ) ;
 
    xnames = cell( biggestNodeNumber + numAdditionalSources, 1 ) ;
@@ -485,13 +488,16 @@ function [G, C, B, u, xnames] = NodalAnalysis(filename)
    labelNumber = 0 ;
    for v = voltageLines
       r = r + 1 ;
-      labelNumber = labelNumber + 1 ;
-      label       = voltageLables{labelNumber} ;
-      plusNode    = v(1) ;
-      minusNode   = v(2) ;
-      value       = v(3) ;
-  
-      traceit( sprintf( '%s %d,%d -> %d\n', label, plusNode, minusNode, value ) ) ;
+      labelNumber     = labelNumber + 1 ;
+      label           = voltageLables{labelNumber} ;
+      plusNode        = v(1) ;
+      minusNode       = v(2) ;
+      value           = v(3) ;
+      freq            = v(4) ;
+      phase           = v(5) ;
+      valueWithPhase  = value * exp( j * phase ) ;
+      
+      traceit( sprintf( '%s %d,%d -> %d (%e, %e)\n', label, plusNode, minusNode, value, freq, phase ) ) ;
       xnames{r} = sprintf( 'i_{%s_{%d,%d}}', label, minusNode, plusNode ) ;
 
       if ( plusNode )
@@ -503,7 +509,8 @@ function [G, C, B, u, xnames] = NodalAnalysis(filename)
          G( minusNode, r ) = 1 ;
       end
 
-      B( r, r ) = value ;
+      freqIndex = find( u == freq ) ;
+      B( r, freqIndex ) = valueWithPhase ;
    end
 
    % value for r (fall through from loop above)
@@ -570,19 +577,50 @@ function [G, C, B, u, xnames] = NodalAnalysis(filename)
    % process the current sources:
    labelNumber = 0 ;
    for i = currentLines
-      labelNumber = labelNumber + 1 ;
-      label       = currentLables{labelNumber} ;
-      plusNode    = i(1) ;
-      minusNode   = i(2) ;
-      value       = i(3) ;
+      labelNumber     = labelNumber + 1 ;
+      label           = currentLables{labelNumber} ;
+      plusNode        = i(1) ;
+      minusNode       = i(2) ;
+      value           = i(3) ;
+      freq            = v(4) ;
+      phase           = v(5) ;
+      valueWithPhase  = value * exp( j * phase ) ;
 
-      traceit( sprintf( '%s %d,%d -> %d\n', label, plusNode, minusNode, value ) ) ;
+      traceit( sprintf( '%s %d,%d -> %d (%e, %e)\n', label, plusNode, minusNode, value, freq, phase ) ) ;
 
+      freqIndex = find( u == freq ) ;
       if ( plusNode )
-         B( plusNode, plusNode ) = B( plusNode, plusNode ) - value ;
+         B( plusNode, freqIndex ) = B( plusNode, freqIndex ) - valueWithPhase ;
       end
       if ( minusNode )
-         B( minusNode, minusNode ) = B( minusNode, minusNode ) + value ;
+         B( minusNode, freqIndex ) = B( minusNode, freqIndex ) + valueWithPhase ;
+      end
+   end
+
+   bdiode = cell( size(B, 1), 1 );
+
+   % process the diode sources:
+   labelNumber = 0 ;
+   for i = diodeLines
+      labelNumber = labelNumber + 1 ;
+      label       = diodeLables{labelNumber} ;
+      plusNode    = i(1) ;
+      minusNode   = i(2) ;
+      io          = i(3) ;
+      vt          = i(4) ;
+
+      traceit( sprintf( '%s %d,%d -> %d\n', label, plusNode, minusNode, -io ) ) ;
+
+      freqIndex = find( u == 0 ) ; % expect this to be zero.
+      if ( plusNode )
+         B( plusNode, freqIndex ) = B( plusNode, freqIndex ) + io ;
+
+         struct([])
+         bdiode{ plusNode }{end+1} = struct( 'io', -io, 'vt', vt, 'vp', plusNode, 'vn', minusNode ) ;
+      end
+      if ( minusNode )
+         B( minusNode, freqIndex ) = B( minusNode, freqIndex ) - io ;
+         bdiode{ minusNode }{end+1} = struct( 'io', io, 'vt', vt, 'vp', plusNode, 'vn', minusNode ) ;
       end
    end
 end
