@@ -596,11 +596,14 @@ function [G, C, B, bdiode, u, xnames] = NodalAnalysis(filename)
          B( minusNode, freqIndex ) = B( minusNode, freqIndex ) + valueWithPhase ;
       end
    end
-
-   bdiode = cell( size(B, 1), 1 );
-
+    
    % process the diode sources:
    labelNumber = 0 ;
+   d = 0;
+
+   %bdiode = cell( size(B, 1), 1 );
+   bdiode = cell( size(diodeLines,2),1 );
+
    for i = diodeLines
       labelNumber = labelNumber + 1 ;
       label       = diodeLables{labelNumber} ;
@@ -608,19 +611,21 @@ function [G, C, B, bdiode, u, xnames] = NodalAnalysis(filename)
       minusNode   = i(2) ;
       io          = i(3) ;
       vt          = i(4) ;
+      d = d + 1;
 
       traceit( sprintf( '%s %d,%d -> %d\n', label, plusNode, minusNode, -io ) ) ;
 
       freqIndex = find( u == 0 ) ; % expect this to be zero.
+      
+      bdiode{d} = struct( 'io', -io, 'vt', vt, 'vp', plusNode, 'vn', minusNode ) ;
       if ( plusNode )
          B( plusNode, freqIndex ) = B( plusNode, freqIndex ) + io ;
 
-         struct([])
-         bdiode{ plusNode }{end+1} = struct( 'io', -io, 'vt', vt, 'vp', plusNode, 'vn', minusNode ) ;
+         %bdiode{ plusNode }{end+1} = struct( 'io', -io, 'vt', vt, 'vp', plusNode, 'vn', minusNode ) ;
       end
       if ( minusNode )
          B( minusNode, freqIndex ) = B( minusNode, freqIndex ) - io ;
-         bdiode{ minusNode }{end+1} = struct( 'io', io, 'vt', vt, 'vp', plusNode, 'vn', minusNode ) ;
+         %bdiode{ minusNode }{end+1} = struct( 'io', io, 'vt', vt, 'vp', plusNode, 'vn', minusNode ) ;
       end
    end
 end
