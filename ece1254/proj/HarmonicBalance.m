@@ -56,9 +56,7 @@ function [Y, B, I, u, Vnames] = HarmonicBalance(G, C, B, bdiode, u, xnames, N, o
 %
 % INPUT PARAMETERS:
 %
-% - filename [string]:
-%
-%     netlist source file to read.
+% FIXME: parameters from NodalAnalysis.
 %
 % - N [integer]:
 %
@@ -103,6 +101,32 @@ function [Y, B, I, u, Vnames] = HarmonicBalance(G, C, B, bdiode, u, xnames, N, o
 % 
 %------------------------------------------------
 
-   traceit( ['filename: ', filename] ) ;
+   traceit( ['N, omega: ', N, omega] ) ;
 
+   twoNplusOne = 2 * N + 1 ;
+   
+   R = size( G, 1 ) ;
+   if ( R ~= size(G, 2) )
+      error( 'HarmonicBalance:squareCheck:R', 'expected G with size (%d,%d) to be square', R, size(G, 2) ) ;
+   end
+
+   Y = zeros( twoNplusOne * R, twoNplusOne * R ) ;
+   Vnames = cell( twoNplusOne * R, 1 ) ;
+   I = [] ; % FIXME
+   u = [] ; % FIXME
+   B = [] ; % FIXME
+
+   jOmega = j * omega ;
+
+   r = 0 ;
+   s = 0 ;
+   for n = -N:N
+      for m = 1:R
+         r = r + 1 ;
+         Vnames{r} = sprintf( '%s:%d', xnames{m}, n ) ;
+      end
+
+      Y( s+1:s+R, s+1:s+R ) = G + jOmega * n * C ;
+      s = s + R ;
+   end
 end
