@@ -1,6 +1,6 @@
 function testH(filename)
 
-   [G, C, B, bdiode, angularVelocities, xnames] = NodalAnalysis( filename ) ;
+   [G, C, B, angularVelocities, D, bdiode, xnames] = NodalAnalysis( filename ) ;
 
    N = 1 ;
    % \nu = 7 is hardcoded in all these tests/*.netlist AC sources:
@@ -8,8 +8,7 @@ function testH(filename)
 
 %   xnames 
 
-   [Y, Vnames, I, bdiode] = HarmonicBalance(G, C, B, bdiode, angularVelocities, xnames, N, omega) ;
-%   [Y, B, I, angularVelocities, Vnames] 
+   [Y, Vnames, I] = HarmonicBalance(G, C, B, angularVelocities, D, bdiode, xnames, N, omega) ;
 
 disp( 'G, C, B, omegas, Yr, Yi:, Ir, Ii' ) ;
    G

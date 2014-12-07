@@ -1,14 +1,14 @@
-function [Y, Vnames, I, bdiode] = HarmonicBalance(G, C, B, bdiode, angularVelocities, xnames, N, omega)
+function [Y, Vnames, I] = HarmonicBalance(G, C, B, angularVelocities, D, bdiode, xnames, N, omega)
 % HarmonicBalance generates the Harmonic balance modified nodal analysis (MNA) equations from the time domain MNA
 % representation.
 %
-%    Y V = B U = I + ~I,                                        (1)
+%    Y V = B U = I + ~I,                                           (1)
 %
 % where ~I represents non-linear contributions not returned directly as a matrix.
 % 
 % The Harmonic balance results returned are associated with the time domain equations
 %
-%    G x(t) + C \dot{x}(t)= B angularVelocities(t),             (2)
+%    G x(t) + C \dot{x}(t)= B angularVelocities(t) + D bdiode(t),  (2)
 %
 % as returned from HarmonicBalance(), 
 % where the column vector angularVelocities(t) contains all sources, and x(t) is a vector of all the sources.
@@ -92,7 +92,7 @@ function [Y, Vnames, I, bdiode] = HarmonicBalance(G, C, B, bdiode, angularVeloci
 %     controlled voltage source, an inductor, or a diode (this last also treated as a current source).
 %     When there are diodes, there will also be a non-linear portion of the diode model to handle separately.
 % 
-% - fixme: handle non-linear diode stuff and return something for that.
+% - FIXME: handle non-linear diode stuff and return something for that.
 % 
 %------------------------------------------------
 
