@@ -404,7 +404,7 @@ function [G, C, B, bdiode, u, xnames] = NodalAnalysis(filename)
    end
 %disableTrace() ;
 
-   u = unique( allfrequencies ) ; % note: unique sorts by default
+   u = unique( abs(allfrequencies), -abs(allfrequencies) ) ; % note: unique sorts by default
    u = u.' ; % convert to Mx1
 
    biggestNodeNumber = max( max( allnodes ) ) ;
@@ -492,12 +492,12 @@ function [G, C, B, bdiode, u, xnames] = NodalAnalysis(filename)
       label           = voltageLables{labelNumber} ;
       plusNode        = v(1) ;
       minusNode       = v(2) ;
-      value           = v(3) ;
+      magnitude       = v(3) ;
       freq            = v(4) ;
       phase           = v(5) ;
-      valueWithPhase  = value * exp( j * phase ) ;
+      valueWithPhase  = magnitude * exp( j * phase ) ;
       
-      traceit( sprintf( '%s %d,%d -> %d (%e, %e)\n', label, plusNode, minusNode, value, freq, phase ) ) ;
+      traceit( sprintf( '%s %d,%d -> %d (%e, %e)\n', label, plusNode, minusNode, magnitude, freq, phase ) ) ;
       xnames{r} = sprintf( 'i_{%s_{%d,%d}}', label, minusNode, plusNode ) ;
 
       if ( plusNode )
@@ -510,7 +510,14 @@ function [G, C, B, bdiode, u, xnames] = NodalAnalysis(filename)
       end
 
       freqIndex = find( u == freq ) ;
-      B( r, freqIndex ) = valueWithPhase ;
+      if ( freq ~= 0 )
+         B( r, freqIndex ) = B( r, freqIndex ) + valueWithPhase/2 ;
+
+         freqIndex = find( u == -freq ) ;
+         B( r, freqIndex ) = B( r, freqIndex ) + valueWithPhase/2 ;
+      else
+         B( r, freqIndex ) = B( r, freqIndex ) + valueWithPhase ;
+      end
    end
 
    % value for r (fall through from loop above)
@@ -581,19 +588,36 @@ function [G, C, B, bdiode, u, xnames] = NodalAnalysis(filename)
       label           = currentLables{labelNumber} ;
       plusNode        = i(1) ;
       minusNode       = i(2) ;
-      value           = i(3) ;
-      freq            = v(4) ;
-      phase           = v(5) ;
-      valueWithPhase  = value * exp( j * phase ) ;
+      magnitude       = i(3) ;
+      freq            = i(4) ;
+      phase           = i(5) ;
+      valueWithPhase  = magnitude * exp( j * phase ) ;
 
-      traceit( sprintf( '%s %d,%d -> %d (%e, %e)\n', label, plusNode, minusNode, value, freq, phase ) ) ;
+      traceit( sprintf( '%s %d,%d -> %d (%e, %e)\n', label, plusNode, minusNode, magnitude, freq, phase ) ) ;
 
       freqIndex = find( u == freq ) ;
-      if ( plusNode )
-         B( plusNode, freqIndex ) = B( plusNode, freqIndex ) - valueWithPhase ;
-      end
-      if ( minusNode )
-         B( minusNode, freqIndex ) = B( minusNode, freqIndex ) + valueWithPhase ;
+      if ( freq ~= 0 )
+         if ( plusNode )
+            B( plusNode, freqIndex ) = B( plusNode, freqIndex ) - valueWithPhase/2 ;
+         end
+         if ( minusNode )
+            B( minusNode, freqIndex ) = B( minusNode, freqIndex ) + valueWithPhase/2 ;
+         end
+
+         freqIndex = find( u == freq ) ;
+         if ( plusNode )
+            B( plusNode, freqIndex ) = B( plusNode, freqIndex ) - valueWithPhase/2 ;
+         end
+         if ( minusNode )
+            B( minusNode, freqIndex ) = B( minusNode, freqIndex ) + valueWithPhase/2 ;
+         end
+      else
+         if ( plusNode )
+            B( plusNode, freqIndex ) = B( plusNode, freqIndex ) - valueWithPhase ;
+         end
+         if ( minusNode )
+            B( minusNode, freqIndex ) = B( minusNode, freqIndex ) + valueWithPhase ;
+         end
       end
    end
     
