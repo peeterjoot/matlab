@@ -1,20 +1,22 @@
-function testH( filename )
+function testH(filename)
 
-   [G, C, B, bdiode, u, xnames] = NodalAnalysis( filename ) ;
+   [G, C, B, bdiode, angularVelocities, xnames] = NodalAnalysis( filename ) ;
 
    N = 1 ;
    omega = 2 ;
 
 %   xnames 
 
-   [Y, B, I, u, Vnames] = HarmonicBalance(G, C, B, bdiode, u, xnames, N, omega) ;
+   [Y, Vnames, I, bdiode] = HarmonicBalance(G, C, B, bdiode, angularVelocities, xnames, N, omega) ;
+%   [Y, B, I, angularVelocities, Vnames] 
 
-disp( 'G, C, Ry, Ri:' ) ;
+disp( 'G, C, Yr, Yi:, Ir, Ii' ) ;
    G
    C
    real(Y)
    imag(Y)
-%   Vnames
-%   B   
+   real(I)
+   imag(I)
+   Vnames
 
 end   

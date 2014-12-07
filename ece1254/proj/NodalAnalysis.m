@@ -1,10 +1,10 @@
-function [G, C, B, bdiode, u, xnames] = NodalAnalysis(filename)
+function [G, C, B, bdiode, angularVelocities, xnames] = NodalAnalysis(filename)
 % NodalAnalysis generates the modified nodal analysis (MNA) equations from a text file
 %
 % This is based on NodalAnalysis.m from ps3a (which included RLC support), and has been generalized to add support
 % for non-DC sources and diodes.
 %
-% This routine [G, C, B, u, x] = NodalAnalysis(filename)
+% This routine [G, C, B, angularVelocities, x] = NodalAnalysis(filename)
 % generates the modified nodal analysis (MNA) equations
 %
 %    G x(t) + C \dot{x}(t)= B u(t)
@@ -122,10 +122,13 @@ function [G, C, B, bdiode, u, xnames] = NodalAnalysis(filename)
 %    the circuit the first column would have contributions from the DC sources, 
 %    and any columns after that would be for higher frequencies.
 % 
-% - u [array]
+% - angularVelocities [array]
 %   
-%    Mx1 matrix of frequencies, ordered from lowest to highest.  
-%    A zero value (in the 1,1 position) represents a DC source.
+%    Mx1 matrix of angular velocities ( 2 pi freq, where freq is from an AC current
+%    or voltage line specification ), ordered from lowest to highest, including 
+%    both negative and positive frequencies for any given AC signal.
+% 
+%    A zero value in one of the angularVelocities vector positions represents a DC source.
 % 
 % - xnames [cell]
 % 
@@ -292,7 +295,13 @@ function [G, C, B, bdiode, u, xnames] = NodalAnalysis(filename)
          else
             phase = 0 ;
          end
-         a = [ n1 n2 g freq phase ] ;
+
+         if ( phase && (freq == 0) )
+            error( 'NodalAnalysis:parseline:I', 'expected zero phase (%e) when frequency is zero', phase ) ;
+         end
+
+         omega = 2 * pi * freq ;
+         a = [ n1 n2 g omega phase ] ;
 
          currentLines(:,end+1) = a ;
          currentLables{end+1} = tmp{1} ;
@@ -329,7 +338,13 @@ function [G, C, B, bdiode, u, xnames] = NodalAnalysis(filename)
          else
             phase = 0 ;
          end
-         a = [ n1 n2 g freq phase ] ;
+
+         if ( phase && (freq == 0) )
+            error( 'NodalAnalysis:parseline:V', 'expected zero phase (%e) when frequency is zero', phase ) ;
+         end
+
+         omega = 2 * pi * freq ;
+         a = [ n1 n2 g omega phase ] ;
 
          voltageLines(:,end+1) = a ;
          voltageLables{end+1} = tmp{1} ;
@@ -404,8 +419,8 @@ function [G, C, B, bdiode, u, xnames] = NodalAnalysis(filename)
    end
 %disableTrace() ;
 
-   u = unique( abs(allfrequencies), -abs(allfrequencies) ) ; % note: unique sorts by default
-   u = u.' ; % convert to Mx1
+   allfrequencies = unique( horzcat( abs(allfrequencies), -abs(allfrequencies) ) ) ;
+   angularVelocities = allfrequencies.' ; % convert to Mx1
 
    biggestNodeNumber = max( max( allnodes ) ) ;
    traceit( [ 'maxnode: ', sprintf('%d', biggestNodeNumber) ] ) ;
@@ -493,11 +508,10 @@ function [G, C, B, bdiode, u, xnames] = NodalAnalysis(filename)
       plusNode        = v(1) ;
       minusNode       = v(2) ;
       magnitude       = v(3) ;
-      freq            = v(4) ;
-      phase           = v(5) ;
-      valueWithPhase  = magnitude * exp( j * phase ) ;
+      omega           = v(4) ;
+      phi             = v(5) ;
       
-      traceit( sprintf( '%s %d,%d -> %d (%e, %e)\n', label, plusNode, minusNode, magnitude, freq, phase ) ) ;
+      traceit( sprintf( '%s %d,%d -> %d (%e, %e)\n', label, plusNode, minusNode, magnitude, omega, phi ) ) ;
       xnames{r} = sprintf( 'i_{%s_{%d,%d}}', label, minusNode, plusNode ) ;
 
       if ( plusNode )
@@ -509,14 +523,25 @@ function [G, C, B, bdiode, u, xnames] = NodalAnalysis(filename)
          G( minusNode, r ) = 1 ;
       end
 
-      freqIndex = find( u == freq ) ;
-      if ( freq ~= 0 )
-         B( r, freqIndex ) = B( r, freqIndex ) + valueWithPhase/2 ;
+      % V,omega,phi => V cos( omega t - phi ) = e^{ j omega t - j phi } * V/2 + e^{-j omega t + j phi } * V/2
 
-         freqIndex = find( u == -freq ) ;
-         B( r, freqIndex ) = B( r, freqIndex ) + valueWithPhase/2 ;
+      omegaIndex = find( angularVelocities == omega ) ;
+   
+      if ( size(omegaIndex) ~= size(1) )
+         error( 'NodalAnalysis:find', 'failed to find angular velocity %e in angularVelocities: %s', omega, mat2str(angularVelocities) ) ;
+      end
+
+      if ( omega == 0 )
+         B( r, omegaIndex ) = B( r, omegaIndex ) + magnitude ;
       else
-         B( r, freqIndex ) = B( r, freqIndex ) + valueWithPhase ;
+         B( r, omegaIndex ) = B( r, omegaIndex ) + magnitude * exp( -j * phi )/2 ;
+
+         omegaIndex = find( angularVelocities == -omega ) ;
+         if ( size(omegaIndex) ~= size(1) )
+            error( 'NodalAnalysis:find', 'failed to find angular velocity %e in angularVelocities: %s', -omega, mat2str(angularVelocities) ) ;
+         end
+
+         B( r, omegaIndex ) = B( r, omegaIndex ) + magnitude * exp( j * phi )/2 ;
       end
    end
 
@@ -589,34 +614,44 @@ function [G, C, B, bdiode, u, xnames] = NodalAnalysis(filename)
       plusNode        = i(1) ;
       minusNode       = i(2) ;
       magnitude       = i(3) ;
-      freq            = i(4) ;
-      phase           = i(5) ;
-      valueWithPhase  = magnitude * exp( j * phase ) ;
+      omega           = i(4) ;
+      phi             = i(5) ;
 
-      traceit( sprintf( '%s %d,%d -> %d (%e, %e)\n', label, plusNode, minusNode, magnitude, freq, phase ) ) ;
+      traceit( sprintf( '%s %d,%d -> %d (%e, %e)\n', label, plusNode, minusNode, magnitude, omega, phi ) ) ;
 
-      freqIndex = find( u == freq ) ;
-      if ( freq ~= 0 )
+      % V,omega,phi => V cos( omega t - phi ) = e^{ j omega t - j phi } * V/2 + e^{-j omega t + j phi } * V/2
+
+      omegaIndex = find( angularVelocities == omega ) ;
+      if ( size(omegaIndex) ~= size(1) )
+         error( 'NodalAnalysis:find', 'failed to find angular velocity %e in angularVelocities: %s', omega, mat2str(angularVelocities) ) ;
+      end
+
+      if ( omega == 0 )
          if ( plusNode )
-            B( plusNode, freqIndex ) = B( plusNode, freqIndex ) - valueWithPhase/2 ;
+            B( plusNode, omegaIndex ) = B( plusNode, omegaIndex ) - magnitude ;
          end
          if ( minusNode )
-            B( minusNode, freqIndex ) = B( minusNode, freqIndex ) + valueWithPhase/2 ;
-         end
-
-         freqIndex = find( u == freq ) ;
-         if ( plusNode )
-            B( plusNode, freqIndex ) = B( plusNode, freqIndex ) - valueWithPhase/2 ;
-         end
-         if ( minusNode )
-            B( minusNode, freqIndex ) = B( minusNode, freqIndex ) + valueWithPhase/2 ;
+            B( minusNode, omegaIndex ) = B( minusNode, omegaIndex ) + magnitude ;
          end
       else
          if ( plusNode )
-            B( plusNode, freqIndex ) = B( plusNode, freqIndex ) - valueWithPhase ;
+            B( plusNode, omegaIndex ) = B( plusNode, omegaIndex ) - magnitude * exp( -j * phi )/2 ;
          end
          if ( minusNode )
-            B( minusNode, freqIndex ) = B( minusNode, freqIndex ) + valueWithPhase ;
+            B( minusNode, omegaIndex ) = B( minusNode, omegaIndex ) + magnitude * exp( -j * phi )/2 ;
+         end
+
+         omegaIndex = find( angularVelocities == -omega ) ;
+
+         if ( size(omegaIndex) ~= size(1) )
+            error( 'NodalAnalysis:find', 'failed to find angular velocity %e in angularVelocities: %s', -omega, mat2str(angularVelocities) ) ;
+         end
+
+         if ( plusNode )
+            B( plusNode, omegaIndex ) = B( plusNode, omegaIndex ) - magnitude * exp( j * phi )/2 ;
+         end
+         if ( minusNode )
+            B( minusNode, omegaIndex ) = B( minusNode, omegaIndex ) + magnitude * exp( j * phi )/2 ;
          end
       end
    end
@@ -639,16 +674,19 @@ function [G, C, B, bdiode, u, xnames] = NodalAnalysis(filename)
 
       traceit( sprintf( '%s %d,%d -> %d\n', label, plusNode, minusNode, -io ) ) ;
 
-      freqIndex = find( u == 0 ) ; % expect this to be zero.
+      omegaIndex = find( angularVelocities == 0 ) ;
+      if ( size(omegaIndex) ~= size(1) )
+         error( 'NodalAnalysis:find', 'failed to find DC frequency entry in angularVelocities: %s', -omega, mat2str(angularVelocities) ) ;
+      end
       
       bdiode{d} = struct( 'io', -io, 'vt', vt, 'vp', plusNode, 'vn', minusNode ) ;
       if ( plusNode )
-         B( plusNode, freqIndex ) = B( plusNode, freqIndex ) + io ;
+         B( plusNode, omegaIndex ) = B( plusNode, omegaIndex ) + io ;
 
          %bdiode{ plusNode }{end+1} = struct( 'io', -io, 'vt', vt, 'vp', plusNode, 'vn', minusNode ) ;
       end
       if ( minusNode )
-         B( minusNode, freqIndex ) = B( minusNode, freqIndex ) - io ;
+         B( minusNode, omegaIndex ) = B( minusNode, omegaIndex ) - io ;
          %bdiode{ minusNode }{end+1} = struct( 'io', io, 'vt', vt, 'vp', plusNode, 'vn', minusNode ) ;
       end
    end

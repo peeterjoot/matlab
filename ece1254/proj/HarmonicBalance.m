@@ -1,17 +1,17 @@
-function [Y, B, I, u, Vnames] = HarmonicBalance(G, C, B, bdiode, u, xnames, N, omega)
+function [Y, Vnames, I, bdiode] = HarmonicBalance(G, C, B, bdiode, angularVelocities, xnames, N, omega)
 % HarmonicBalance generates the Harmonic balance modified nodal analysis (MNA) equations from the time domain MNA
 % representation.
 %
-%    Y V = B U = I + ~I,                        (1)
+%    Y V = B U = I + ~I,                                        (1)
 %
 % where ~I represents non-linear contributions not returned directly as a matrix.
 % 
 % The Harmonic balance results returned are associated with the time domain equations
 %
-%    G x(t) + C \dot{x}(t)= B u(t),             (2)
+%    G x(t) + C \dot{x}(t)= B angularVelocities(t),             (2)
 %
 % as returned from HarmonicBalance(), 
-% where the column vector u(t) contains all sources, and x(t) is a vector of all the sources.
+% where the column vector angularVelocities(t) contains all sources, and x(t) is a vector of all the sources.
 %
 % Here V = [ 
 %    V_{-N}^(1) 
@@ -56,7 +56,11 @@ function [Y, B, I, u, Vnames] = HarmonicBalance(G, C, B, bdiode, u, xnames, N, o
 %
 % INPUT PARAMETERS:
 %
-% FIXME: parameters from NodalAnalysis.
+% This function consumes all the output parameters of:
+%
+%    [G, C, B, bdiode, angularVelocities, xnames] = NodalAnalyis()
+% 
+% which should be passed here in the same order.  In addition to those, also pass:
 %
 % - N [integer]:
 %
@@ -68,36 +72,27 @@ function [Y, B, I, u, Vnames] = HarmonicBalance(G, C, B, bdiode, u, xnames, N, o
 %
 %------------------------------------------------
 %
-% FIXME: Returned VARIABLES:
-%
 % With R equal to the total number of MNA variables, the returned parameters
 % 
-% - G [array]
+% - Y [array]
 % 
-%    RxR matrix of resistance stamps.
+%    R(2N+1) x R(2N+1) matrix, where the 2N+1 RxR matrices down the diagonal are formed from sums of G's and (j omega n C)'s
 % 
-% - C [array]   
+% - I [array]
 % 
-%    RxR matrix of stamps for the time dependent portion of the MNA equations.
+%    R x (2 N + 1) matrix of linear source Fourier coefficients.
 % 
-% - B [array]
+% - Vnames [cell]
 % 
-%    RxM matrix of constant source terms.  Each column encodes the current sources 
-%    for increasing frequencies.  For example, if there are DC sources in 
-%    the circuit the first column would have contributions from the DC sources, 
-%    and any columns after that would be for higher frequencies.
+%   is an R x (2 N + 1) array of strings for each of the Fourier coefficient variables in the frequency domain equations.
+%
+%   The R entries are composed of: 
+%   - Entries for each node voltage in the system.  
+%   - Entries for each current variable flowing through a voltage source, a voltage
+%     controlled voltage source, an inductor, or a diode (this last also treated as a current source).
+%     When there are diodes, there will also be a non-linear portion of the diode model to handle separately.
 % 
-% - u [array]
-%   
-%    Mx1 matrix of frequencies, ordered from lowest to highest.  
-%    A zero value (in the 1,1 position) represents a DC source.
-% 
-% - xnames [cell]
-% 
-%   is an Rx1 array of strings for each of the variables in the resulting system.  
-%   Entries will be added to this for each node voltage in the system.  
-%   Current variables will be added for each DC voltage source, each DC voltage
-%   controlled voltage source, as well as any inductor currents.
+% - fixme: handle non-linear diode stuff and return something for that.
 % 
 %------------------------------------------------
 
@@ -112,14 +107,13 @@ function [Y, B, I, u, Vnames] = HarmonicBalance(G, C, B, bdiode, u, xnames, N, o
 
    Y = zeros( twoNplusOne * R, twoNplusOne * R ) ;
    Vnames = cell( twoNplusOne * R, 1 ) ;
-   I = [] ; % FIXME
-   u = [] ; % FIXME
-   B = [] ; % FIXME
+   I = zeros( twoNplusOne * R, 1 ) ;
 
    jOmega = j * omega ;
 
    r = 0 ;
    s = 0 ;
+   q = 0 ;
    for n = -N:N
       for m = 1:R
          r = r + 1 ;
@@ -128,5 +122,15 @@ function [Y, B, I, u, Vnames] = HarmonicBalance(G, C, B, bdiode, u, xnames, N, o
 
       Y( s+1:s+R, s+1:s+R ) = G + jOmega * n * C ;
       s = s + R ;
+
+      thisOmega = omega * n ;
+      omegaIndex = find( angularVelocities == thisOmega ) ;
+   
+      if ( size(omegaIndex) == size(1) )
+         % found one (not an error not to find a matching frequency.  Our input sources may not have all the frequencies that 
+         % we allow in our bandwidth limited Harmonic Balance DFT representation.
+
+         I( q+1:q+R ) = B( :, omegaIndex ) ;
+      end
    end
 end
