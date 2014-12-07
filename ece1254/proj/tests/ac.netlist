@@ -1,4 +1,6 @@
+* this one is actually a DC line:
 V1 1 0 AC 1 0
+* these all with non-zero frequencies:
 V1 1 2 AC 1 7
 V1 2 3 AC 1 9 3
 V1 3 4 AC 1 9 5

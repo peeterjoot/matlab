@@ -1,0 +1,30 @@
+stack overflow q:
+
+In Mathematica matrices can be constructed using rules, but I don't see any way to do this in matlab.  Here's an example (dumb for-loop) way of constructing a matrix where each (i,j) entry has a simple rule:
+
+    N = 3 ;
+    r = -N:N;
+    c = -N:N;
+    twoNplusOne = 2 * N + 1 ;
+
+    F = zeros( twoNplusOne, twoNplusOne ) ;
+    for n = 1:twoNplusOne
+       for m = 1:twoNplusOne
+           F( n, m ) = r(n) * c(m) ;
+       end
+    end
+    F
+
+producing:
+
+    F =
+     9     6     3     0    -3    -6    -9
+     6     4     2     0    -2    -4    -6
+     3     2     1     0    -1    -2    -3
+     0     0     0     0     0     0     0
+    -3    -2    -1     0     1     2     3
+    -6    -4    -2     0     2     4     6
+    -9    -6    -3     0     3     6     9
+
+
+Is there a more natural "Matlab" way to do this instead of using a for-loop?

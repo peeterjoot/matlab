@@ -1,5 +1,5 @@
 * LC pair in parallel with an AC current source, all connected through a resistor to ground.
-Is1 1 2 AC 1 0
+Is1 1 2 AC 1 7
 C1 1 2 1
 L1 1 2 3
 Rg 1 0 0.001

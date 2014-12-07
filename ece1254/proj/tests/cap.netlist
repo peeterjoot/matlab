@@ -1,4 +1,4 @@
 * single capactor in parallel with an AC current source
-Is1 1 0 AC 1 0
+Is1 1 0 AC 1 7
 C1 1 0 2
 .end

@@ -125,6 +125,8 @@ function [Y, Vnames, I, bdiode] = HarmonicBalance(G, C, B, bdiode, angularVeloci
 
       thisOmega = omega * n ;
       omegaIndex = find( angularVelocities == thisOmega ) ;
+
+      traceit( sprintf('HarmonicBalance: n=%d, thisOmega = %e, omegaIndex = %s', n, thisOmega, mat2str( omegaIndex ) ) ) ;
    
       if ( size(omegaIndex) == size(1) )
          % found one (not an error not to find a matching frequency.  Our input sources may not have all the frequencies that 
@@ -132,5 +134,6 @@ function [Y, Vnames, I, bdiode] = HarmonicBalance(G, C, B, bdiode, angularVeloci
 
          I( q+1:q+R ) = B( :, omegaIndex ) ;
       end
+      q = q + R ;
    end
 end
