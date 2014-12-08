@@ -12,16 +12,16 @@ function testH(filename)
    maxIter = 50 ;
    useStepping = 0 ;
 
-   [V, Vnames, F, Fbar, f, iter, normF, normDeltaV, totalIters] = NewtonsHarmonicBalance( filename, N, tolF, tolV, tolRel, maxIter, useStepping ) ;
+   r = NewtonsHarmonicBalance( filename, N, tolF, tolV, tolRel, maxIter, useStepping ) ;
 
-   V
-   Vnames
-   f
-   iter
-   normF
-   normDeltaV
-   totalIters
+   r.V
+   r.f
+   r.iter
+   r.normF
+   r.normDeltaV
+   r.totalIters
 
+% convert to time domain:
 %   for 
 %   Vp = 
 

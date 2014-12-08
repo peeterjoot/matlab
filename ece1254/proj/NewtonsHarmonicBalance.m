@@ -1,4 +1,4 @@
-function [V, Vnames, F, Fbar, f, iter, normF, normDeltaV, totalIters] = NewtonsHarmonicBalance( filename, N, tolF, tolV, tolRel, maxIter, useStepping )
+function [r, xnames, Vnames] = NewtonsHarmonicBalance( filename, N, tolF, tolV, tolRel, maxIter, useStepping )
    % NewtonsHarmonicBalance: Harmonic Balance equations of the form
    %
    %      f(V) = Gd V - I -II(V),
@@ -6,64 +6,58 @@ function [V, Vnames, F, Fbar, f, iter, normF, normDeltaV, totalIters] = NewtonsH
    %   are constructed from the supplied .netlist specification.  The zeros of this function are sought, determining the
    %   the DFT Fourier coefficent vector V that solves the system in the frequency domain.
    %
-   %   PARAMETERS:
+   % PARAMETERS:
    %
-   %      filename [string]:
+   % - filename [string]:
    %
-   %         The path for a .netlist file that specifies the circuit to solve.
+   %      The path for a .netlist file that specifies the circuit to solve.
    %
-   %      N [positive integer]:
+   % - N [positive integer]:
    %
-   %         The number of frequencies to include in Fourier series.
+   %      The number of frequencies to include in Fourier series.
    %
-   %      tolF [double]:
-   %      tolV [double]:
-   %      tolRel [double]:
+   % - tolF [double]:
+   % - tolV [double]:
+   % - tolRel [double]:
    %
-   %         Iteration stops when all of:
-   %            |f(x)| < tolF
-   %            |\Delta x| < tolV
-   %            |\Delta x|/|x| < tolRel
+   %      Iteration stops when all of:
+   %         |f(x)| < tolF
+   %         |\Delta x| < tolV
+   %         |\Delta x|/|x| < tolRel
    %
-   %      maxIter [positive integer]:
+   % - maxIter [positive integer]:
    %
-   %         Limit Newton's method search to this number of iterations (per stepping interval)
+   %      Limit Newton's method search to this number of iterations (per stepping interval)
    %
-   %      useStepping [boolean]:
+   % - useStepping [boolean]:
    %
-   %         use source stepping, scaling sources by values 0:0.1:1
+   %      Use source stepping, scaling sources by values 0:0.1:1
    %
-   % Returns:
+   % RETURNS:
    %
-   %  V [vector]:
+   % A struct() return that contains the results of NodalAnalysis() and HarmonicBalance() plus the following fields:
+   %
+   % - r.V [vector]:
    %
    %     Solution in frequency domain.
    %
-   %  Vnames [vector]:
-   %
-   %     Descriptions of all the variables solved for.
-   %
-   %  f [vector]:
+   % - r.f [vector]:
    %
    %     Value of f(V) at end of the iterations.
    %
-   %   F,Fbar [matrix]:
-   %
-   %      To convert back to time domain
-   %
-   %   iter [integer]:
+   % - r.iter [integer]:
    %
    %      The last number of iterations for the final step interval.
    %
-   %   normF [double]:
+   % - r.normF [double]:
    %
    %      |f(V)| at the end of the last iteration.
    %
-   %   normDeltaV [double]:
+   % - r.normDeltaV [double]:
    %
    %      |\delta V| at the end of the last iteration.
    %
-   %   totalIters [integer]:
+   % - r.totalIters [integer]:
    %
    %      Sum of last iter counts if useStepping is set (otherwise == iter).
    %
@@ -83,7 +77,7 @@ function [V, Vnames, F, Fbar, f, iter, normF, normDeltaV, totalIters] = NewtonsH
       % Setup for first Newton's iteration
       %
 
-      [G, C, B, angularVelocities, D, bdiode, xnames] = NodalAnalysis( filename, lambda ) ;
+      [r, xnames, bdiode] = NodalAnalysis( filename, lambda ) ;
 
       %
       % Question: How to find the fundamental frequency?  We have a set that we want to cast into the following form:
@@ -105,24 +99,24 @@ function [V, Vnames, F, Fbar, f, iter, normF, normDeltaV, totalIters] = NewtonsH
       % is the fundamental frequency.  To force this, a very small magnitude source with the fundamental frequency
       % could be included in the .netlist file if it is not already there.
       %
-      omega = min( find( angularVelocities > 0 ) ) ;
+      omega = min( find( r.angularVelocities > 0 ) ) ;
       %------------------------------------------------------------------------------------------
 
-      [Gd, Vnames, I, F, Fbar] = HarmonicBalance( G, C, B, angularVelocities, D, bdiode, xnames, N, omega ) ;
+      [r, Vnames] = HarmonicBalance( r, xnames, N, omega ) ;
 
       R = size( xnames, 1 ) ;
 
       % for stepping use the last computed value of V
       if ( ~haveFirstV )
-         V = rand( size( Gd, 1 ), 1 ) ;
-         %V = zeros( size( Gd, 1 ), 1 ) ;
+         V = rand( size( r.Gd, 1 ), 1 ) ;
+         %V = zeros( size( r.Gd, 1 ), 1 ) ;
       end
 
-      [II, JI] = DiodeCurrentAndJacobian( Gd, F, Fbar, D, bdiode, V ) ;
+      [II, JI] = DiodeCurrentAndJacobian( r, bdiode, V ) ;
 
-      J = Gd - JI ;
+      J = r.Gd - JI ;
 
-      f = Gd * V - I - II ;
+      f = r.Gd * V - r.I - II ;
       %-------------------------------------------------------------------------------------------------
 
       iter = 0 ;
@@ -138,11 +132,11 @@ function [V, Vnames, F, Fbar, f, iter, normF, normDeltaV, totalIters] = NewtonsH
 
          %---------------------------------------------------------------
          % repeat all the non-linear calculations that are V dependent
-         [II, JI] = DiodeCurrentAndJacobian( Gd, F, Fbar, D, bdiode, V ) ;
+         [II, JI] = DiodeCurrentAndJacobian( r, bdiode, V ) ;
 
-         J = Gd - JI ;
+         J = r.Gd - JI ;
 
-         f = Gd * V - I - II ;
+         f = r.Gd * V - r.I - II ;
          %---------------------------------------------------------------
 
          normF = norm( f ) ;
@@ -158,5 +152,10 @@ function [V, Vnames, F, Fbar, f, iter, normF, normDeltaV, totalIters] = NewtonsH
       end
    end
 
-%      disp( sprintf( '%1.1f & %d & %f & %2.1e & %2.1e & %2.1e \\\\ \\hline', lambda, iter, x, f, normDeltaV, relDiffV ) ) ;
+   r.V          = V ;
+   r.f          = f ;
+   r.iter       = iter ;
+   r.normF      = normF ;
+   r.normDeltaV = normDeltaV ;
+   r.totalIters = totalIters ;
 end

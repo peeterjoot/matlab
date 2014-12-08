@@ -1,4 +1,4 @@
-function [G, C, B, angularVelocities, D, bdiode, xnames] = NodalAnalysis(filename, sourceStepScaling)
+function [results, xnames, bdiode] = NodalAnalysis(filename, sourceStepScaling)
 % NodalAnalysis generates the modified nodal analysis (MNA) equations from a text file
 %
 % This is based on NodalAnalysis.m from ps3a (which included RLC support), and has been generalized to add support
@@ -114,22 +114,22 @@ function [G, C, B, angularVelocities, D, bdiode, xnames] = NodalAnalysis(filenam
 %
 % With R equal to the total number of MNA variables, the returned parameters are
 %
-% - G [array]
+% - results.G [array]
 %
 %    RxR matrix of resistance stamps.
 %
-% - C [array]
+% - results.C [array]
 %
 %    RxR matrix of stamps for the time dependent portion of the MNA equations.
 %
-% - B [array]
+% - results.B [array]
 %
 %    RxM matrix of constant source terms.  Each column encodes the current sources
 %    for increasing frequencies.  For example, if there are DC sources in
 %    the circuit the first column would have contributions from the DC sources,
 %    and any columns after that would be for higher frequencies.
 %
-% - angularVelocities [array]
+% - results.angularVelocities [array]
 %
 %    Mx1 matrix of angular velocities ( 2 pi freq, where freq is from an AC current
 %    or voltage line specification ), ordered from lowest to highest, including
@@ -150,7 +150,7 @@ function [G, C, B, angularVelocities, D, bdiode, xnames] = NodalAnalysis(filenam
 %   An Sx1 array that encodes all the non-linear source information, where S is the number
 %   of non-linear sources.
 %
-% - D [array]
+% - results.D [array]
 %
 %   is an RxS matrix.  The i-th column of D contains the magnitudes of the contributions
 %   of the i-th non-linear source.  For example, if the i'th (diode) source is:
@@ -723,4 +723,6 @@ function [G, C, B, angularVelocities, D, bdiode, xnames] = NodalAnalysis(filenam
          D( plusNode, d ) = io ;
       end
    end
+
+   results = struct( 'G', G, 'C', C, 'B', B, 'angularVelocities', angularVelocities, 'D', D ) ;
 end

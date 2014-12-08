@@ -1,6 +1,11 @@
-function [II, JI] = DiodeCurrentAndJacobian( Gd, F, Fbar, D, bdiode, V ) ;
+function [II, JI] = DiodeCurrentAndJacobian( inputs, bdiode, V ) ;
    % DiodeCurrentAndJacobian: Calculate the non-linear current contributions of the diode
    % and its associated Jacobian.
+
+   Gd     = inputs.Gd ;
+   F      = inputs.F ;
+   Fbar   = inputs.Fbar ;
+   D      = inputs.D ;
 
    R = size( D, 1 ) ;
    vSize = size( Gd, 1 ) ;
