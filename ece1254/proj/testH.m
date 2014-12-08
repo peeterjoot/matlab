@@ -28,26 +28,13 @@ function testH(filename)
 %   Vnames
 
    R = size( xnames, 1 ) ;
-
    V = rand( size( Gd, 1 ), 1 ) ;
-   II = zeros( size( V ) ) ;
-   twoNplusOne = size( F ) ;
+   %V = zeros( size( Gd, 1 ), 1 ) ;
 
-   % move to helper function:
-   for i = 1:size(D, 2)
-      E = DiodeExponentialDFT( bdiode{i}, V, R, F, Fbar ) ;
-      JE = DiodeExponentialJacobian( bdiode{i}, V, R, F, Fbar ) ;
-%full(E)
-%full(JE)
-      d = D( :, i ) ;
-
-      % concatenate the D[]'s and the E's to form II.
-      for j = 1:twoNplusOne
-
-         II( 1 + (j - 1) * R: j * R, 1 ) = II( 1 + (j - 1) * R: j * R, 1 ) + d * E( j ) ;
-      end
-   end
-
+   [II, JI] = DiodeCurrentAndJacobian( Gd, F, Fbar, D, bdiode, V ) ;
+   J = Gd - JI ;
+%J
+%inv(J)
 %   II
 %   V = Gd\(I + II) ;
 %Gd
