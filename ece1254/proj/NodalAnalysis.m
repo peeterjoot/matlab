@@ -1,4 +1,4 @@
-function [G, C, B, angularVelocities, D, bdiode, xnames] = NodalAnalysis(filename)
+function [G, C, B, angularVelocities, D, bdiode, xnames] = NodalAnalysis(filename, sourceStepScaling)
 % NodalAnalysis generates the modified nodal analysis (MNA) equations from a text file
 %
 % This is based on NodalAnalysis.m from ps3a (which included RLC support), and has been generalized to add support
@@ -104,6 +104,10 @@ function [G, C, B, angularVelocities, D, bdiode, xnames] = NodalAnalysis(filenam
 %
 %     netlist source file to read.
 %
+% - sourceStepScaling [double]:
+%
+%     A value in [0,1] to scale the sources by.  Default is 1 if unspecified.
+%
 %------------------------------------------------
 %
 % OUTPUT VARIABLES:
@@ -161,8 +165,15 @@ function [G, C, B, angularVelocities, D, bdiode, xnames] = NodalAnalysis(filenam
 %
 %------------------------------------------------
 
-   %enableTrace() ;
-   traceit( ['filename: ', filename] ) ;
+   if ( nargin < 2 )
+      sourceStepScaling = 1 ;
+   end
+
+   traceit( sprintf('filename: %s, sourceStepScaling: %e', filename, sourceStepScaling ) ) ;
+
+   if ( (sourceStepScaling < 0) || (sourceStepScaling > 1) )
+      error( 'NodalAnalysis:sourceStepScaling:validation', 'sourceStepScaling value %e outside of allowed [0,1] interval', sourceStepScaling ) ;
+   end
 
    currentLines   = [] ;
    resistorLines  = [] ;
@@ -529,7 +540,7 @@ function [G, C, B, angularVelocities, D, bdiode, xnames] = NodalAnalysis(filenam
       label           = voltageLables{labelNumber} ;
       plusNode        = v(1) ;
       minusNode       = v(2) ;
-      magnitude       = v(3) ;
+      magnitude       = v(3) * sourceStepScaling ;
       omega           = v(4) ;
       phi             = v(5) ;
 
@@ -635,7 +646,7 @@ function [G, C, B, angularVelocities, D, bdiode, xnames] = NodalAnalysis(filenam
       label           = currentLables{labelNumber} ;
       plusNode        = i(1) ;
       minusNode       = i(2) ;
-      magnitude       = i(3) ;
+      magnitude       = i(3) * sourceStepScaling ;
       omega           = i(4) ;
       phi             = i(5) ;
 

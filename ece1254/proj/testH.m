@@ -4,39 +4,25 @@ function testH(filename)
       filename = 'tests/diode1.netlist' ;
    end
 
-   [G, C, B, angularVelocities, D, bdiode, xnames] = NodalAnalysis( filename ) ;
-
-%disp( 'G, C, B, D' ) ;
-%   full( G ) 
-%   full( C ) 
-%   full( B ) 
-%   full( D )
-
    N = 1 ;
-   % \nu = 7 is hardcoded in all these tests/*.netlist AC sources:
-   omega = 2 * pi * 7 ;
+   tol = 1e-6 ;
+   tolF = 1e-6 ;
+   tolV = 1e-6 ;
+   tolRel = 1e-6 ;
+   maxIter = 50 ;
+   useStepping = 0 ;
 
-%   xnames 
+   [V, Vnames, F, Fbar, f, iter, normF, normDeltaV, totalIters] = NewtonsHarmonicBalance( filename, N, tolF, tolV, tolRel, maxIter, useStepping ) ;
 
-   [Gd, Vnames, I, F, Fbar] = HarmonicBalance( G, C, B, angularVelocities, D, bdiode, xnames, N, omega ) ;
+   V
+   Vnames
+   f
+   iter
+   normF
+   normDeltaV
+   totalIters
 
-%   angularVelocities
-%   real(Gd)
-%   imag(Gd)
-%   real(I)
-%   imag(I)
-%   Vnames
+%   for 
+%   Vp = 
 
-   R = size( xnames, 1 ) ;
-   V = rand( size( Gd, 1 ), 1 ) ;
-   %V = zeros( size( Gd, 1 ), 1 ) ;
-
-   [II, JI] = DiodeCurrentAndJacobian( Gd, F, Fbar, D, bdiode, V ) ;
-   J = Gd - JI ;
-%J
-%inv(J)
-%   II
-%   V = Gd\(I + II) ;
-%Gd
-%   Fbar * V /twoNplusOne
 end   
