@@ -1,6 +1,16 @@
 function testH(filename)
 
+   if ( nargin < 1 )
+      filename = 'tests/diode1.netlist' ;
+   end
+
    [G, C, B, angularVelocities, D, bdiode, xnames] = NodalAnalysis( filename ) ;
+
+disp( 'G, C, B, D' ) ;
+   full( G ) 
+   full( C ) 
+   full( B ) 
+   full( D )
 
    N = 1 ;
    % \nu = 7 is hardcoded in all these tests/*.netlist AC sources:
@@ -8,17 +18,29 @@ function testH(filename)
 
 %   xnames 
 
-   [Y, Vnames, I] = HarmonicBalance(G, C, B, angularVelocities, D, bdiode, xnames, N, omega) ;
+   [Gd, Vnames, I, F, Fbar] = HarmonicBalance( G, C, B, angularVelocities, D, bdiode, xnames, N, omega ) ;
 
-disp( 'G, C, B, omegas, Yr, Yi:, Ir, Ii' ) ;
-   G
-   C
-   B
-   angularVelocities
-   real(Y)
-   imag(Y)
-   real(I)
-   imag(I)
-   Vnames
+%   angularVelocities
+%   real(Gd)
+%   imag(Gd)
+%   real(I)
+%   imag(I)
+%   Vnames
 
+   R = size( xnames, 1 ) ;
+
+   V = rand( size( Gd, 1 ), 1 ) ;
+   II = zeros( size( V ) ) ;
+   twoNplusOne = size( F ) ;
+
+   % move to helper function:
+   for i = 1:size(D, 2)
+      E = DiodeExponentialDFT( bdiode{i}, V, R, F, Fbar ) ;
+      d = D( :, i ) ;
+
+      % concatenate the D[]'s and the E's to form II.
+%      for j = 1:twoNplusOne
+%         II(, 1) ;
+%      end
+   end
 end   

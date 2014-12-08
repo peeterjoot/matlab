@@ -1,8 +1,8 @@
-function [Y, Vnames, I] = HarmonicBalance(G, C, B, angularVelocities, D, bdiode, xnames, N, omega)
+function [Gd, Vnames, I, F, Fbar] = HarmonicBalance(G, C, B, angularVelocities, D, bdiode, xnames, N, omega)
 % HarmonicBalance generates the Harmonic balance modified nodal analysis (MNA) equations from the time domain MNA
 % representation.
 %
-%    Y V = B U = I + ~I,                                           (1)
+%    Gd V = B U = I + ~I,                                           (1)
 %
 % where ~I represents non-linear contributions not returned directly as a matrix.
 % 
@@ -48,9 +48,9 @@ function [Y, Vnames, I] = HarmonicBalance(G, C, B, angularVelocities, D, bdiode,
 %     t_k = T k/(2 N + 1)                                            (5)
 %     omega T = 2 pi                                                 (6)
 % 
-% Y has the block diagonal structure
+% Gd has the block diagonal structure
 % 
-%    Y = [ {G + j omega n}_n \delta_{nm} ]_{nm}                      (7)
+%    Gd = [ {G + j omega n}_n \delta_{nm} ]_{nm}                      (7)
 % 
 %---------------------------------------------------------------------------------------
 %
@@ -74,7 +74,7 @@ function [Y, Vnames, I] = HarmonicBalance(G, C, B, angularVelocities, D, bdiode,
 %
 % With R equal to the total number of MNA variables, the returned parameters
 % 
-% - Y [array]
+% - Gd [array]
 % 
 %    R(2N+1) x R(2N+1) matrix, where the 2N+1 RxR matrices down the diagonal are formed from sums of G's and (j omega n C)'s
 % 
@@ -105,7 +105,7 @@ function [Y, Vnames, I] = HarmonicBalance(G, C, B, angularVelocities, D, bdiode,
       error( 'HarmonicBalance:squareCheck:R', 'expected G with size (%d,%d) to be square', R, size(G, 2) ) ;
    end
 
-   Y = zeros( twoNplusOne * R, twoNplusOne * R ) ;
+   Gd = zeros( twoNplusOne * R, twoNplusOne * R ) ;
    Vnames = cell( twoNplusOne * R, 1 ) ;
    I = zeros( twoNplusOne * R, 1 ) ;
 
@@ -120,7 +120,7 @@ function [Y, Vnames, I] = HarmonicBalance(G, C, B, angularVelocities, D, bdiode,
          Vnames{r} = sprintf( '%s:%d', xnames{m}, n ) ;
       end
 
-      Y( s+1:s+R, s+1:s+R ) = G + jOmega * n * C ;
+      Gd( s+1:s+R, s+1:s+R ) = G + jOmega * n * C ;
       s = s + R ;
 
       thisOmega = omega * n ;
@@ -136,4 +136,9 @@ function [Y, Vnames, I] = HarmonicBalance(G, C, B, angularVelocities, D, bdiode,
       end
       q = q + R ;
    end
+
+   F = FourierMatrixComplex( N ) ;
+
+   % precalculate the conjugate since we need it repeatedly.
+   Fbar = conj( F ) ;
 end
