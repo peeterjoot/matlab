@@ -22,7 +22,7 @@ function JE = DiodeExponentialJacobian( d, V, R, F, Fbar )
    vt = d.vt ;
    kronDel = @(j, k) j==k ;
 
-enableTrace();
+%enableTrace();
    for r = 1:twoNplusOne
       for s = 1:vSize
          for a = 1:twoNplusOne
@@ -41,23 +41,6 @@ traceit( sprintf('r, s, a, b, u, v, arg, delta, exp() = %d, %d, %d, %d, %d, %d, 
          end
       end
    end
-%      % This was attempt at "optimized" implementation.  see more zeros than I expect?
-%      for q = 0:twoNplusOne-1
-%         for r = 1:twoNplusOne
-%            for a = 1:twoNplusOne
-%               if ( d.vp )
-%                  s = q * R + d.vp ;
-%
-%                  JE(r, s) = JE(r, s) + Fbar(r, a) * F(a, q + 1) * exp( F(a, q+1) * V(s)/d.vt ) ;
-%               end
-%               if ( d.vn )
-%                  s = q * R + d.vn ;
-%
-%                  JE(r, s) = JE(r, s) - Fbar(r, a) * F(a, q + 1) * exp( -F(a, q+1) * V(s)/d.vt ) ;
-%               end
-%            end
-%         end
-%      end
 
    JE = JE/( twoNplusOne * vt ) ;
 end
