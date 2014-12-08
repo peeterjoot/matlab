@@ -6,11 +6,11 @@ function testH(filename)
 
    [G, C, B, angularVelocities, D, bdiode, xnames] = NodalAnalysis( filename ) ;
 
-disp( 'G, C, B, D' ) ;
-   full( G ) 
-   full( C ) 
-   full( B ) 
-   full( D )
+%disp( 'G, C, B, D' ) ;
+%   full( G ) 
+%   full( C ) 
+%   full( B ) 
+%   full( D )
 
    N = 1 ;
    % \nu = 7 is hardcoded in all these tests/*.netlist AC sources:
@@ -36,11 +36,20 @@ disp( 'G, C, B, D' ) ;
    % move to helper function:
    for i = 1:size(D, 2)
       E = DiodeExponentialDFT( bdiode{i}, V, R, F, Fbar ) ;
+      JE = DiodeExponentialJacobian( bdiode{i}, V, R, F, Fbar ) ;
+%full(E)
+%full(JE)
       d = D( :, i ) ;
 
       % concatenate the D[]'s and the E's to form II.
-%      for j = 1:twoNplusOne
-%         II(, 1) ;
-%      end
+      for j = 1:twoNplusOne
+
+         II( 1 + (j - 1) * R: j * R, 1 ) = II( 1 + (j - 1) * R: j * R, 1 ) + d * E( j ) ;
+      end
    end
+
+%   II
+%   V = Gd\(I + II) ;
+%Gd
+%   Fbar * V /twoNplusOne
 end   
