@@ -5,7 +5,7 @@
 
 clear
 clc
-fileName = 'BridgeRectifier.netlist';
+fileName = '../circuits/BridgeRectifier.netlist';
 
 % Harmonic Balance Parameters
 N = 50;

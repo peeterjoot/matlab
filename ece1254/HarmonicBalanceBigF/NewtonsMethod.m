@@ -2,9 +2,9 @@ clear
 clc
 
 %import data from circuit file
-%[G, C, B, bdiode, angularVelocities, xnames] = NodalAnalysis('simple.netlist');
+%[G, C, B, bdiode, angularVelocities, xnames] = NodalAnalysis('../circuits/simple.netlist');
 
-[G, C, B, bdiode, angularVelocities, xnames] = NodalAnalysis('BridgeRectifier.netlist');
+[G, C, B, bdiode, angularVelocities, xnames] = NodalAnalysis('../circuits/BridgeRectifier.netlist');
 
 % Harmonic Balance Parameters
 N = 20;
