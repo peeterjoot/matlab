@@ -1,4 +1,4 @@
-function E = DiodeExponentialDFT( d, V, R, F, Fbar )
+function E = DiodeExponentialDFT( d, V, R, F, Finv )
    % DiodeExponentialDFT: given a diode struct descriptor, generate the DFT 
    % calculation associated with a specific value of V.
    % 
@@ -14,7 +14,7 @@ function E = DiodeExponentialDFT( d, V, R, F, Fbar )
    %  V:    [vector]:  The whole DFT coordinate vector V of size: (R * (2 N + 1)) x 1.
    %  R:    [integer]: the number of unknowns in the time domain equations.
    %  F:    [matrix]:  (2N + 1) DFT matrix.
-   %  Fbar: [matrix]:  conj(F)
+   %  Finv: [matrix]:  conj(F)/(2 N + 1)
 
    if ( d.vn )
       vn = - V( d.vn : R : end ) ;
@@ -36,5 +36,5 @@ function E = DiodeExponentialDFT( d, V, R, F, Fbar )
    vTimeDomain = F * diffV ;
    ExpV = exp( vTimeDomain ) ;
 
-   E = Fbar * ExpV / twoNplusOne ;
+   E = Finv * ExpV ;
 end

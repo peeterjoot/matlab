@@ -1,7 +1,7 @@
 function [r, xnames, Vnames] = NewtonsHarmonicBalance( filename, N, tolF, tolV, tolRel, maxIter, useStepping )
    % NewtonsHarmonicBalance: Harmonic Balance equations of the form
    %
-   %      f(V) = Gd V - I -II(V),
+   %      f(V) = Y V - I -II(V),
    %
    %   are constructed from the supplied .netlist specification.  The zeros of this function are sought, determining the
    %   the DFT Fourier coefficent vector V that solves the system in the frequency domain.
@@ -99,7 +99,9 @@ function [r, xnames, Vnames] = NewtonsHarmonicBalance( filename, N, tolF, tolV, 
       % is the fundamental frequency.  To force this, a very small magnitude source with the fundamental frequency
       % could be included in the .netlist file if it is not already there.
       %
-      omega = min( find( r.angularVelocities > 0 ) ) ;
+      omega = min( r.angularVelocities( find( r.angularVelocities > 0 ) ) ) ;
+
+      traceit( sprintf( 'angularVelocities = %s, omega = %e', mat2str( r.angularVelocities ), omega ) ) ;
       %------------------------------------------------------------------------------------------
 
       [r, Vnames] = HarmonicBalance( r, xnames, N, omega ) ;
@@ -108,15 +110,16 @@ function [r, xnames, Vnames] = NewtonsHarmonicBalance( filename, N, tolF, tolV, 
 
       % for stepping use the last computed value of V
       if ( ~haveFirstV )
-         V = rand( size( r.Gd, 1 ), 1 ) ;
-         %V = zeros( size( r.Gd, 1 ), 1 ) ;
+         V = rand( size( r.Y, 1 ), 1 ) + 1j * rand( size( r.Y, 1 ), 1 ) ;
+         %V = zeros( size( r.Y, 1 ), 1 ) ;
+         %V = ones( size( r.Y, 1 ), 1 ) ;
       end
 
       [II, JI] = DiodeCurrentAndJacobian( r, bdiode, V ) ;
 
-      J = r.Gd - JI ;
+      J = r.Y - JI ;
 
-      f = r.Gd * V - r.I - II ;
+      f = r.Y * V - r.I - II ;
       %-------------------------------------------------------------------------------------------------
 
       iter = 0 ;
@@ -134,9 +137,9 @@ function [r, xnames, Vnames] = NewtonsHarmonicBalance( filename, N, tolF, tolV, 
          % repeat all the non-linear calculations that are V dependent
          [II, JI] = DiodeCurrentAndJacobian( r, bdiode, V ) ;
 
-         J = r.Gd - JI ;
+         J = r.Y - JI ;
 
-         f = r.Gd * V - r.I - II ;
+         f = r.Y * V - r.I - II ;
          %---------------------------------------------------------------
 
          normF = norm( f ) ;
@@ -153,9 +156,11 @@ function [r, xnames, Vnames] = NewtonsHarmonicBalance( filename, N, tolF, tolV, 
    end
 
    r.V          = V ;
+   r.II         = II ;
    r.f          = f ;
    r.iter       = iter ;
    r.normF      = normF ;
    r.normDeltaV = normDeltaV ;
    r.totalIters = totalIters ;
+   r.omega      = omega ;
 end

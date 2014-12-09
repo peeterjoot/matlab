@@ -1,4 +1,4 @@
-function JE = DiodeExponentialJacobian( d, V, R, F, Fbar )
+function JE = DiodeExponentialJacobian( d, V, R, F, Finv )
    % DiodeExponentialJacobian: This calculates the Jacobian of
    %
    %    \vec{E} = (1/(2 N + 1)) \bar{F} * exp( F * (V^m - V^n)/V_T ), where m = d.vp, and n = d.vn
@@ -11,7 +11,7 @@ function JE = DiodeExponentialJacobian( d, V, R, F, Fbar )
    %  V:    [vector]:  The whole DFT coordinate vector V of size: (R * (2 N + 1)) x 1.
    %  R:    [integer]: the number of unknowns in the time domain equations.
    %  F:    [matrix]:  (2N + 1) DFT matrix.
-   %  Fbar: [matrix]:  conj(F)
+   %  Finv: [matrix]:  conj(F)/(2 N + 1)
 
    twoNplusOne = size( F, 1 ) ;
    vSize = size( V, 1 ) ;
@@ -34,13 +34,13 @@ function JE = DiodeExponentialJacobian( d, V, R, F, Fbar )
                delta = (m ~= 0) * kronDel( s, u ) - ( n ~= 0 ) * kronDel( s, v ) ;
                expValue = exp( F(a, b) * arg / vt ) ;
 
-traceit( sprintf('r, s, a, b, u, v, arg, delta, exp() = %d, %d, %d, %d, %d, %d, %e, %e, %d, %e', r, s, a, b, u, v, arg, delta, expValue ) ) ;
+%traceit( sprintf('r, s, a, b, u, v, arg, delta, exp() = %d, %d, %d, %d, %d, %d, %e, %e, %d, %e', r, s, a, b, u, v, arg, delta, expValue ) ) ;
 
-               JE(r, s) = JE(r, s) + Fbar(r, a) * F(a, b) * expValue * delta ;
+               JE(r, s) = JE(r, s) + Finv(r, a) * F(a, b) * expValue * delta ;
             end
          end
       end
    end
 
-   JE = JE/( twoNplusOne * vt ) ;
+   JE = JE/vt ;
 end

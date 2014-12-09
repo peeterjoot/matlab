@@ -1,0 +1,75 @@
+function [ Gprime ] = Gprime( bdiodes, x, Nh , Nm )
+%Gprime This function produces the nonlinear contribution to the Jacobean
+%required to solve a nonlinear circuit using Newton's Method
+%   bdiodes is a cell matrix containing the infromation describing the
+%   location and parameters of all diodes in the circuit
+%   x is the vector of all unknown quantities
+%   Nh is the number of harmonics used in the analysis
+%   Nm is the number of physical unknowns of the MNA
+
+N = length(bdiodes);
+F = FourierMatrix(Nh,Nm);
+
+dDiode = @(v,io,Vt) (io/Vt)*(exp(v/Vt));
+
+%Generate the Jacobian corresponding to a single circuit for each time step
+%then combine them as a block column matrix. This form allows the fourier
+%matrix to be used in obtaining the DFT
+
+%for each harmonic
+for j = 0:2*Nh;
+    gprimecell = zeros(Nm);
+%for each diode
+    for i = 1:N;
+        d = bdiodes{i};
+
+        n1 = d.vp;
+        n2 = d.vn;
+
+        io = abs(d.io);
+        Vt = abs(d.vt);
+        v = 0;
+
+        if (n1)
+            v = v + x( n1 + j*Nm );
+        end
+
+        if (n2)
+            v = v - x( n2 + j*Nm );
+        end
+
+        dg = dDiode(v,io,Vt);
+
+
+        % insert the stamp:
+        if ( n1 )
+            gprimecell( n1, n1 ) = gprimecell( n1, n1 ) + dg ;
+            if ( n2 )
+                gprimecell( n1, n2 ) = gprimecell( n1, n2 ) - dg ;
+                gprimecell( n2, n1 ) = gprimecell( n2, n1 ) - dg ;
+            end
+        end
+        if ( n2 )
+            gprimecell( n2, n2 ) = gprimecell( n2, n2 ) + dg ;
+        end
+    end
+
+    corner = 1 + j*Nm;
+    gprime(corner:corner+Nm-1,1:Nm) = gprimecell;
+end
+
+Gprime = zeros(Nm*(2*Nh+1));
+GprimeColumn = F\gprime;
+
+%need to re organize Gp into it's block diagonal form
+for  i = 0:2*Nh
+    blockStart = 1 + i*Nm;
+    blockEnd = blockStart + Nm-1;
+    Gprime( blockStart:blockEnd ,blockStart:blockEnd ) = GprimeColumn( blockStart:blockEnd, 1:Nm );
+end
+
+
+end
+
+
+

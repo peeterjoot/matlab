@@ -1,0 +1,6 @@
+* Simple single node Rectifier
+I1 1 0 AC 1 10
+D1 1 0 10e-12 25e-3
+R1 3 0 100
+C1 3 0 0.01
+.end
