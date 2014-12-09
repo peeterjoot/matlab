@@ -1,10 +1,11 @@
 function testH(filename)
 
    if ( nargin < 1 )
-      %filename = 'tests/diode1.netlist' ;
-      %filename = 'tests/rc.netlist' ;
-      %filename = 'tests/rc2.netlist' ;
-      filename = 'tests/res2.netlist' ;
+      %filename = '../circuits/diode1.netlist' ;
+      %filename = '../circuits/rc.netlist' ;
+      %filename = '../circuits/rcVsource.netlist' ;
+      %filename = '../circuits/rc2.netlist' ;
+      filename = '../circuits/res2.netlist' ;
    end
 
    N = 20 ;

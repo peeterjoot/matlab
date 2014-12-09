@@ -1,7 +1,0 @@
-* single resistor and capactor in parallel with an AC current source, all connected through a resistor to ground.
-* Ilabel node1 node2 AC value freq [phase]
-Is1 1 2 AC 1 1
-R1 1 2 0.5
-C1 1 2 3
-Rg 1 0 0.001
-.end
