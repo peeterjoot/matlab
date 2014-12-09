@@ -1,5 +1,6 @@
 function testFourierMatrixComplex( N )
-   % testFourierMatrixComplex Function compares FourierMatrixComplex( N ) to a programmatic loop construction method
+   % Verify FourierMatrixComplex( N ), produced with vectorized code, against dumb
+   % programmatic loop construction method.
    % N is the number of Harmonics to be used
    %
    r = -N:N;
