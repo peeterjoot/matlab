@@ -1,0 +1,11 @@
+* single resistor, capactor, inductor in series with an, connected to an AC voltage source
+*
+* worked example from:
+*
+* http://www2.cose.isu.edu/~hackmart/RLC_circuits_engphys.pdf (page 10)
+*
+Vs1 1 0 AC 150 60
+C1 1 2 3.5e-6
+L1 2 3 0.6
+R1 3 0 250
+.end

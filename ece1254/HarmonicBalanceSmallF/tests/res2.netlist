@@ -1,0 +1,7 @@
+* single resistor in parallel with an AC current source (equivalent to 5V voltage source)
+* that pair connected to two resistors in series (expect voltage drop at the second node).
+Is1 0 1 AC 0.5 60
+Rs 0 1 10
+R1 1 2 10
+R2 2 0 10
+.end

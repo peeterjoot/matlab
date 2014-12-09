@@ -6,6 +6,8 @@ FROMPS1 += isDebugEnabled.m
 FROMPS2a += tridiagonal.m
 CLEAN += *.mat
 CLEAN += *.png
+CLEAN += *~
+CLEAN += *.pdf
 CLEAN += $(FROMPS1)
 CLEAN += $(FROMPS2a)
 
