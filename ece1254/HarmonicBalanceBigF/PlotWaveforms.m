@@ -1,7 +1,7 @@
 %PlotWaveforms.m - This script calls the HBSolve function to solve the
 %circuit described in fileName using the Harmonic Balance method,
 %truncating the harmonics to N multiples of fundamental. 
-% Various Parameters of interest of plotted
+% Various Parameters of interest are plotted
 
 clear
 clc

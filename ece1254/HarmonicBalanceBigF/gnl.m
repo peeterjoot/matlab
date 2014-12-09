@@ -1,5 +1,5 @@
 function [ gnl ] = gnl(  bdiodes, x, Nh , Nm )
-%GNL This function dermines the nonlinear currents of the diodes in bdiodes
+%GNL This function determines the nonlinear currents of the diodes in bdiodes
 %for the voltages contained in x. (Time domain)
 %   
 %   bdiodes is a cell matrix containing the infromation describing the
