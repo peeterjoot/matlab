@@ -1,4 +1,4 @@
-function [results, Vnames] = HarmonicBalance( inputs, xnames, N, omega )
+function results = HarmonicBalance( inputs, N, omega )
 % HarmonicBalance generates the Harmonic balance modified nodal analysis (MNA) equations from the time domain MNA
 % representation.
 %
@@ -88,7 +88,7 @@ function [results, Vnames] = HarmonicBalance( inputs, xnames, N, omega )
 %
 %    R x (2 N + 1) matrix of linear source Fourier coefficients.
 %
-% - Vnames [cell]
+% - results.Vnames [cell]
 %
 %   is an R x (2 N + 1) array of strings for each of the Fourier coefficient variables in the frequency domain equations.
 %
@@ -106,6 +106,7 @@ function [results, Vnames] = HarmonicBalance( inputs, xnames, N, omega )
    C                 = inputs.C ;
    B                 = inputs.B ;
    angularVelocities = inputs.angularVelocities ;
+   xnames            = inputs.xnames ;
 
    traceit( ['N, omega: ', N, omega] ) ;
 
@@ -159,5 +160,6 @@ function [results, Vnames] = HarmonicBalance( inputs, xnames, N, omega )
    results.I = I ;
    results.F = F ;
    results.Finv = Finv ;
+   results.Vnames = Vnames ;
 
 end

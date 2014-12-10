@@ -16,19 +16,19 @@ function testH(filename)
    maxIter = 50 ;
    useStepping = 0 ;
 
-   [r, xnames, Vnames] = NewtonsHarmonicBalance( filename, N, tolF, tolV, tolRel, maxIter, useStepping ) ;
+   r = NewtonsHarmonicBalance( filename, N, tolF, tolV, tolRel, maxIter, useStepping ) ;
 
    %full(real(r.B))
    %full(imag(r.B))
    %r.angularVelocities
-   full(r.G)
+   %full(r.G)
    %full(r.C)
    %real(r.Y)
    %imag(r.Y)
-   r.I
+   %r.I
    %r.Y * r.V - r.I - r.II
    %r.V
-   %Vnames
+   %r.Vnames
    %r.f
    %r.iter
    %r.normF
@@ -38,7 +38,7 @@ function testH(filename)
    % sort output into physical parameters
 
    twoNplusOne = 2 * N + 1 ;
-   R = size( xnames, 1 ) ;
+   R = size( r.xnames, 1 ) ;
    V = zeros( twoNplusOne, R ) ;
    v = zeros( twoNplusOne, R ) ;
    tk = 2 * pi * (-N:N)/ (r.omega * twoNplusOne ) ;
@@ -46,14 +46,14 @@ function testH(filename)
    for i = 1:R
       X = r.V( i : R : end ) ;
       V( :, i ) = X ;
-      x = real( r.Finv * X ) ;
+      x = real( r.F * X ) ;
       v( :, i ) = x ;
 
-      disp( xnames{i} ) ;
+      %disp( r.xnames{i} ) ;
       figure ;
       plot( tk, v( :, i ) ) ;
       xlabel( 't' ) ;
-      ylabel( xnames{i} ) ;
+      ylabel( r.xnames{i} ) ;
    end
 
 % verify F^{-1} = \bar{F}/(2 N + 1)

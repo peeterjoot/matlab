@@ -1,0 +1,5 @@
+* two resistors in series with a 60Hz AC current source
+Vs1 0 1 AC 5 60
+R1 1 2 10
+R2 2 0 10
+.end

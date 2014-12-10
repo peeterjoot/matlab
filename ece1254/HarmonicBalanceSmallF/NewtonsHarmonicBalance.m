@@ -1,4 +1,4 @@
-function [r, xnames, Vnames] = NewtonsHarmonicBalance( filename, N, tolF, tolV, tolRel, maxIter, useStepping )
+function r = NewtonsHarmonicBalance( filename, N, tolF, tolV, tolRel, maxIter, useStepping )
    % NewtonsHarmonicBalance: Harmonic Balance equations of the form
    %
    %      f(V) = Y V - I -II(V),
@@ -77,7 +77,7 @@ function [r, xnames, Vnames] = NewtonsHarmonicBalance( filename, N, tolF, tolV, 
       % Setup for first Newton's iteration
       %
 
-      [r, xnames, bdiode] = NodalAnalysis( filename, lambda ) ;
+      r = NodalAnalysis( filename, lambda ) ;
 
       %
       % Question: How to find the fundamental frequency?  We have a set that we want to cast into the following form:
@@ -104,9 +104,9 @@ function [r, xnames, Vnames] = NewtonsHarmonicBalance( filename, N, tolF, tolV, 
       traceit( sprintf( 'angularVelocities = %s, omega = %e', mat2str( r.angularVelocities ), omega ) ) ;
       %------------------------------------------------------------------------------------------
 
-      [r, Vnames] = HarmonicBalance( r, xnames, N, omega ) ;
+      r = HarmonicBalance( r, N, omega ) ;
 
-      R = size( xnames, 1 ) ;
+      R = size( r.xnames, 1 ) ;
 
       % for stepping use the last computed value of V
       if ( ~haveFirstV )
@@ -115,7 +115,7 @@ function [r, xnames, Vnames] = NewtonsHarmonicBalance( filename, N, tolF, tolV, 
          %V = ones( size( r.Y, 1 ), 1 ) ;
       end
 
-      [II, JI] = DiodeCurrentAndJacobian( r, bdiode, V ) ;
+      [II, JI] = DiodeCurrentAndJacobian( r, V ) ;
 
       J = r.Y - JI ;
 
@@ -135,7 +135,7 @@ function [r, xnames, Vnames] = NewtonsHarmonicBalance( filename, N, tolF, tolV, 
 
          %---------------------------------------------------------------
          % repeat all the non-linear calculations that are V dependent
-         [II, JI] = DiodeCurrentAndJacobian( r, bdiode, V ) ;
+         [II, JI] = DiodeCurrentAndJacobian( r, V ) ;
 
          J = r.Y - JI ;
 

@@ -1,4 +1,4 @@
-function [results, xnames, bdiode] = NodalAnalysis(filename, sourceStepScaling)
+function results = NodalAnalysis( filename, sourceStepScaling )
 % NodalAnalysis generates the modified nodal analysis (MNA) equations from a text file
 %
 % This is based on NodalAnalysis.m from ps3a (which included RLC support), and has been generalized to add support
@@ -138,14 +138,14 @@ function [results, xnames, bdiode] = NodalAnalysis(filename, sourceStepScaling)
 %
 %    A zero value in one of the angularVelocities vector positions represents a DC source.
 %
-% - xnames [cell]
+% - results.xnames [cell]
 %
 %   is an Rx1 array of strings for each of the variables in the resulting system.
 %   Entries will be added to this for each node voltage in the system.
 %   Current variables will be added for each DC voltage source, each DC voltage
 %   controlled voltage source, as well as any inductor currents.
 %
-% - bdiode [array of struct]
+% - results.bdiode [array of struct]
 %
 %   An Sx1 array that encodes all the non-linear source information, where S is the number
 %   of non-linear sources.
@@ -724,5 +724,5 @@ function [results, xnames, bdiode] = NodalAnalysis(filename, sourceStepScaling)
       end
    end
 
-   results = struct( 'G', G, 'C', C, 'B', B, 'angularVelocities', angularVelocities, 'D', D ) ;
+   results = struct( 'G', G, 'C', C, 'B', B, 'angularVelocities', angularVelocities, 'D', D, 'xnames', {xnames}, 'bdiode', {bdiode} ) ;
 end
