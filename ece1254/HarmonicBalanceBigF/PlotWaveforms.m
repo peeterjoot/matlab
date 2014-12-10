@@ -38,14 +38,15 @@ function PlotWaveforms( fileName, saveBaseName, withTitle )
    figNum = 2 ;
    f = figure ;
    plot( t, v2-v1, t, vr, 'linewidth', 2 ) ;
-   legend( 'Source Voltage', 'Output Voltage' ) ;
+   legend( 'Source Voltage', 'Output Voltage', 4 ) ;
    xlabel( 'Time (s)' ) ;
    ylabel( 'Voltage (V)' ) ;
+   setFigureProperties( f ) ;
 
    if ( nargin == 2 )
-      saveName = sprintf( '%sOutputVoltageFig%d.svg', saveBaseName, figNum ) ;
-      %saveas( f, saveName ) ;
-      plot2svg( saveName, f ) ;
+      saveName = sprintf( '%sOutputVoltageFig%d.png', saveBaseName, figNum ) ;
+      saveas( f, saveName ) ;
+      %plot2svg( saveName, f ) ;
 
       figNum = figNum + 1 ;
    end
@@ -58,9 +59,10 @@ function PlotWaveforms( fileName, saveBaseName, withTitle )
    end
    xlabel( 'Time (s)' ) ;
    ylabel( 'Current (A)' ) ;
+   setFigureProperties( f ) ;
 
    if ( nargin == 2 )
-      saveName = sprintf( '%sSourceCurrentFig%d.svg', saveBaseName, figNum ) ;
+      saveName = sprintf( '%sSourceCurrentFig%d.png', saveBaseName, figNum ) ;
       %saveas( f, saveName ) ;
       plot2svg( saveName, f ) ;
 
@@ -79,14 +81,15 @@ function PlotWaveforms( fileName, saveBaseName, withTitle )
    if ( withTitle )
       title( 'Diode Voltages' ) ;
    end
-   legend( 'vd1', 'vd2', 'vd3', 'vd4' ) ;
+   legend( 'vd1', 'vd2', 'vd3', 'vd4', 4 ) ;
    xlabel( 'Time (s)' ) ;
    ylabel( 'Voltage (V)' ) ;
+   setFigureProperties( f ) ;
 
    if ( nargin == 2 )
-      saveName = sprintf( '%sDiodeVoltagesFig%d.svg', saveBaseName, figNum ) ;
-      %saveas( f, saveName ) ;
-      plot2svg( saveName, f ) ;
+      saveName = sprintf( '%sDiodeVoltagesFig%d.png', saveBaseName, figNum ) ;
+      saveas( f, saveName ) ;
+      %plot2svg( saveName, f ) ;
 
       figNum = figNum + 1 ;
    end
