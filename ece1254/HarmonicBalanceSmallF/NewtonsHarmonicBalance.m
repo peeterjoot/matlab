@@ -106,6 +106,16 @@ function r = NewtonsHarmonicBalance( filename, N, tolF, tolV, tolRel, maxIter, u
 
       r = HarmonicBalance( r, N, omega ) ;
 
+      %-----------------
+      % precalculate the Fourier transform matrix pairs and cache them:
+      F = FourierMatrixComplex( N ) ;
+
+      Finv = conj( F )/twoNplusOne ;
+
+      r.F = F ;
+      r.Finv = Finv ;
+      %-----------------
+
       R = size( r.xnames, 1 ) ;
 
       % for stepping use the last computed value of V

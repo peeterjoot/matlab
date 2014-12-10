@@ -24,7 +24,10 @@ function NewtonsMethod( fileName )
    k = -N:N ;
 
 
-   [Y, Vnames, Is, ~] = HarmonicBalance(r.G, r.C, r.B, r.bdiode, r.angularVelocities, r.xnames, N, omega) ;
+   h = HarmonicBalance( r, N, omega ) ;
+   Y = h.Y ;
+   Is = h.I ;
+   Vnames = h.Vnames ;
 
    M = length(r.G) ;
 

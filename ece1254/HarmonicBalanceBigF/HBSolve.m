@@ -12,8 +12,10 @@ function [ x, X, ecputime, omega, R ] = HBSolve( N, fileName )
    %Only intend on using one frequency for all AC sources
    omega = min(r.angularVelocities(find (r.angularVelocities > 0 ) )) ;
 
-   [Y, ~, Is, ~] = HarmonicBalance(r.G, r.C, r.B, r.bdiode, r.angularVelocities, r.xnames, N, omega) ;
-   R = length(r.G) ;
+   h = HarmonicBalance( r, N, omega ) ;
+   Y = h.Y ;
+   Is = h.I ;
+   R = length( r.G ) ;
 
    % Fourier Transform Matrix
    F = FourierMatrix(N,R) ;

@@ -151,15 +151,8 @@ function results = HarmonicBalance( inputs, N, omega )
       q = q + R ;
    end
 
-   F = FourierMatrixComplex( N ) ;
-
-   % precalculate the conjugate since we need it repeatedly.
-   Finv = conj( F )/twoNplusOne ;
-
    results.Y = Y ;
    results.I = I ;
-   results.F = F ;
-   results.Finv = Finv ;
    results.Vnames = Vnames ;
 
 end
