@@ -1,11 +1,11 @@
 function response = computeFreqResp( omegaSet, G, C, B, L )
 % A Matlab routine computeFreqResp( omegaSet, G, C, B, L ) which takes in omegaSet, G, C, B, L as input and
 % produces data for system frequency response plots. Here omegaSet is a vector of frequencies in rad/s.
-% 
+%
 % This is a plot of:
 %
 % F(s) = L^T ( G + s C )^{-1} B U(s)
-% 
+%
 % for a impulse response (U(s) is all ones)
 
 bSize = size( B, 2 ) ;
@@ -32,5 +32,5 @@ for omega = omegaSet
 
    f = lt * x ;
 
-   response(end+1) = f ; 
+   response(end+1) = f ;
 end

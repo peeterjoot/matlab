@@ -1,8 +1,8 @@
 function driver( what, withBE )
-% 
+%
 % parameters:
 % (1) what:
-% 
+%
 % if what == 1: error/cpu plots
 %    what == 2: doMultiPlot
 % else
@@ -133,11 +133,11 @@ if ( what == 1 )
 
          pBE = polyfit( logtBE, logeBE, 1 ) ;
          bBE = pBE(2)
-         mBE = pBE(1) 
+         mBE = pBE(1)
 
          pTR = polyfit( logtTR, logeTR, 1 ) ;
-         bTR = pTR(2) 
-         mTR = pTR(1) 
+         bTR = pTR(2)
+         mTR = pTR(1)
 
       else
          loglog( tBE, eBE, '-.ob' ) ;

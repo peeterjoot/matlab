@@ -46,4 +46,4 @@ for k = 1:3
 end
 end
 
-r = FourierMatrix(N,M);
+r = FourierMatrix(N,M) ;

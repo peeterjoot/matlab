@@ -9,7 +9,7 @@
 function [ L, U ] = noPivotLU( M, epsilon )
 % noPivotLU performs LU factorization (not in place) of the input matrix, producing the factors: M = L U,
 % where L and U are lower and upper triangular respectively.
-% 
+%
 
 %enableTrace( ) ;
 sz = size(M, 1) ;
@@ -27,13 +27,13 @@ U = M ;
 for i = 1:sz-1
 %%%%disp( M ) ;
 %%%   rowContainingMaxElement = findMaxIndexOfColumnMatrix( U(i:sz, i), i - 1 ) ;
-%%%   
-%%%   % http://stackoverflow.com/questions/4939738/swapping-rows-and-columns 
+%%%
+%%%   % http://stackoverflow.com/questions/4939738/swapping-rows-and-columns
 %%%   % example:
 %%%   % A([3 1],2:4) = A([1 3], 2:4)
 %%%   % this exchanges the following submatrices (row subsets)
-%%%   % - row 1, with columns ranging from 2:4 
-%%%   % - row 3, with columns ranging from 2:4 
+%%%   % - row 1, with columns ranging from 2:4
+%%%   % - row 3, with columns ranging from 2:4
 %%%
 %%%   traceit( sprintf('i = %d, pivotRow = %d', i, rowContainingMaxElement) ) ;
 %%%   if ( rowContainingMaxElement ~= i )
@@ -45,7 +45,7 @@ for i = 1:sz-1
 %%%      permutationSign = -permutationSign ;
 %%%
 %%%      traceit( sprintf( 'permutation sign: %d, pivot value: %d', permutationSign, U(i,i) ) ) ;
-%%%   end 
+%%%   end
 
    % now do the row operations:
    %
@@ -56,9 +56,9 @@ for i = 1:sz-1
    for j = i+1:sz
       if ( abs(U(j, i)) > epsilon )
          multiplier = U(j, i)/U(i, i) ;
-   
+
          %traceit( sprintf('iteration: %d, row %d, multiplier: %d', i, j, multiplier) ) ;
-   
+
          U( j, i ) = 0 ;
          U( j, i+1:sz ) = U( j, i+1:sz ) - multiplier * U( i, i+1:sz ) ;
          L( j, i ) = multiplier ;

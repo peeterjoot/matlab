@@ -18,32 +18,32 @@ function [G,b] = NodalAnalysis(filename)
 % Write a MATLAB routine [G,b]=NodalAnalysis(filename)
 % that generates the modified nodal analysis (MNA) equations
 % Gx = b (1)
-% 
+%
 % from a text file (netlist) that describes an electrical circuit made of resis-
 % tors, independent current sources, independent voltage sources, voltage-
 % controlled voltage sources. For the netlist, we use the widely-adopted
 % SPICE syntax. For each resistor, the file will contain a line in the form
-% 
+%
 % Rlabel node1 node2 value
-% 
+%
 % where "value" is the resistance value. Current sources are specified with
 % the line
-% 
+%
 % Ilabel node1 node2 DC value
-% 
+%
 % and current flows from node1 to node2. Note that DC is just a keyword.
 % A voltage source connected between the nodes node+ and node- is spec-
 % ified by the line
-% 
+%
 % Vlabel node+ node- DC value
-% 
+%
 % where node+ and node- identify, respectively, the node where the posi-
 % tive and "negative" terminal is connected to. A voltage-controlled volt-
 % age source, connected between the nodesnode+ and node-, is specified
 % by the line
-% 
+%
 % Elabel node+ node- nodectrl+ nodectrl- gain
-% 
+%
 % The controlling voltage is between the nodes nodectrl+ and nodectrl-,
 % and the last argument is the source gain.
 
@@ -126,7 +126,7 @@ function [G,b] = NodalAnalysis(filename)
 
    % if we wanted to allow for gaps in the node numbers (like 1, 3, 4, 5), then we'd have to count the number of unique node numbers
    % instead of just taking a max, and map the matrix positions to the original node numbers later.
-   % 
+   %
    allnodes = zeros(2, 1) ;
 
 %enableTrace() ;
@@ -160,7 +160,7 @@ function [G,b] = NodalAnalysis(filename)
 
    %
    % Done parsing the netlist file.
-   % 
+   %
    %----------------------------------------------------------------------------
 
    numVoltageSources = size( voltageLines, 2 ) ;
@@ -204,7 +204,7 @@ function [G,b] = NodalAnalysis(filename)
       plusNode    = v(2) ;
       minusNode   = v(3) ;
       value       = v(4) ;
-  
+
       traceit( sprintf( 'V:%d %d,%d -> %d\n', label, plusNode, minusNode, value ) ) ;
 
       if ( plusNode )

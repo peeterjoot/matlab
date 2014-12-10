@@ -2,11 +2,11 @@ function JE = DiodeExponentialJacobian( d, V, R, F, Finv )
    % DiodeExponentialJacobian: This calculates the Jacobian of
    %
    %    \vec{E} = (1/(2 N + 1)) \bar{F} * exp( F * (V^m - V^n)/V_T ), where m = d.vp, and n = d.vn
-   % 
+   %
    % One or more of n, or m may be zero if the diode is connected to ground.
-   % 
+   %
    % parameters:
-   % 
+   %
    %  d:    [struct]:  struct( 'type', 'exp', 'vt', vt, 'vp', plusNode, 'vn', minusNode ) ;
    %  V:    [vector]:  The whole DFT coordinate vector V of size: (R * (2 N + 1)) x 1.
    %  R:    [integer]: the number of unknowns in the time domain equations.
@@ -22,7 +22,7 @@ function JE = DiodeExponentialJacobian( d, V, R, F, Finv )
    vt = d.vt ;
    kronDel = @(j, k) j==k ;
 
-%enableTrace();
+%enableTrace() ;
    for r = 1:twoNplusOne
       for s = 1:vSize
          for a = 1:twoNplusOne

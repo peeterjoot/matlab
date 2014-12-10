@@ -9,7 +9,7 @@ function [V,D] = sorteig(A, mode)
    [V, D] = eig( A ) ;
 
    d = diag( D ) ;
-   if ( 0 ) 
+   if ( 0 )
       [~, p] = sort( abs(d), mode ) ; % ignore the actual sort results.  Just want the index.
       ds = d( p ) ;
    else

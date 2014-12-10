@@ -19,4 +19,4 @@ rI = GI\bI ;
 
 s = size(rV, 1) ;
 rV = rV(1:s-2) ;
-norm(rV - rI) 
+norm(rV - rI)

@@ -62,4 +62,4 @@ function testH(filename)
 %   (real(ii) - eye( twoNplusOne )) > 1e-10
 %   imag(ii) > 1e-10
 
-end   
+end

@@ -27,7 +27,7 @@ for iter = 1:nmax
    else
       p = z ;
    end
-   
+
    q = A * p ;
    alpha = rho/(p.' * q) ;
    x = x + alpha * p ;

@@ -64,7 +64,7 @@ else
    invC = inv(C) ;
    A = -invC * G ;
    [V, D] = sorteig( A, 'descend' ) ;
-   
+
    bt = inv(V) * invC * bu ; % \tilde{b}
    % w' = D w + b
    % y = L^T V w = (V^T L)^T w
@@ -107,7 +107,7 @@ if ( 1 )
          legend( { 'Real (full)',
                    sprintf('Real (q = %d)', q),
                    'Imag (full)',
-                   sprintf('Imag (q = %d)', q) 
+                   sprintf('Imag (q = %d)', q)
                } ) ;
          xlabel( '\omega' ) ;
          saveas( f, sprintf('ps3bFreqResponsePartCq%dFig%d.png', q, ii ) ) ;
@@ -117,4 +117,4 @@ if ( 1 )
 
       save( qCache, 'Gq', 'Cq', 'bq', 'Lq' ) ;
    end
-end 
+end

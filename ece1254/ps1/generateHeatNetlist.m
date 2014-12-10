@@ -8,7 +8,7 @@ function generateHeatNetlist(filename, N, doProblemA, withSineSource )
 
 % ps3.d.
 % attempt 1) commit: 44ff3320a9b53aaa2656d9e2b89cdd7b75f4c73a
-% 
+%
 % This used an integral, approximated by a sum to express the constraint.
 % This generated a meaningless looking plot (scale was way wrong, values went negative,
 % and also didn't have zero heat flow at the origin.)
@@ -79,7 +79,7 @@ function generateHeatNetlist(filename, N, doProblemA, withSineSource )
 
       traceit( sprintf('i: %d, xi: %f, si: %f, H/\\kappa_m = %f', i, xi, si, hAmp/ kappaM ) ) ;
       current = hAmp * deltaX * si * si / kappaM ;
-     
+
       fprintf( fh, 'I%d 0 %d DC %f\n', i, i, current ) ;
    end
 

@@ -1,5 +1,5 @@
 function g_bDebugOn = isDebugEnabled( )
-% check if debug mode is enabled.  If neither enableDebug() nor disableDebug() has been called, this 
+% check if debug mode is enabled.  If neither enableDebug() nor disableDebug() has been called, this
 % disable debug modes.
    global g_bDebugOn ;
 

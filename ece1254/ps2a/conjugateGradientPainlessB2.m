@@ -1,21 +1,21 @@
 function [x, stats] = conjugateGradientPainlessB2( G, b, P, epsilon )
 % write in MATLAB your own routine for the conjugate gradient method.
-% Give to the user the possibility of specifying a preconditioning matrix P. 
+% Give to the user the possibility of specifying a preconditioning matrix P.
 % The routine shall stop iterations when the residual norm satisfies
 %   \Norm{G x − b}^2/\Norm{b}^2 < e
 % where e is a threshold specified by the user.
-% 
+%
 % This is based on the pseudocode algorithm from Shewchuk's
 % "An Introduction to the Conjugate Gradient Method Without the Agonizing Pain"
 % appendix B.2
 %
 % It has been modified:
 %
-% - using a dumb and inefficient application of an 
+% - using a dumb and inefficient application of an
 %   optional preconditioner.
 %
 % - also modified to use the stop-iteration condition above.
-% 
+%
 
 %enableTrace() ;
 i = 0 ;
@@ -79,7 +79,7 @@ while ( (i < iMax) && (relativeErr > epsilon) )
    deltaNew = r.' * r ;
    beta = deltaNew/deltaOld ;
    d = r + beta * d ;
-   i = i + 1 ; 
+   i = i + 1 ;
 
 %   if ( mod( i, 200 ) == 0 )
 %      traceit( sprintf( '%d: deltaNew: %f, relErr: %f', i, deltaNew, relativeErr ) ) ;

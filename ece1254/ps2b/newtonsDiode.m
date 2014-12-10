@@ -42,7 +42,7 @@ for lambda = lambdas
    while ( iter < maxIter )
       totalIters = totalIters + 1 ;
 
-      % the trailing bound of this instrumentation inserted after fact to see 
+      % the trailing bound of this instrumentation inserted after fact to see
       % how the last iterations went.
       %
       if ( ( 0 == mod(iter, 50) ) || (iter < 10) || (iter > 380) )

@@ -8,7 +8,7 @@
 function [ P, L, U, permutationSign ] = myLU( M )
 % myLU performs LU factorization (not in place) of the input matrix, producing the factors: P M = L U,
 % where P is a permutation matrix, and L and U are lower and upper triangular respectively.
-% 
+%
 % Side effects: the determinant of M can be computed by the products of the resulting
 % diagonal times the (returned) permutationSign.
 %
@@ -29,13 +29,13 @@ permutationSign = 1 ; % could use to compute the determinant (product of diagona
 for i = 1:sz-1
 %disp( M ) ;
    rowContainingMaxElement = findMaxIndexOfColumnMatrix( U(i:sz, i), i - 1 ) ;
-   
-   % http://stackoverflow.com/questions/4939738/swapping-rows-and-columns 
+
+   % http://stackoverflow.com/questions/4939738/swapping-rows-and-columns
    % example:
    % A([3 1],2:4) = A([1 3], 2:4)
    % this exchanges the following submatrices (row subsets)
-   % - row 1, with columns ranging from 2:4 
-   % - row 3, with columns ranging from 2:4 
+   % - row 1, with columns ranging from 2:4
+   % - row 3, with columns ranging from 2:4
 
    traceit( sprintf('i = %d, pivotRow = %d', i, rowContainingMaxElement) ) ;
    if ( rowContainingMaxElement ~= i )
@@ -47,7 +47,7 @@ for i = 1:sz-1
       permutationSign = -permutationSign ;
 
       traceit( sprintf( 'permutation sign: %d, pivot value: %d', permutationSign, U(i,i) ) ) ;
-   end 
+   end
 
    % now do the row operations:
    %

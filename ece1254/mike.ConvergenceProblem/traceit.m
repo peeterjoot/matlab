@@ -4,9 +4,9 @@ function traceit(string)
 %   following a 'debug: ' prefix.
 %
    global g_bTraceOn ;
-   
+
    if g_bTraceOn
-       [ST,I] = dbstack( 1 );
+       [ST,I] = dbstack( 1 ) ;
 
        fprintf( 'debug: %s:%d: %s\n', ST(1).name, ST(1).line, string ) ;
    end

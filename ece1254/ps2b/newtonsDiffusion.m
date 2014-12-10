@@ -1,6 +1,6 @@
 function [x, r] = newtonsDiffusion( N, V, tolF, tolX, tolRel, maxIter, numStepIntervals, noDamping )
 % sample calls:
-% 
+%
 % V=1;ee=1e-6;[x, r] = newtonsDiffusion( 100, V, ee, ee, ee, 500, 1, 1 ) ; y = [ -V;x;V ] ; plot( 0:r.deltaX:1, y ) ; xlabel( 'x' ) ; ylabel( '\psi(x)' ) ;
 % (4 iters)
 %
@@ -21,7 +21,7 @@ function [x, r] = newtonsDiffusion( N, V, tolF, tolX, tolRel, maxIter, numStepIn
 % solve: F(x) = G * x - b + 2 [sinh(x_i)]_i
 %        b(1) = -V, b(N) = V, b({else}) = 0.
 %        G = 2 I - P - P^T, where P is ones on the superdiagonal, and zeros elsewhere.
-% 
+%
 % This are the nodal equations for the finite approximation of the nonlinear Poisson equation:
 %
 %    d^2 psi/du^2 = 2 sinh( psi(u) ), psi(0) = -V, psi(1) = V, u in [0,1]
@@ -32,7 +32,7 @@ function [x, r] = newtonsDiffusion( N, V, tolF, tolX, tolRel, maxIter, numStepIn
 %
 % numStepIntervals [in]: 1 for no stepping.  Something higher to step the values of V from V/numStepIntervals to V.
 %
-% noDamping [in]: boolean: specify 1 to force alpha=1. 
+% noDamping [in]: boolean: specify 1 to force alpha=1.
 %
 % maxIter [in]: stop after this many iterations if not converged.
 %
@@ -65,7 +65,7 @@ b(N,1) = V ;
 r.deltaX = 1/(N+1) ;
 deltaXsq = r.deltaX * r.deltaX ;
 hcoeff = 2 * deltaXsq ;
-% H(x) = hcoeff * sinh( x(1:N) ) 
+% H(x) = hcoeff * sinh( x(1:N) )
 % F(x) = G * x - b + H(x)
 %      = G * x - b + hcoeff * sinh( x(1:N) )
 

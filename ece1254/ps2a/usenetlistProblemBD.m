@@ -28,9 +28,9 @@ N = size(G, 1) ;
 [v, relres, iter, flag] = conjgrad( G, b, b, eye(N), N, sqrt(err) ) ;
 
 % compare direct solution with CG "solution".  None of these CG implementations converge.
-norms = [ norm( G * r - b ) 
-; norm( G * s - b ) 
-; norm( G * t - b ) 
-; norm( G * u - b ) 
-; norm( G * v - b ) 
+norms = [ norm( G * r - b )
+; norm( G * s - b )
+; norm( G * t - b )
+; norm( G * u - b )
+; norm( G * v - b )
 ] ;

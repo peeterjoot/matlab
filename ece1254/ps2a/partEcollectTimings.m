@@ -50,7 +50,7 @@ for i = N
             s = backSubst( U, y, epsilon ) ;
          delta = toc ;
          tmp(end+1) = delta ;
-   
+
          % norm( r - s )
       end
       timingsLU(end+1) = mean(tmp) ;

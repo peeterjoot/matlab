@@ -9,12 +9,12 @@ function generateResistorGridNetlist(filename, N, R, Rg, Vs, Rs, withVoltageSour
 % • three current sources, each one connected between a randomly-
 %   selected node of the grid and the reference node. The source current
 %   flows from the grid node to the reference node. Choose their value
-%   randomly between 10 mA and 100 mA;
+%   randomly between 10 mA and 100 mA ;
 %
 %   The source current must flow from the grid to the reference node as shown in fig. 1.1
-%   (and not viceversa!). 
-% 
-% parameters: 
+%   (and not viceversa!).
+%
+% parameters:
 %    filename: string: file location to write the generated netlist.
 %    N: integer: number of resistors per edge.
 %    R: value of resistance of internal node resistances.
@@ -24,10 +24,10 @@ function generateResistorGridNetlist(filename, N, R, Rg, Vs, Rs, withVoltageSour
 %                                described above is used.
 %    noRandom: boolean: (default 0): override random current source node locations and values.
 
-% 
+%
 % Assumptions
 %
-% 1) Reference node means ground.  
+% 1) Reference node means ground.
 %     http://www.solved-problems.com/circuits/circuits-articles/525/reference-node-node-voltages/
 
    %enableTrace() ;
@@ -94,7 +94,7 @@ function generateResistorGridNetlist(filename, N, R, Rg, Vs, Rs, withVoltageSour
    for i = 1:3
       sourceValue = minCurrentSourceAmperage + (maxCurrentSourceAmperage - minCurrentSourceAmperage) ;
 
-      % Toggle for comparison of solutions with and without Norton voltage 
+      % Toggle for comparison of solutions with and without Norton voltage
       % source to current source transformation:
       %
       if ( noRandom )

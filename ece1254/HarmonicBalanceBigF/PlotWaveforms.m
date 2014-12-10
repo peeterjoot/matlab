@@ -1,9 +1,9 @@
 function PlotWaveforms( fileName, saveBaseName, withTitle )
    % Calls the HBSolve function to solve the
    % circuit described in fileName using the Harmonic Balance method,
-   % truncating the harmonics to N multiples of fundamental. 
+   % truncating the harmonics to N multiples of fundamental.
    % Various Parameters of interest are plotted
-   
+
    %clear
    %clc
    if ( nargin < 1 )
@@ -17,24 +17,24 @@ function PlotWaveforms( fileName, saveBaseName, withTitle )
    % Harmonic Balance Parameters
    N = 50 ;
    [x, X, ecputime, omega, R ] = HBSolve( N, fileName ) ;
-   
+
    f0 = omega/( 2*pi ) ;
    T = 1/f0 ;
    dt = T/( 2*N+1 ) ;
    k = -N:N ;
    t = dt*k ;
-   
+
    % Plot Voltages
    v1 = real( x( 1:R:end ) ) ;
    v2 = real( x( 2:R:end ) ) ;
    v3 = real( x( 3:R:end ) ) ;
    % v4 = real( x( 4:M:end ) ) ;
    % v5 = real( x( 5:M:end ) ) ;
-   % 
+   %
    i = real( x( 4:R:end ) ) ;
    vr = v3 ;
    close all ;
-  
+
    figNum = 2 ;
    f = figure ;
    plot( t, v2-v1, t, vr, 'linewidth', 2 ) ;
@@ -49,7 +49,7 @@ function PlotWaveforms( fileName, saveBaseName, withTitle )
       figNum = figNum + 1 ;
    end
 
-   % 
+   %
    f = figure ;
    plot( t, i, 'linewidth', 2 ) ;
    if ( withTitle )

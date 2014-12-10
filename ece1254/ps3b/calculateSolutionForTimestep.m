@@ -17,7 +17,7 @@ function [discreteTimes, v, s, iterationTimes] = calculateSolutionForTimestep( q
 % withBe    [boolean]:        specify 1,0 for BE or TR iteration methods respectively.
 % withSine  [boolean]:        specify 1,0 for sine or unit step driver input respectively.
 % withPrima [boolean]:        specify 1,0 for modal or prima reduction respectively.
-% 
+%
 % outputs:
 %
 % discreteTimes  [array, double]: the times at which the output is calculated.
@@ -66,7 +66,7 @@ if ( withPrima && (q ~= 501) )
       Cq = eye( size(Cq) ) ;
 
       [V, Gq] = sorteig( Gq, 'descend' ) ;
-   
+
       bq = inv(V) * bq ;
       Lq = V.' * Lq ;
 

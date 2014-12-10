@@ -9,7 +9,7 @@
 function x = forwardSubst( L, b, epsilon )
 % forwardSubst performs a back substitution returning x for the system L x = b, where L is lower triangular and has no
 % zeros on the diagonal.
-% 
+%
 
 %enableTrace( ) ;
 [m, n] = size( L ) ;
@@ -38,7 +38,7 @@ for i = 1:m
    bi = b(i, 1) ;
    uii = L(i, i) ;
    if ( i ~= 1 )
-      % The dot() function takes care of the transpose operation if required (so that the result is a scalar 
+      % The dot() function takes care of the transpose operation if required (so that the result is a scalar
       % and not a matrix) :
       dotprod = dot( x(1:i-1), L(i, 1:i-1) ) ;
    end

@@ -6,7 +6,7 @@ function generateNetlist(filename, n, alpha, useBigResistor)
 % n        [integer]: how many discretization intervals.
 % alpha    [float]: heating coefficient.
 % useBigResistor [boolean]: instead of using a zero voltage source to force the zero current boundary
-%                           value constraint, use a big (i.e. infinite) resistor to model no flow and the 
+%                           value constraint, use a big (i.e. infinite) resistor to model no flow and the
 %                           end point.
 
 deltaX = 1/n ;

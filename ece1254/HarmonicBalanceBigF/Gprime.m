@@ -55,10 +55,10 @@ function [ Gprime ] = Gprime( bdiodes, x, Nh , Nm )
        end
 
        corner = 1 + j*Nm ;
-       
+
 
        gprime(corner:corner+Nm-1,corner:corner+Nm-1) = gprimecell ;
-       
+
    end
 
    Gprime = F\(gprime*F) ;

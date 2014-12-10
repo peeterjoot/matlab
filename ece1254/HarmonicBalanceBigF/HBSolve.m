@@ -42,49 +42,49 @@ function [ x, X, ecputime, omega, R ] = HBSolve( N, fileName )
    for i = 1:iterations
        X = X0 ;
        x = F*X ;
-       
+
        %determine non linear currents
        inl = gnl(r.bdiode, x, N , R) ;
        Inl = F\inl ;
-       
+
        %Function to minimize I
        I = Y*X + Inl - lambda*Is ;
-       
+
        %Construct Jacobian
        Gp = Gprime( r.bdiode, x, N , R ) ;
        J = Y + Gp ;
-       
+
        disp(['starting iteration ' num2str(i) ' lambda is ' num2str(lambda) ' norm of X0 = ' num2str(norm(X0))]) ;
        stepConverged = 0 ;
        for k= 1:subiterations
-           
+
            %Newton Iteration Update
            dX = J\-I ;
            X = X + dX ;
            x = F*X ;
-           
+
            %determine non linear currents
            inl = gnl(r.bdiode, x, N , R) ;
            Inl = F\inl ;
-           
+
            %Function to minimize I
            I = Y*X + Inl - lambda*Is ;
-           
+
            %Construct Jacobian
            Gp = Gprime( r.bdiode, x, N , R ) ;
            J = Y + Gp ;
-           
+
            if ( (rcond(J) < JcondTol) || ( isnan(rcond(J)) ))
                stepConverged = 0 ;
                break
            end
-           
+
            if (norm(I) < eI) || (norm(dX) < edV) %&& (norm(dV)/norm(V) < edVr)
                stepConverged = 1 ;
                break ;
            end
        end
-       
+
        if ( stepConverged ) %solution did not converge
            %disp('solution converged')
            X0 = X ;
@@ -96,19 +96,19 @@ function [ x, X, ecputime, omega, R ] = HBSolve( N, fileName )
            dlambda = dlambda/2 ;
            lambda = plambda + dlambda ;
        end
-       
+
        totalIterations = totalIterations + k ;
-       
+
        if plambda == 1 && stepConverged == 1 ;
            converged = 1 ;
            break ;
        end ;
        if lambda >=1; lambda = 1; end ;
-       
+
        if dlambda<=0.0001
            error('source load step too small, function not converging')
        end
-       
+
    end
    ecputime = cputime - ecputime ;
 

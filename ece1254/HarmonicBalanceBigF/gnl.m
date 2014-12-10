@@ -1,7 +1,7 @@
 function [ gnl ] = gnl(  bdiodes, x, Nh , Nm )
    %GNL This function determines the nonlinear currents of the diodes in bdiodes
    %for the voltages contained in x. (Time domain)
-   %   
+   %
    %   bdiodes is a cell matrix containing the infromation describing the
    %   location and parameters of all diodes in the circuit
    %   x is the vector of all unknown quantities

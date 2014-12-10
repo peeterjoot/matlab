@@ -1,18 +1,18 @@
 function TestSolver( fileName )
    % Calls the HBSolve function to solve the
    % circuit described in fileName using the Harmonic Balance method,
-   % truncating the harmonics to N multiples of fundamental. 
+   % truncating the harmonics to N multiples of fundamental.
    % The circuit is solved for varying values of N and the cputime required
-   % to solve and the maximum error between the solution and a solution of 
+   % to solve and the maximum error between the solution and a solution of
    % 'sufficiently large' N is computed
-   
+
 %   clear
 %   clc
 
    if ( nargin < 1 )
       fileName = '../circuits/BridgeRectifier.netlist' ;
    end
-   
+
    % Reference Harmonic Balance Parameters
    Nref = 100 ;
    [xref, Xref, ecputimeref, omegaref, Rref ] = HBSolve( Nref, fileName ) ;
@@ -21,9 +21,9 @@ function TestSolver( fileName )
    dtref = Tref/(2*Nref+1) ;
    kref = -Nref:Nref ;
    tref = dtref*kref ;
-   
+
    Nvalues = [ 1  5  9 10 50 90] ;
-   
+
    %M tests
    M = length(Nvalues) ;
    ecputimeValues = zeros(M,1) ;
@@ -31,14 +31,14 @@ function TestSolver( fileName )
    n = 0 ;
    for N = Nvalues
       [x, X, ecputime, omega, R ] = HBSolve( N, fileName ) ;
-      
+
       % Harmonic Balance Parameters
        f0 = omega/(2*pi) ;
        T = 1/f0 ;
        dt = T/(2*N+1) ;
        k = -N:N ;
        t = dt*k' ;
-      
+
        %Determine error in the frequency domain to avoid time scaling issues
        %Need to zero pad the truncated soltuion
        Xz = [ zeros(R*(Nref-N),1) ; X ; zeros(R*(Nref-N),1)] ;
@@ -50,7 +50,7 @@ function TestSolver( fileName )
    Nvalues = [Nvalues Nref] ;
    errorValues = [errorValues ; 0] ;
    ecputimeValues = [ecputimeValues ; ecputimeref] ;
-   
+
    close all
    figure
    loglog(Nvalues,errorValues,Nvalues,ecputimeValues)

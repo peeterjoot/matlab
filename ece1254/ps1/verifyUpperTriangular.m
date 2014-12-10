@@ -7,7 +7,7 @@
 
 function verifyUpperTriangular( U, epsilon )
 % verifyUpperTriangular produces an error if the matrix U is not upper triangular within precision epsilon.
-% 
+%
 
 %enableTrace( ) ;
 [m, n] = size( U ) ;

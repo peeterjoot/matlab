@@ -1,7 +1,7 @@
 function [x, f, iter, absF, diffX] = newtonsSquareroot( a, x, tolF, tolX, tolRel, maxIter )
-% 
+%
 % solve: f(x) = x^2 - a = 0
-% 
+%
 % examples:
 %   [x, f, iter, absF, diffX] = newtonsSquareroot( 2, 0, 1e-6, 1e-6, 1e-6, 50 ) ;
 %   [x, f, iter, absF, diffX] = newtonsSquareroot( 2, 0.1, 1e-6, 1e-6, 1e-6, 10 ) ;

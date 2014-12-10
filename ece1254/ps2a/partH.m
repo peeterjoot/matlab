@@ -60,7 +60,7 @@ for r = R
       if ( ~showSymmetryDebug )
          e = eig( G ) ;
 
-         f = figure ; 
+         f = figure ;
          scatter( real(e), imag(e), 'r.' ) ;
          hold on ;
          xlabel( 'Re({\lambda})' ) ;

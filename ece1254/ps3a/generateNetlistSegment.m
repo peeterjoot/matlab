@@ -13,15 +13,15 @@ function [ns, nx, nn] = generateNetlistSegment( fh, ns, nx, nn, r, level )
 %                                         .
 %
 % inputs:
-%   - fh: file handle to print .netlist fragment to. 
+%   - fh: file handle to print .netlist fragment to.
 %   - ns: start node number for the first segment.
-%   - nx: node number for the resistor/inductor connection as depicted above.  
+%   - nx: node number for the resistor/inductor connection as depicted above.
 %   - nn: next segment index.  This is the index for each of the resistor/inductor/capacitor triplet of this part of the
 %         transmission line.
 %
 %  After printing each segment, ns/nx/nn are each updated to the start-node-number/next-node-number/next-segment-number
 %  for the next segment.
-% 
+%
 % outputs:
 %   - ns: the last node number of the sequence of segments printed in this pass.
 %   - nx: the next node number available for use.

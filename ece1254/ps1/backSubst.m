@@ -9,7 +9,7 @@
 function x = backSubst( U, b, epsilon )
 % backSubst performs a back substitution returning x for the system U x = b, where U is upper triangular and has no
 % zeros on the diagonal.
-% 
+%
 
 %enableTrace( ) ;
 [m, n] = size( U ) ;
@@ -38,7 +38,7 @@ for i = m:-1:1
    bi = b(i, 1) ;
    uii = U(i, i) ;
    if ( i ~= m )
-      % The dot() function takes care of the transpose operation if required (so that the result is a scalar 
+      % The dot() function takes care of the transpose operation if required (so that the result is a scalar
       % and not a matrix) :
       dotprod = dot( x(i+1:m), U(i, i+1:m) ) ;
    end

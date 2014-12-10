@@ -6,14 +6,14 @@ function tableData = displayOutputErrorAndCpuTimes()
 
    qs = [1 2 4 10 50 501] ;
 
-   tmax = [ 10000 700 ] ;   
+   tmax = [ 10000 700 ] ;
    withSine = [ 1 0 ] ;
    names = { 'Sine', 'Unit' } ;
 
    tableData = {} ;
 
-   %for withPrima = 1:1 
-   for withPrima = 0:1 
+   %for withPrima = 1:1
+   for withPrima = 0:1
 
       if ( withPrima )
          qo = 2 ;
@@ -69,9 +69,9 @@ function tableData = displayOutputErrorAndCpuTimes()
          hold off ;
          saveas( f, sprintf( 'ps3b%sDriverCpuTimes%sFig1.png', names{ii}, methodNames{withPrima+1} ) ) ;
 
-         cpuColumn = {} ;         
-         indexColumn = {} ;         
-         errorColumn = {} ;         
+         cpuColumn = {} ;
+         indexColumn = {} ;
+         errorColumn = {} ;
 
          cpuColumn{end+1} = sprintf('%s, cpu, %s', methodNames{withPrima+1}, names{ii}) ;
          errorColumn{end+1} = sprintf('%s, error, %s', methodNames{withPrima+1}, names{ii}) ;
@@ -86,9 +86,9 @@ function tableData = displayOutputErrorAndCpuTimes()
             maxErr = max(abs(sRef - s)) ;
             meanCpu = mean(it) ;
             devCpu = std(it, 1) ;
-    
-            errorColumn{end+1} = sprintf('%1.2e', maxErr ) ; 
-            cpuColumn{end+1} = sprintf('%1.2e \\pm %1.2e', meanCpu, devCpu ) ; 
+
+            errorColumn{end+1} = sprintf('%1.2e', maxErr ) ;
+            cpuColumn{end+1} = sprintf('%1.2e \\pm %1.2e', meanCpu, devCpu ) ;
             indexColumn{end+1} = sprintf('%d', q) ;
          end
 

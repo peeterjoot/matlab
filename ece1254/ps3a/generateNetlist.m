@@ -14,7 +14,7 @@ function [r, endpoints] = generateNetlist( filename, LengthsMM )
 % Divide each transmission line into segments of length ∆z = 0.05mm, and
 % model each segment with an RLC circuit as the one shown in the figure.
 %
-% Model the clock source with a periodic voltage source with the following characteristics: 
+% Model the clock source with a periodic voltage source with the following characteristics:
 % amplitude 1 V, rise/fall time 100 ps, period 2 ns, duty cycle 50%, initial delay 100 ps. The clock
 % source voltage is depicted in fig. 1.2.
 %
@@ -23,16 +23,16 @@ function [r, endpoints] = generateNetlist( filename, LengthsMM )
 % [in] LengthsMM (optional):
 %     For test purposes, override the builtin LengthsMM with a different set of lengths.
 %     Example:
-%        LengthsMM          = [ 0.05 ; 0.05 ; 0.05 ; 0.05 ] ;           
+%        LengthsMM          = [ 0.05 ; 0.05 ; 0.05 ; 0.05 ] ;
 %        LengthsMM          = [ 0.05 ; 0.05 ] ;
-%        LengthsMM          = [ 0.15 ; 0.15 ; 0.15 ; 0.15 ] ;           
+%        LengthsMM          = [ 0.15 ; 0.15 ; 0.15 ; 0.15 ] ;
 %
 % LengthsMM must have at least 2 rows, and no more than 4.  The default value for this parameter is:
 %
 %   LengthsMM          = [ 6 ; 4 ; 3 ; 2 ] ;
 %
 % (that of the problem specification)
-% 
+%
 % Output:
 %    r: table of in the RLC values per segment (to use in the problem set report).
 %    endpoints: nodenumbers for the loads on the circuit.  We are interested in the voltage at one of these points.
@@ -83,7 +83,7 @@ startNodeNumbers = [ns] ;
 for level = [2:maxLevel]
    [endpoints, nn] = generateNetlistSegmentForLevel( fh, level, startNodeNumbers, max( startNodeNumbers ) + 1, nn, r ) ;
 
-   traceit( sprintf('endpoints: %s\n', mat2str(endpoints)) );
+   traceit( sprintf('endpoints: %s\n', mat2str(endpoints)) ) ;
 
    startNodeNumbers = endpoints ;
 end

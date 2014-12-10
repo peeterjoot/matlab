@@ -1,19 +1,19 @@
 function [x, stats, residuals] = conjugateGradientQuarteroniPrecond( G, b, P, epsilon, withoutLU )
 % write in MATLAB your own routine for the conjugate gradient method.
-% Give to the user the possibility of specifying a preconditioning matrix P. 
+% Give to the user the possibility of specifying a preconditioning matrix P.
 % The routine shall stop iterations when the residual norm satisfies
 %   \Norm{G x − b}^2/\Norm{b}^2 < epsilon
 % where epsilon is a threshold specified by the user.
 %
 % This is based on the algorithm from Quarteroni, et al's "Numerical Mathematics"
-% 
+%
 % That text also has a Matlab implementation for this algorithm (copied into conjgrad.m
 % for reference and to compare test results from).
 %
 % This matlab routine was coded using the algorithm but not using the explicit listing.  The
 % change of variables used to go from the algorthim to this routine are listed in the
 % problem set writup.
-% 
+%
 % parameters:
 %  in/out: G x = b (returns x)
 %  P (in): preconditioner
@@ -47,12 +47,12 @@ if ( np ~= 0 )
       error( 'conjugateGradientQuarteroniPrecond:preconditionerCheck', 'preconditioning matrix dimensions %d,%d do not match input matrix dimensions %d,%d', mp, np, m, n ) ;
    end
 
-   if ( withoutLU ) 
+   if ( withoutLU )
       z = P\r ;
    else
       [ L, U, luP ] = lu( P ) ;
- 
-      Pr = luP * r ; 
+
+      Pr = luP * r ;
       y = L\Pr ;
       z = U\y ;
    end
@@ -84,10 +84,10 @@ while ( (i < iMax) && (relativeErr > epsilon) )
    residuals(end+1) = relativeErr ;
 
    if ( np ~= 0 )
-      if ( withoutLU ) 
+      if ( withoutLU )
          z = P\r ;
       else
-         Pr = luP * r ; 
+         Pr = luP * r ;
          y = L\Pr ;
          z = U\y ;
       end
@@ -106,7 +106,7 @@ while ( (i < iMax) && (relativeErr > epsilon) )
 %      traceit( sprintf( '%d: delta: %f, relErr: %f', i, delta, relativeErr ) ) ;
 %   end
 
-   i = i + 1 ; 
+   i = i + 1 ;
 end
 
 stats(end+1) = relativeErr ;

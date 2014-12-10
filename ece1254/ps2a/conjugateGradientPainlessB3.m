@@ -1,6 +1,6 @@
 function x = conjugateGradientPainlessB3( G, b, P, epsilon )
 % write in MATLAB your own routine for the conjugate gradient method.
-% Give to the user the possibility of specifying a preconditioning matrix P. 
+% Give to the user the possibility of specifying a preconditioning matrix P.
 % The routine shall stop iterations when the residual norm satisfies
 %   \Norm{G x − b}^2/\Norm{b}^2 < e
 % where e is a threshold specified by the user.
@@ -80,5 +80,5 @@ while ( (i < iMax) && (relativeErr > epsilon) )
       traceit( sprintf( '%d: deltaNew: %f, relErr: %f, deltaNought: %f', i, deltaNew, relativeErr, deltaNought ) ) ;
    end
 
-   i = i + 1 ; 
+   i = i + 1 ;
 end

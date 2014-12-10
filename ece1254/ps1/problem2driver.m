@@ -121,7 +121,7 @@ else
       Z(i,j) = x( (n+1) * (i-1) + j ) ;
    end
    end
-   
+
    figure ;
    surf( X, Y, Z ) ;
 end
