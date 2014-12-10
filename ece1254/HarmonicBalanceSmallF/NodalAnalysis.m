@@ -713,7 +713,7 @@ function results = NodalAnalysis( filename, sourceStepScaling )
          error( 'NodalAnalysis:find', 'failed to find DC frequency entry in angularVelocities: %s', -omega, mat2str(angularVelocities) ) ;
       end
 
-      bdiode{ d } = struct( 'type', 'exp', 'vt', vt, 'vp', plusNode, 'vn', minusNode ) ;
+      bdiode{ d } = struct( 'io', -io, 'type', 'exp', 'vt', vt, 'vp', plusNode, 'vn', minusNode ) ;
       if ( plusNode )
          B( plusNode, omegaIndex ) = B( plusNode, omegaIndex ) + io ;
          D( plusNode, d ) = -io ;

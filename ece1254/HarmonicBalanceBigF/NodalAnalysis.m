@@ -10,14 +10,14 @@ function [G, C, B, bdiode, angularVelocities, xnames] = NodalAnalysis(filename)
 %    G x(t) + C \dot{x}(t)= B u(t)
 %
 % Here the column vector u(t) contains all sources, and x(t) is a vector of all the sources.
-% 
+%
 %---------------------------------------------------------------------------------------
 %
 % NETLIST SYNTAX:
 %
 % These matrices are generated from a text file (netlist) that describes an
 % electrical circuit made of resistors, independent current sources,
-% independent voltage sources, voltage-controlled voltage sources, capacitors, and inductors. 
+% independent voltage sources, voltage-controlled voltage sources, capacitors, and inductors.
 %
 % For the netlist, we use the widely-adopted SPICE syntax, as simplified with the following assumptions:
 %
@@ -35,16 +35,16 @@ function [G, C, B, bdiode, angularVelocities, xnames] = NodalAnalysis(filename)
 % The netlist elements lines are specified as follows:
 %
 % - The syntax for specifying a resistor is a line of the form:
-% 
+%
 %     Rlabel node1 node2 value
-% 
+%
 %   where "value" is the resistance value.
 %
 % - The syntax for specifying a current source is lines of the form:
-% 
+%
 %     Ilabel node1 node2 DC value
 %     Ilabel node1 node2 AC value freq [phase]
-% 
+%
 %   and current flows from node1 to node2.
 %   Here value, a floating point number, is the amplitude of the current.
 %   A line with 'DC value' is equivalent to that of 'AC value 0'. The parameter
@@ -52,10 +52,10 @@ function [G, C, B, bdiode, angularVelocities, xnames] = NodalAnalysis(filename)
 %
 % - The syntax for specifying a voltage source connected between the nodes node+ and
 %   node- is one of:
-% 
+%
 %     Vlabel node+ node- DC value
 %     Vlabel node+ node- AC value freq [phase]
-% 
+%
 %   where node+ and node- identify, respectively, the node where the positive
 %   and "negative" terminal is connected to, and value is the amplitude
 %   of the voltage source (a floating point value).
@@ -64,34 +64,34 @@ function [G, C, B, bdiode, angularVelocities, xnames] = NodalAnalysis(filename)
 %
 % - The syntax for specifying a voltage-controlled voltage source,
 %   connected between the nodesnode+ and node-, is:
-% 
+%
 %     Elabel node+ node- nodectrl+ nodectrl- gain
-% 
+%
 %   The controlling voltage is between the nodes nodectrl+ and nodectrl-,
 %   and the last argument is the source gain (a floating point number).
-% 
+%
 % - The syntax for specifying a capacitor is:
-% 
+%
 %     Clabel node1 node2 val
 %
 %   where label is an arbitrary label, node1 and node2 are integer circuit node numbers, and val is
 %   the capacitance (a floating point number).
 %
 % - The syntax for specifying an inductor is:
-% 
+%
 %     Llabel node1 node2 val
-% 
+%
 %   where label is an arbitrary label, node1 and node2 are integer circuit node numbers, and val
 %   is the inductance (a floating point number).
-% 
+%
 % - The syntax for specifying a diode modelled by I_d = I_0 ( e^{V/V_t} - 1 ) is:
 %
 %     Dlabel node1 node2 I_0 V_T
 %
 %   where V = V_n1 - V_n2, and the current flows from n1 to n2.
-%    
+%
 % - Comment lines, starting with *, as described in the following, are allowed:
-%     http://jjc.hydrus.net/jjc/technical/ee/documents/spicehowto.pdf 
+%     http://jjc.hydrus.net/jjc/technical/ee/documents/spicehowto.pdf
 %
 %------------------------------------------------
 %
@@ -106,37 +106,37 @@ function [G, C, B, bdiode, angularVelocities, xnames] = NodalAnalysis(filename)
 % OUTPUT VARIABLES:
 %
 % With N equal to the total number of MNA variables, the returned parameters are
-% 
+%
 % - G [array]
-% 
+%
 %    NxN matrix of resistance stamps.
-% 
-% - C [array]   
-% 
+%
+% - C [array]
+%
 %    NxN matrix of stamps for the time dependent portion of the MNA equations.
-% 
+%
 % - B [array]
-% 
-%    NxM matrix of constant source terms.  Each column encodes the current sources 
-%    for increasing frequencies.  For example, if there are DC sources in 
-%    the circuit the first column would have contributions from the DC sources, 
+%
+%    NxM matrix of constant source terms.  Each column encodes the current sources
+%    for increasing frequencies.  For example, if there are DC sources in
+%    the circuit the first column would have contributions from the DC sources,
 %    and any columns after that would be for higher frequencies.
-% 
+%
 % - angularVelocities [array]
-%   
+%
 %    Mx1 matrix of angular velocities ( 2 pi freq, where freq is from an AC current
-%    or voltage line specification ), ordered from lowest to highest, including 
+%    or voltage line specification ), ordered from lowest to highest, including
 %    both negative and positive frequencies for any given AC signal.
-% 
+%
 %    A zero value in one of the angularVelocities vector positions represents a DC source.
-% 
+%
 % - xnames [cell]
-% 
-%   is an Nx1 array of strings for each of the variables in the resulting system.  
-%   Entries will be added to this for each node voltage in the system.  
+%
+%   is an Nx1 array of strings for each of the variables in the resulting system.
+%   Entries will be added to this for each node voltage in the system.
 %   Current variables will be added for each DC voltage source, each DC voltage
 %   controlled voltage source, as well as any inductor currents.
-% 
+%
 %------------------------------------------------
 
    %enableTrace() ;
@@ -367,7 +367,7 @@ function [G, C, B, bdiode, angularVelocities, xnames] = NodalAnalysis(filename)
 
    % if we wanted to allow for gaps in the node numbers (like 1, 3, 4, 5), then we'd have to count the number of unique node numbers
    % instead of just taking a max, and map the matrix positions to the original node numbers later.
-   % 
+   %
    allnodes = zeros(2, 1) ; % assume a zero node.
    allfrequencies = zeros(1, 0) ; % don't assume a DC source
 
@@ -427,7 +427,7 @@ function [G, C, B, bdiode, angularVelocities, xnames] = NodalAnalysis(filename)
 
    %
    % Done parsing the netlist file.
-   % 
+   %
    %----------------------------------------------------------------------------
 
    numVoltageSources = size( voltageLines, 2 ) ;
@@ -510,7 +510,7 @@ function [G, C, B, bdiode, angularVelocities, xnames] = NodalAnalysis(filename)
       magnitude       = v(3) ;
       omega           = v(4) ;
       phi             = v(5) ;
-      
+
       traceit( sprintf( '%s %d,%d -> %d (%e, %e)\n', label, plusNode, minusNode, magnitude, omega, phi ) ) ;
       xnames{r} = sprintf( 'i_{%s_{%d,%d}}', label, minusNode, plusNode ) ;
 
@@ -526,7 +526,7 @@ function [G, C, B, bdiode, angularVelocities, xnames] = NodalAnalysis(filename)
       % V,omega,phi => V cos( omega t - phi ) = e^{ j omega t - j phi } * V/2 + e^{-j omega t + j phi } * V/2
 
       omegaIndex = find( angularVelocities == omega ) ;
-   
+
       if ( size(omegaIndex) ~= size(1) )
          error( 'NodalAnalysis:find', 'failed to find angular velocity %e in angularVelocities: %s', omega, mat2str(angularVelocities) ) ;
       end
@@ -589,7 +589,7 @@ function [G, C, B, bdiode, angularVelocities, xnames] = NodalAnalysis(filename)
       plusNode    = i(1) ;
       minusNode   = i(2) ;
       value       = i(3) ;
-  
+
       traceit( sprintf( '%s %d,%d -> %d\n', label, plusNode, minusNode, value ) ) ;
 
       if ( plusNode )
@@ -655,13 +655,13 @@ function [G, C, B, bdiode, angularVelocities, xnames] = NodalAnalysis(filename)
          end
       end
    end
-    
+
    % process the diode sources:
    labelNumber = 0 ;
-   d = 0;
+   d = 0 ;
 
-   %bdiode = cell( size(B, 1), 1 );
-   bdiode = cell( size(diodeLines,2),1 );
+   %bdiode = cell( size(B, 1), 1 ) ;
+   bdiode = cell( size(diodeLines,2),1 ) ;
 
    for i = diodeLines
       labelNumber = labelNumber + 1 ;
@@ -670,7 +670,7 @@ function [G, C, B, bdiode, angularVelocities, xnames] = NodalAnalysis(filename)
       minusNode   = i(2) ;
       io          = i(3) ;
       vt          = i(4) ;
-      d = d + 1;
+      d = d + 1 ;
 
       traceit( sprintf( '%s %d,%d -> %d\n', label, plusNode, minusNode, -io ) ) ;
 
@@ -678,7 +678,7 @@ function [G, C, B, bdiode, angularVelocities, xnames] = NodalAnalysis(filename)
       if ( size(omegaIndex) ~= size(1) )
          error( 'NodalAnalysis:find', 'failed to find DC frequency entry in angularVelocities: %s', -omega, mat2str(angularVelocities) ) ;
       end
-      
+
       bdiode{d} = struct( 'io', -io, 'vt', vt, 'vp', plusNode, 'vn', minusNode ) ;
       if ( plusNode )
          B( plusNode, omegaIndex ) = B( plusNode, omegaIndex ) + io ;
