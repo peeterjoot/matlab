@@ -14,9 +14,23 @@ function PlotWaveforms( fileName, saveBaseName, withTitle )
       withTitle = 0 ;
    end
 
-   % Harmonic Balance Parameters
-   N = 50 ;
-   [x, X, ecputime, omega, R ] = HBSolve( N, fileName ) ;
+   cacheFile = 'psave.mat' ;   
+
+   %for quick experimentation with plot alternatives.
+   %if ( exist( cacheFile, 'file' ) )
+   %   load( cacheFile ) ;
+   %else
+
+      % Harmonic Balance Parameters
+      N = 50 ;
+      [x, X, ecputime, omega, R ] = HBSolve( N, fileName ) ;
+
+   %   save( cacheFile ) ;
+   %end
+
+   saveExtension = 'pdf' ;
+   %saveExtension = 'png' ;
+   figPathExtension = sprintf( '.%s', saveExtension ) ;
 
    f0 = omega/( 2*pi ) ;
    T = 1/f0 ;
@@ -38,15 +52,18 @@ function PlotWaveforms( fileName, saveBaseName, withTitle )
    figNum = 2 ;
    f = figure ;
    plot( t, v2-v1, t, vr, 'linewidth', 2 ) ;
-   legend( 'Source Voltage', 'Output Voltage', 4 ) ;
+   legend( 'Source Voltage', 'Output Voltage', 'Location', 'SouthEast' ) ;
    xlabel( 'Time (s)' ) ;
    ylabel( 'Voltage (V)' ) ;
-   setFigureProperties( f ) ;
+   %setFigureProperties( f ) ;
 
    if ( nargin == 2 )
-      saveName = sprintf( '%sOutputVoltageFig%d', saveBaseName, figNum ) ;
-      saveas( f, saveName, 'eps' ) ;
-      %plot2svg( saveName, f ) ;
+      saveName = sprintf( '%sOutputVoltageFig%d%s', saveBaseName, figNum, figPathExtension ) ;
+      %saveas( f, saveName, saveExtension ) ;
+
+      % white background
+      set( f, 'Color', 'w' ) ;
+      export_fig( saveName ) ;
 
       figNum = figNum + 1 ;
    end
@@ -59,12 +76,15 @@ function PlotWaveforms( fileName, saveBaseName, withTitle )
    end
    xlabel( 'Time (s)' ) ;
    ylabel( 'Current (A)' ) ;
-   setFigureProperties( f ) ;
+   %setFigureProperties( f ) ;
 
    if ( nargin == 2 )
-      saveName = sprintf( '%sSourceCurrentFig%d', saveBaseName, figNum ) ;
-      saveas( f, saveName, 'eps' ) ;
-      %plot2svg( saveName, f ) ;
+      saveName = sprintf( '%sSourceCurrentFig%d%s', saveBaseName, figNum, figPathExtension ) ;
+      saveas( f, saveName, saveExtension ) ;
+
+      % white background
+      set( f, 'Color', 'w' ) ;
+      export_fig( saveName ) ;
 
       figNum = figNum + 1 ;
    end
@@ -81,15 +101,18 @@ function PlotWaveforms( fileName, saveBaseName, withTitle )
    if ( withTitle )
       title( 'Diode Voltages' ) ;
    end
-   legend( 'vd1', 'vd2', 'vd3', 'vd4', 4 ) ;
+   legend( 'vd1', 'vd2', 'vd3', 'vd4', 'Location', 'SouthEast' ) ;
    xlabel( 'Time (s)' ) ;
    ylabel( 'Voltage (V)' ) ;
-   setFigureProperties( f ) ;
+   %setFigureProperties( f ) ;
 
    if ( nargin == 2 )
-      saveName = sprintf( '%sDiodeVoltagesFig%d', saveBaseName, figNum ) ;
-      saveas( f, saveName, 'eps' ) ;
-      %plot2svg( saveName, f ) ;
+      saveName = sprintf( '%sDiodeVoltagesFig%d%s', saveBaseName, figNum, figPathExtension ) ;
+      saveas( f, saveName, saveExtension ) ;
+
+      % white background
+      set( f, 'Color', 'w' ) ;
+      export_fig( saveName ) ;
 
       figNum = figNum + 1 ;
    end
