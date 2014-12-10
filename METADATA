@@ -409,23 +409,6 @@ circuit using Newton's Method
 },
 {
    DATE => 'Dec 9, 2014',
-   path => 'ece1254/HarmonicBalanceBigF/NodalAnalysis.m',
-   WHAT => qq(
-NodalAnalysis generates the modified nodal analysis (MNA) equations from a text file
-
-This is based on NodalAnalysis.m from ps3a (which included RLC support), and has been generalized to add support
-for non-DC sources and diodes.
-
-This routine [G, C, B, angularVelocities, x] = NodalAnalysis(filename)
-generates the modified nodal analysis (MNA) equations
-
-   G x(t) + C x'(t)= B u(t)
-
-Here the column vector u(t) contains all sources, and x(t) is a vector of all the sources.
-)
-},
-{
-   DATE => 'Dec 9, 2014',
    path => 'ece1254/HarmonicBalanceBigF/PlotWaveforms.m',
    WHAT => qq(
 Calls the HBSolve function to solve the
