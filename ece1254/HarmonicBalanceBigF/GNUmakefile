@@ -3,11 +3,12 @@ FROMPS1 += disableTrace.m
 FROMPS1 += enableTrace.m
 FROMPS1 += traceit.m
 FROMPS1 += isDebugEnabled.m
+FROMSM += NodalAnalysis.m
 CLEAN += *.mat
 CLEAN += *.png
 CLEAN += $(FROMPS1)
 
-all :: $(FROMPS1)
+all :: $(FROMPS1) $(FROMSM)
 
 clean: 
 	rm -f $(CLEAN)
@@ -31,3 +32,5 @@ traceit.m : ../ps1/traceit.m
 isDebugEnabled.m : ../ps1/isDebugEnabled.m
 	cp $^ $@
 
+NodalAnalysis.m : ../HarmonicBalanceSmallF/NodalAnalysis.m
+	cp $^ $@

@@ -720,7 +720,7 @@ function results = NodalAnalysis( filename, sourceStepScaling )
       end
       if ( minusNode )
          B( minusNode, omegaIndex ) = B( minusNode, omegaIndex ) - io ;
-         D( plusNode, d ) = io ;
+         D( minusNode, d ) = io ;
       end
    end
 

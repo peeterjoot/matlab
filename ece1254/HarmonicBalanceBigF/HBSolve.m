@@ -6,13 +6,14 @@ function [ x, X, ecputime, omega, R ] = HBSolve( N, fileName )
 %described in HarmonicBalance.m and the cpu time required to solve the
 %circuit using Newton's Method
 
-[G, C, B, bdiode, angularVelocities, xnames] = NodalAnalysis(fileName);
+r = NodalAnalysis( fileName ) ;
+
 % Harmonic Balance Parameters
 %Only intend on using one frequency for all AC sources
-omega = min(angularVelocities(find (angularVelocities > 0 ) ));
+omega = min(r.angularVelocities(find (r.angularVelocities > 0 ) ));
 
-[Y, ~, Is, bdiode] = HarmonicBalance(G, C, B, bdiode, angularVelocities, xnames, N, omega);
-R = length(G);
+[Y, ~, Is, ~] = HarmonicBalance(r.G, r.C, r.B, r.bdiode, r.angularVelocities, r.xnames, N, omega);
+R = length(r.G);
 
 % Fourier Transform Matrix
 F = FourierMatrix(N,R);
@@ -43,14 +44,14 @@ for i = 1:iterations
     x = F*X;
     
     %determine non linear currents
-    inl = gnl(bdiode, x, N , R);
+    inl = gnl(r.bdiode, x, N , R);
     Inl = F\inl;
     
     %Function to minimize I
     I = Y*X + Inl - lambda*Is;
     
     %Construct Jacobian
-    Gp = Gprime( bdiode, x, N , R );
+    Gp = Gprime( r.bdiode, x, N , R );
     J = Y + Gp;
     
     disp(['starting iteration ' num2str(i) ' lambda is ' num2str(lambda) ' norm of X0 = ' num2str(norm(X0))]);
@@ -63,14 +64,14 @@ for i = 1:iterations
         x = F*X;
         
         %determine non linear currents
-        inl = gnl(bdiode, x, N , R);
+        inl = gnl(r.bdiode, x, N , R);
         Inl = F\inl;
         
         %Function to minimize I
         I = Y*X + Inl - lambda*Is;
         
         %Construct Jacobian
-        Gp = Gprime( bdiode, x, N , R );
+        Gp = Gprime( r.bdiode, x, N , R );
         J = Y + Gp;
         
         if ( (rcond(J) < JcondTol) || ( isnan(rcond(J)) ))
