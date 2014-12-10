@@ -8,40 +8,40 @@ function [ gnl ] = gnl(  bdiodes, x, Nh , Nm )
 %   Nh is the number of harmonics used in the analysis
 %   Nm is the number of physical unknowns of the MNA
 
-N = length(bdiodes);
+N = length(bdiodes) ;
 
 %Standard Diode Expression
-%Diode = @(v,io,Vt) io*(exp(v/Vt)-1);
+%Diode = @(v,io,Vt) io*(exp(v/Vt)-1) ;
 
 %Reverse Saturation Current Handled in NodalAnalayis as DC source so:
-Diode = @(v,io,Vt) io*(exp(v/Vt));
+Diode = @(v,io,Vt) io*(exp(v/Vt)) ;
 
 
-gnl = zeros(Nm*(2*Nh+1),1);
+gnl = zeros(Nm*(2*Nh+1),1) ;
 
 %for each harmonic
-for j = 0:2*Nh;
-    gnlcell = zeros(Nm,1);
+for j = 0:2*Nh ;
+    gnlcell = zeros(Nm,1) ;
 %for each diode
-    for i = 1:N;
-        d = bdiodes{i};
+    for i = 1:N ;
+        d = bdiodes{i} ;
 
-        n1 = d.vp;
-        n2 = d.vn;
+        n1 = d.vp ;
+        n2 = d.vn ;
 
-        io = abs(d.io);
-        Vt = abs(d.vt);
-        v = 0;
+        io = abs(d.io) ;
+        Vt = abs(d.vt) ;
+        v = 0 ;
 
         if (n1)
-            v = v + x( n1 + j*Nm );
+            v = v + x( n1 + j*Nm ) ;
         end
 
         if (n2)
-            v = v - x( n2 + j*Nm );
+            v = v - x( n2 + j*Nm ) ;
         end
 
-        id = Diode(v,io,Vt);
+        id = Diode(v,io,Vt) ;
 
 
         % insert the stamp:
@@ -52,9 +52,9 @@ for j = 0:2*Nh;
             gnlcell( n2) = gnlcell( n2 ) - id ;
         end
     end
-    blockStart = 1 + j*Nm;
-    blockEnd = blockStart + Nm-1;
-    gnl(blockStart:blockEnd) = gnlcell;
+    blockStart = 1 + j*Nm ;
+    blockEnd = blockStart + Nm-1 ;
+    gnl(blockStart:blockEnd) = gnlcell ;
 end
 
 end

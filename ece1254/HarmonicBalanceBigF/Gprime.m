@@ -7,39 +7,39 @@ function [ Gprime ] = Gprime( bdiodes, x, Nh , Nm )
 %   Nh is the number of harmonics used in the analysis
 %   Nm is the number of physical unknowns of the MNA
 
-N = length(bdiodes);
-F = FourierMatrix(Nh,Nm);
+N = length(bdiodes) ;
+F = FourierMatrix(Nh,Nm) ;
 
-dDiode = @(v,io,Vt) (io/Vt)*(exp(v/Vt));
+dDiode = @(v,io,Vt) (io/Vt)*(exp(v/Vt)) ;
 
 %Generate the Jacobian corresponding to a single circuit for each time step
 %then combine them as a block column matrix. This form allows the fourier
 %matrix to be used in obtaining the DFT
 
-gprime = zeros(Nm*(2*Nh+1));
+gprime = zeros(Nm*(2*Nh+1)) ;
 %for each time step
-for j = 0:2*Nh;
-    gprimecell = zeros(Nm);
+for j = 0:2*Nh ;
+    gprimecell = zeros(Nm) ;
 %for each diode
-    for i = 1:N;
-        d = bdiodes{i};
+    for i = 1:N ;
+        d = bdiodes{i} ;
 
-        n1 = d.vp;
-        n2 = d.vn;
+        n1 = d.vp ;
+        n2 = d.vn ;
 
-        io = abs(d.io);
-        Vt = abs(d.vt);
-        v = 0;
+        io = abs(d.io) ;
+        Vt = abs(d.vt) ;
+        v = 0 ;
 
         if (n1)
-            v = v + x( n1 + j*Nm );
+            v = v + x( n1 + j*Nm ) ;
         end
 
         if (n2)
-            v = v - x( n2 + j*Nm );
+            v = v - x( n2 + j*Nm ) ;
         end
 
-        dg = dDiode(v,io,Vt);
+        dg = dDiode(v,io,Vt) ;
 
         % insert the stamp:
         if ( n1 )
@@ -54,14 +54,14 @@ for j = 0:2*Nh;
         end
     end
 
-    corner = 1 + j*Nm;
+    corner = 1 + j*Nm ;
     
 
-    gprime(corner:corner+Nm-1,corner:corner+Nm-1) = gprimecell;
+    gprime(corner:corner+Nm-1,corner:corner+Nm-1) = gprimecell ;
     
 end
 
-Gprime = F\(gprime*F);
+Gprime = F\(gprime*F) ;
 
 end
 

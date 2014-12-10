@@ -10,46 +10,46 @@ function TestSolver( fileName )
 %   clc
 
    if ( nargin < 1 )
-      fileName = '../circuits/BridgeRectifier.netlist';
+      fileName = '../circuits/BridgeRectifier.netlist' ;
    end
    
    % Reference Harmonic Balance Parameters
-   Nref = 100;
-   [xref, Xref, ecputimeref, omegaref, Rref ] = HBSolve( Nref, fileName );
-   f0ref = omegaref/(2*pi);
-   Tref = 1/f0ref;
-   dtref = Tref/(2*Nref+1);
-   kref = -Nref:Nref;
-   tref = dtref*kref;
+   Nref = 100 ;
+   [xref, Xref, ecputimeref, omegaref, Rref ] = HBSolve( Nref, fileName ) ;
+   f0ref = omegaref/(2*pi) ;
+   Tref = 1/f0ref ;
+   dtref = Tref/(2*Nref+1) ;
+   kref = -Nref:Nref ;
+   tref = dtref*kref ;
    
-   Nvalues = [ 1  5  9 10 50 90];
+   Nvalues = [ 1  5  9 10 50 90] ;
    
    %M tests
-   M = length(Nvalues);
-   ecputimeValues = zeros(M,1);
-   errorValues = zeros(M,1);
-   n = 0;
+   M = length(Nvalues) ;
+   ecputimeValues = zeros(M,1) ;
+   errorValues = zeros(M,1) ;
+   n = 0 ;
    for N = Nvalues
-      [x, X, ecputime, omega, R ] = HBSolve( N, fileName );
+      [x, X, ecputime, omega, R ] = HBSolve( N, fileName ) ;
       
       % Harmonic Balance Parameters
-       f0 = omega/(2*pi);
-       T = 1/f0;
-       dt = T/(2*N+1);
-       k = -N:N;
-       t = dt*k';
+       f0 = omega/(2*pi) ;
+       T = 1/f0 ;
+       dt = T/(2*N+1) ;
+       k = -N:N ;
+       t = dt*k' ;
       
        %Determine error in the frequency domain to avoid time scaling issues
        %Need to zero pad the truncated soltuion
-       Xz = [ zeros(R*(Nref-N),1) ; X ; zeros(R*(Nref-N),1)];
-       eX = norm(Xz - Xref);
-       n = n + 1;
-       errorValues(n) = eX;
-       ecputimeValues(n) = ecputime;
+       Xz = [ zeros(R*(Nref-N),1) ; X ; zeros(R*(Nref-N),1)] ;
+       eX = norm(Xz - Xref) ;
+       n = n + 1 ;
+       errorValues(n) = eX ;
+       ecputimeValues(n) = ecputime ;
    end
-   Nvalues = [Nvalues Nref];
-   errorValues = [errorValues ; 0];
-   ecputimeValues = [ecputimeValues ; ecputimeref];
+   Nvalues = [Nvalues Nref] ;
+   errorValues = [errorValues ; 0] ;
+   ecputimeValues = [ecputimeValues ; ecputimeref] ;
    
    close all
    figure
