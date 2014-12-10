@@ -4,12 +4,12 @@ function setFigureProperties( s, fontSize, width, height )
    % publication needs
    % parameters: 
    %   s: figure handle
-   %   fontSize: default 12.
+   %   fontSize: default 16.
    %   width: in cm
    %   height: in cm
 
    if ( nargin < 2 )
-      fontSize = 12 ;
+      fontSize = 16 ;
    end
    if ( nargin < 3 )
       width = 12 ;

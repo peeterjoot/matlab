@@ -44,8 +44,8 @@ function PlotWaveforms( fileName, saveBaseName, withTitle )
    setFigureProperties( f ) ;
 
    if ( nargin == 2 )
-      saveName = sprintf( '%sOutputVoltageFig%d.png', saveBaseName, figNum ) ;
-      saveas( f, saveName ) ;
+      saveName = sprintf( '%sOutputVoltageFig%d', saveBaseName, figNum ) ;
+      saveas( f, saveName, 'eps' ) ;
       %plot2svg( saveName, f ) ;
 
       figNum = figNum + 1 ;
@@ -62,9 +62,9 @@ function PlotWaveforms( fileName, saveBaseName, withTitle )
    setFigureProperties( f ) ;
 
    if ( nargin == 2 )
-      saveName = sprintf( '%sSourceCurrentFig%d.png', saveBaseName, figNum ) ;
-      %saveas( f, saveName ) ;
-      plot2svg( saveName, f ) ;
+      saveName = sprintf( '%sSourceCurrentFig%d', saveBaseName, figNum ) ;
+      saveas( f, saveName, 'eps' ) ;
+      %plot2svg( saveName, f ) ;
 
       figNum = figNum + 1 ;
    end
@@ -87,8 +87,8 @@ function PlotWaveforms( fileName, saveBaseName, withTitle )
    setFigureProperties( f ) ;
 
    if ( nargin == 2 )
-      saveName = sprintf( '%sDiodeVoltagesFig%d.png', saveBaseName, figNum ) ;
-      saveas( f, saveName ) ;
+      saveName = sprintf( '%sDiodeVoltagesFig%d', saveBaseName, figNum ) ;
+      saveas( f, saveName, 'eps' ) ;
       %plot2svg( saveName, f ) ;
 
       figNum = figNum + 1 ;
