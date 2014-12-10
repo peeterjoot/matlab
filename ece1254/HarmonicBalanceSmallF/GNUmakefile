@@ -8,14 +8,14 @@ CLEAN += *.mat
 CLEAN += *.png
 CLEAN += *~
 CLEAN += *.pdf
-CLEAN += $(FROMPS1)
-CLEAN += $(FROMPS2a)
 
-all :: $(FROMPS1)
-all :: $(FROMPS2a)
+COPYTARGETS += $(FROMPS1)
+COPYTARGETS += $(FROMPS2a)
+
+all :: $(COPYTARGETS)
 
 clean: 
-	rm -f $(CLEAN)
+	rm -f $(CLEAN) $(COPYTARGETS)
 
 # why is this recursing?  hacked around this by copying each manually below
 #%.m : ../ps1/%.m

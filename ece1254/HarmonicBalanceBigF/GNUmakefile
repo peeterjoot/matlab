@@ -6,12 +6,14 @@ FROMPS1 += isDebugEnabled.m
 FROMSM += NodalAnalysis.m
 CLEAN += *.mat
 CLEAN += *.png
-CLEAN += $(FROMPS1)
 
-all :: $(FROMPS1) $(FROMSM)
+COPYTARGETS += $(FROMPS1)
+COPYTARGETS += $(FROMSM)
+
+all :: $(COPYTARGETS)
 
 clean: 
-	rm -f $(CLEAN)
+	rm -f $(CLEAN) $(COPYTARGETS)
 
 # why is this recursing?  hacked around this by copying each manually below
 #%.m : ../ps1/%.m
