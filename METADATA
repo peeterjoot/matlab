@@ -402,12 +402,12 @@ described in HarmonicBalance.m and the cpu time required to solve the
 circuit using Newton's Method
 )
 },
-% dead code? :
-%{
-%   DATE => 'Dec 9, 2014',
-%   path => 'ece1254/HarmonicBalanceBigF/NewtonsMethod.m',
-%   WHAT => qq(Harmonic Balance Newton's method iterations)
-%},
+# dead code? :
+#{
+#   DATE => 'Dec 9, 2014',
+#   path => 'ece1254/HarmonicBalanceBigF/deadcode/NewtonsMethod.m',
+#   WHAT => qq(Harmonic Balance Newton's method iterations)
+#},
 {
    DATE => 'Dec 9, 2014',
    path => 'ece1254/HarmonicBalanceBigF/PlotWaveforms.m',

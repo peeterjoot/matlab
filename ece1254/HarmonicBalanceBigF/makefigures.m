@@ -4,11 +4,11 @@ function makefigures()
    %clc
    close all ;
 
+if ( 0 )
    p = struct( 'fileName', '../circuits/BridgeRectifier.netlist' ) ;
    p.figName = 'bridgeRectifier' ;
    p.xLabel = 'Time (s)' ;
 
-if ( 1 )
    %p.title = 'Source and Output Voltages' ;
    p.figNum = 2 ;
    p.figDesc = 'SourceAndOutputVoltages' ;
@@ -39,6 +39,61 @@ if ( 1 )
 end
 
 if ( 1 )
+   p = struct( 'fileName', '../circuits/BridgeRectifierCap.netlist' ) ;
+   p.figName = 'bridgeRectifierCapFilter' ;
+   p.xLabel = 'Time (s)' ;
+
+   %p.title = 'Source and Output Voltages' ;
+   p.figNum = 2 ;
+   p.figDesc = 'SourceAndOutputVoltages' ;
+   %p.verbose = 1 ;
+
+   % 'V_1'
+   % 'V_2'
+   % 'V_3'
+   % 'i_{V1_{1,2}}'
+
+   p.nPlus = [ 2 3 ] ;
+   p.nMinus = [ 1 0 ] ;
+   p.legends = { 'Source Voltage', 'Output Voltage' } ;
+   p.yLabel = 'Voltage (V)' ;
+   PlotWaveforms( p ) ;
+
+   %p.title = 'Source Current' ;
+   p.figNum = 3 ;
+   p.figDesc = 'SourceCurrent' ;
+   p.nPlus = [ 4 ] ;
+   p.nMinus = [ 0 ] ;
+   p.legends = {} ;
+   p.yLabel = 'Current (A)' ;
+   PlotWaveforms( p ) ;
+
+   %p.title = 'Diode Voltages' ;
+   p.figDesc = 'DiodeVoltages' ;
+   p.figNum = 4 ;
+   p.nPlus = [ 2 0 1 0 ] ;
+   p.nMinus = [ 3 1 3 2 ] ;
+   p.legends = { 'vd1', 'vd2', 'vd3', 'vd4' } ;
+   p.yLabel = 'Voltage (V)' ;
+   PlotWaveforms( p ) ;
+end
+
+if ( 0 )
+   p = struct( 'fileName', '../circuits/simpleSingleNodeRectifier.netlist' ) ;
+   p.figName = 'simpleRectifierCircuit' ;
+   p.xLabel = 'Time (s)' ;
+
+   %p.title = 'Voltage' ;
+   p.figNum = 2 ;
+   p.figDesc = 'Voltage' ;
+
+   p.nPlus = [ 1 ] ;
+   p.nMinus = [ 0 ] ;
+   p.yLabel = 'Voltage (V)' ;
+   PlotWaveforms( p ) ;
+end
+
+if ( 0 )
    % inputs:
    %V1 1 0 AC 10 1e6
    %D1 1 2 10e-12 25e-3
@@ -70,7 +125,7 @@ if ( 1 )
    %PlotWaveforms( p ) ;
 end
 
-if ( 1 )
+if ( 0 )
    % in:
    %V1 1 6 AC 1 1e6
    %V1 6 0 AC 1 8e6
