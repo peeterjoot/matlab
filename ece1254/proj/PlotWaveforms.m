@@ -1,5 +1,5 @@
 function PlotWaveforms( p )
-   % Calls the HBSolve function to solve the
+   % Calls a Harmonic Balance solution function to solve the
    % circuit described in fileName using the Harmonic Balance method,
    % truncating the harmonics to N multiples of fundamental.
    % Various Parameters of interest are plotted
@@ -8,26 +8,33 @@ function PlotWaveforms( p )
       p.logPlot = 0 ;
    end
 
-   if ( p.logPlot )
-      cacheSuffix = 'TestSolver' ;
-   else
-      cacheSuffix = 'HBSolve' ;
+   if ( ~isfield( p, 'solver' ) )
+      p.solver = @HBSolve ;
    end
 
-   cacheFile = sprintf( '%s%s.mat', p.figName, cacheSuffix ) ;
+   finfo = functions( p.solver ) ;
+
+   if ( p.logPlot )
+      solutionMethodString = sprintf( 'TimingAndError%s', finfo.function ) ;
+   else
+      solutionMethodString = sprintf( 'DirectSolution%s', finfo.function ) ;
+   end
+
+   cacheFile = sprintf( '%s%s.mat', p.figName, solutionMethodString ) ;
+   traceit( sprintf( 'cacheFile: %s', cacheFile ) ) ;
 
    if ( exist( cacheFile, 'file' ) )
       load( cacheFile ) ;
    else
 
       if ( p.logPlot )
-         h = TestSolver( p.fileName ) ;
+         h = TestSolver( p ) ;
 
          save( cacheFile, 'h' ) ;
       else
          % Harmonic Balance Parameters
          N = 50 ;
-         h = HBSolve( N, p.fileName ) ;
+         h = p.solver( N, p.fileName ) ;
 
          % explicitly name the vars to avoid saving input param 'p'
          save( cacheFile, 'N', 'h' ) ;

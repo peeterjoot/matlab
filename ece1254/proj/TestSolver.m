@@ -1,5 +1,5 @@
-function r = TestSolver( fileName )
-   % Calls the HBSolve function to solve the
+function r = TestSolver( p )
+   % Calls a Harmonic Balance solution function to solve the
    % circuit described in fileName using the Harmonic Balance method,
    % truncating the harmonics to N multiples of fundamental.
    % The circuit is solved for varying values of N and the cputime required
@@ -9,9 +9,13 @@ function r = TestSolver( fileName )
 %   clear
 %   clc
 
+   if ( ~isfield( p, 'solver' ) )
+      p.solver = @HBSolve ;
+   end
+
    % Reference Harmonic Balance Parameters
    Nref = 100 ;
-   h = HBSolve( Nref, fileName ) ;
+   h = p.solver( Nref, p.fileName ) ;
    xref        = h.v ;
    Xref        = h.V ;
    ecputimeref = h.ecputime ;
@@ -32,7 +36,7 @@ function r = TestSolver( fileName )
    errorValues = zeros( M, 1 ) ;
    n = 0 ;
    for N = Nvalues
-      hn = HBSolve( N, fileName ) ;
+      hn = p.solver( N, p.fileName ) ;
       v        = hn.v ;
       V        = hn.V ;
       ecputime = hn.ecputime ;

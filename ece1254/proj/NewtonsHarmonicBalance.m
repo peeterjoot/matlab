@@ -224,6 +224,7 @@ function r = NewtonsHarmonicBalance( N, filename, p )
    % regular output parameters:
    r.v            = v ;
    r.V            = V ;
+   r.R            = R ;
    r.II           = II ;
    r.f            = f ;
    r.iter         = iter ;

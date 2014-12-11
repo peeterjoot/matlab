@@ -4,7 +4,7 @@ function makefigures()
    %clc
    close all ;
 
-   doAll = 1 ;
+   doAll = 0 ;
 
    if ( doAll || 0 )
       p = struct( 'fileName', '../circuits/BridgeRectifier.netlist' ) ;
@@ -80,7 +80,7 @@ function makefigures()
       PlotWaveforms( p ) ;
    end
 
-   if ( doAll || 1 )
+   if ( doAll || 0 )
       p = struct( 'fileName', '../circuits/simpleSingleNodeRectifier.netlist' ) ;
       p.figName = 'simpleRectifierCircuit' ;
       p.figNum = 3 ;
@@ -102,7 +102,7 @@ function makefigures()
       PlotWaveforms( p ) ;
    end
 
-   if ( doAll || 1 )
+   if ( doAll || 0 )
       % inputs:
       %V1 1 0 AC 10 1e6
       %D1 1 2 10e-12 25e-3
@@ -141,7 +141,7 @@ function makefigures()
       %PlotWaveforms( p ) ;
    end
 
-   if ( doAll || 0 )
+   if ( doAll || 1 )
       % in:
       %V1 1 6 AC 1 1e6
       %V1 6 0 AC 1 8e6
@@ -168,6 +168,7 @@ function makefigures()
 
       p = struct( 'fileName', '../circuits/LCLowpass.netlist' ) ;
       p.figName = 'lowPassFilter' ;
+      p.solver = @NewtonsHarmonicBalance ;
 
       p.xLabel = 'Time (s)' ;
       p.yLabel = 'Voltage (V)' ;
