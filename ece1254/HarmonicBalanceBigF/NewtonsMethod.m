@@ -15,7 +15,7 @@ function NewtonsMethod( fileName )
 
    % Harmonic Balance Parameters
    N = 20 ;
-   %Only intend on using one frequeny for all AC sources
+   %Only intend on using one frequency for all AC sources
    omega = r.angularVelocities(end) ;
    f0 = omega/(2*pi) ;
    T = 1/f0 ;
@@ -43,7 +43,7 @@ function NewtonsMethod( fileName )
    eI = 1e-6 ;
    edV = 1e-3 ;
 
-   %maximum allowed Jacobian Condtion
+   %maximum allowed Jacobian Condition
    JcondTol = 1e-20 ;
 
    %iteration limits
@@ -142,6 +142,7 @@ function NewtonsMethod( fileName )
    i = real(x(4:M:end)) ;
    vr = v3 ;
    close all
+
    figure
    subplot(211)
    plot(t,v2-v1,t,v2-v3,t,vr)
@@ -153,6 +154,7 @@ function NewtonsMethod( fileName )
    vd2 = -v1 ;
    vd3 = v1-v3 ;
    vd4 = -v2 ;
+
    figure
    plot(t,vd1,t,vd2,t,vd3,t,vd4)
    legend('vd1','vd2','vd3','vd4')
