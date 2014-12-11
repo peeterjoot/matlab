@@ -4,41 +4,61 @@ function PlotWaveforms( p )
    % truncating the harmonics to N multiples of fundamental.
    % Various Parameters of interest are plotted
 
-   cacheFile = sprintf( '%s.mat', p.figName ) ;
+   if ( ~isfield( p, 'logPlot' ) )
+      p.logPlot = 0 ;
+   end
+
+   if ( p.logPlot )
+      cacheSuffix = 'Log' ;
+   else
+      cacheSuffix = '' ;
+   end
+
+   cacheFile = sprintf( '%s%s.mat', p.figName, cacheSuffix ) ;
 
    if ( exist( cacheFile, 'file' ) )
       load( cacheFile ) ;
    else
 
-      % Harmonic Balance Parameters
-      N = 50 ;
-      h = HBSolve( N, p.fileName ) ;
+      if ( p.logPlot )
+         h = TestSolver( p.fileName ) ;
 
-      % explicitly name the vars to avoid saving input param 'p'
-      save( cacheFile, 'N', 'h' ) ;
+         save( cacheFile, 'h' ) ;
+      else
+         % Harmonic Balance Parameters
+         N = 50 ;
+         h = HBSolve( N, p.fileName ) ;
+
+         % explicitly name the vars to avoid saving input param 'p'
+         save( cacheFile, 'N', 'h' ) ;
+      end
+   end
+
+%p
+   if ( ~p.logPlot )
+
+      x = h.x ;
+      X = h.X ;
+      R = h.R ;
+
+      f0 = h.omega/( 2 * pi ) ;
+      T = 1/f0 ;
+      dt = T/( 2 * N + 1 ) ;
+      k = -N:N ;
+      t = dt*k ;
+
+      % for Frequency Response
+      fMHz = k*f0/1e6;
+
+      numPlots = size( p.nPlus, 2 ) ;
    end
 
    if ( isfield( p, 'verbose' ) )
       h.xnames
    end
 
-   x = h.x ;
-   X = h.X ;
-   R = h.R ;
-
    fileExtension = 'pdf' ;
    %fileExtension = 'png' ;
-
-   f0 = h.omega/( 2 * pi ) ;
-   T = 1/f0 ;
-   dt = T/( 2 * N + 1 ) ;
-   k = -N:N ;
-   t = dt*k ;
-
-   % for Frequency Response
-   fMHz = k*f0/1e6;
-
-   numPlots = size( p.nPlus, 2 ) ;
 
    f = figure ;
 
@@ -55,23 +75,29 @@ function PlotWaveforms( p )
       p.figDesc = '' ;
    end
 
-   for m = 1:numPlots
-      hold on ;
+   if ( p.logPlot )
 
-      if ( p.spectrum )
-         v = abs( X( p.nPlus(m):R:end ) ) ;
+      loglog( h.Nvalues, h.errorValues, h.Nvalues, h.ecputimeValues, 'linewidth', 2 ) ;
 
-         stem( fMHz, v ) ;
-      else
-         if ( p.nPlus(m) && p.nMinus(m) )
-            v = real( x( p.nPlus(m):R:end ) ) - real( x( p.nMinus(m):R:end ) ) ;
-         elseif ( p.nPlus(m) )
-            v = real( x( p.nPlus(m):R:end ) ) ;
+   else
+      for m = 1:numPlots
+         hold on ;
+
+         if ( p.spectrum )
+            v = abs( X( p.nPlus(m):R:end ) ) ;
+
+            stem( fMHz, v ) ;
          else
-            v = -real( x( p.nMinus(m):R:end ) ) ;
-         end
+            if ( p.nPlus(m) && p.nMinus(m) )
+               v = real( x( p.nPlus(m):R:end ) ) - real( x( p.nMinus(m):R:end ) ) ;
+            elseif ( p.nPlus(m) )
+               v = real( x( p.nPlus(m):R:end ) ) ;
+            else
+               v = -real( x( p.nMinus(m):R:end ) ) ;
+            end
 
-         plot( t, v, 'linewidth', 2 ) ;
+            plot( t, v, 'linewidth', 2 ) ;
+         end
       end
    end
    if ( (size({}) ~= size( p.legends )) )
@@ -79,7 +105,10 @@ function PlotWaveforms( p )
    end
 
    xlabel( p.xLabel ) ;
-   ylabel( p.yLabel ) ;
+
+   if ( isfield( p, 'yLabel' ) )
+      ylabel( p.yLabel ) ;
+   end
 
    if ( size( p.title, 2 ) )
       title( p.title ) ;
@@ -87,7 +116,7 @@ function PlotWaveforms( p )
 
    % eliminate the background that makes the saved plot look
    % like the GUI display window background color:
-   set( s, 'Color', 'w' ) ;
+   set( f, 'Color', 'w' ) ;
 
    hold off ;
 
