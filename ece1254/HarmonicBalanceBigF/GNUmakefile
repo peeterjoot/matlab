@@ -13,6 +13,7 @@ COPYFROM += $(wildcard $(HOME)/export_fig/*.m)
 
 CLEAN += *.mat
 CLEAN += *.png
+CLEAN += *.pdf
 
 LOCALFILES := $(notdir $(COPYFROM))
 

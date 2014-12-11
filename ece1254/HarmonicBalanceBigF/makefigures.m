@@ -6,20 +6,22 @@ function makefigures()
 
    p = struct( 'fileName', '../circuits/BridgeRectifier.netlist' ) ;
    p.figName = 'bridgeRectifier' ;
-   p.title = '' ;
    p.xLabel = 'Time (s)' ;
 
-if ( 0 )
-   %p.title = 'Source Current' ;
+if ( 1 )
+   %p.title = 'Source and Output Voltages' ;
    p.figNum = 2 ;
+   p.figDesc = 'SourceAndOutputVoltages' ;
+
    p.nPlus = [ 2 3 ] ;
    p.nMinus = [ 1 0 ] ;
    p.legends = { 'Source Voltage', 'Output Voltage' } ;
    p.yLabel = 'Voltage (V)' ;
    PlotWaveforms( p ) ;
 
-   %p.title = '' ;
+   %p.title = 'Source Current' ;
    p.figNum = 3 ;
+   p.figDesc = 'SourceCurrent' ;
    p.nPlus = [ 4 ] ;
    p.nMinus = [ 0 ] ;
    p.legends = {} ;
@@ -27,6 +29,7 @@ if ( 0 )
    PlotWaveforms( p ) ;
 
    %p.title = 'Diode Voltages' ;
+   p.figDesc = 'DiodeVoltages' ;
    p.figNum = 4 ;
    p.nPlus = [ 2 0 1 0 ] ;
    p.nMinus = [ 3 1 3 2 ] ;
@@ -48,23 +51,77 @@ if ( 1 )
    %    'i1_0,1'
    p = struct( 'fileName', '../circuits/simpleVrect.netlist' ) ;
    p.figName = 'typicalRectifierCircuit' ;
-   p.title = '' ;
    p.xLabel = 'Time (s)' ;
 
-   %p.title = '' ;
    p.figNum = 2 ;
+   p.figDesc = 'SourceAndOutputVoltages' ;
    p.nPlus = [ 1 2 ] ;
    p.nMinus = [ 0 0 ] ;
    p.legends = { 'Source Voltage', 'Output Voltage' } ;
    p.yLabel = 'Voltage (V)' ;
    PlotWaveforms( p ) ;
 
-   %p.title = '' ;
-   p.figNum = 5 ;
-   p.nPlus = [ 3 ] ;
-   p.nMinus = [ 0 ] ;
+   %p.figNum = 5 ;
+   %p.figDesc = 'Diode Current' ;
+   %p.nPlus = [ 3 ] ;
+   %p.nMinus = [ 0 ] ;
+   %p.legends = {} ;
+   %p.yLabel = 'Current (A)' ;
+   %PlotWaveforms( p ) ;
+end
+
+if ( 1 )
+   % in:
+   %V1 1 6 AC 1 1e6
+   %V1 6 0 AC 1 8e6
+   %R1 1 2 50
+   %L1 2 3 983.63e-9
+   %L2 3 4 3183.099e-9
+   %C1 3 0 1030e-12
+   %C2 4 0 1030e-12
+   %L3 4 5 983.6316e-9
+   %R2 5 0 50
+
+   % out:
+   %'V_1'
+   %'V_2'
+   %'V_3'
+   %'V_4'
+   %'V_5'
+   %'V_6'
+   %'i_{V1_{6,1}}'
+   %'i_{V1_{0,6}}'
+   %'i_{L1_{2,3}}'
+   %'i_{L2_{3,4}}'
+   %'i_{L3_{4,5}}'
+
+   p = struct( 'fileName', '../circuits/LCLowpass.netlist' ) ;
+   p.figName = 'lowPassFilter' ;
+
+   p.xLabel = 'Time (s)' ;
+   p.yLabel = 'Voltage (V)' ;
+   p.figNum = 2 ;
+   p.figDesc = 'SourceAndOutputVoltages' ;
+   p.nPlus = [ 1 5 ] ;
+   p.nMinus = [ 0 0 ] ;
+   p.legends = { 'Source Voltage', 'Output Voltage' } ;
+   PlotWaveforms( p ) ;
+
+   p.spectrum = 1 ;
+   %p.title = 'Input Voltage Spectrum' ;
+   p.xLabel = 'Frequency (MHz)' ;
+   p.yLabel = 'Absolute Magnitude' ;
+   p.figNum = 3 ;
+   p.figDesc = 'InputVoltageSpectrum' ;
+   p.nPlus = [ 1 ] ;
    p.legends = {} ;
-   p.yLabel = 'Current (A)' ;
+   %p.verbose = 1 ;
+   PlotWaveforms( p ) ;
+
+   %p.title = 'Output Voltage Spectrum' ;
+   p.figDesc = 'OutputVoltageSpectrum' ;
+   p.figNum = 4 ;
+   p.nPlus = [ 5 ] ;
    PlotWaveforms( p ) ;
 end
 

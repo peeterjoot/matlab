@@ -1,5 +1,15 @@
-I1 1 0 AC .01 1e6
-I2 1 0 AC .01 8e6
+* With current sources, this doesn't match the circuit diagram.
+* (although the circuit diagram is missing the second frequency source).
+*
+* If the currents below was supposed to be a Norton equivalent to the
+* voltage sources, then there's a missing parallel resistor between 0,1
+*
+*I1 1 0 AC .01 1e6
+*I2 1 0 AC .01 8e6
+*
+*
+V1 1 6 AC 1 1e6
+V1 6 0 AC 0.5 8e6
 R1 1 2 50
 L1 2 3 983.63e-9
 L2 3 4 3183.099e-9
