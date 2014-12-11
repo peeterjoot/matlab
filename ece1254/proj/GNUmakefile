@@ -1,10 +1,13 @@
-# git clone git@github.com:ojwoodford/export_fig.git ~/export_fig
-EFIGDIR := $(HOME)/export_fig
 PS1DIR := ../ps1
-
-PS1FILENAMES := changeTrace.m disableTrace.m enableTrace.m traceit.m isDebugEnabled.m
+PS1FILENAMES += changeTrace.m
+PS1FILENAMES += disableTrace.m
+PS1FILENAMES += enableTrace.m
+PS1FILENAMES += traceit.m
+PS1FILENAMES += isDebugEnabled.m
 PS1PATHNAMES := $(addprefix $(PS1DIR)/,$(PS1FILENAMES))
 
+# git clone git@github.com:ojwoodford/export_fig.git ~/export_fig
+EFIGDIR := $(HOME)/export_fig
 EFIGPATHNAMES := $(wildcard $(EFIGDIR)/*.m)
 EFIGFILENAMES := $(notdir $(EFIGPATHNAMES))
 
