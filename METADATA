@@ -346,10 +346,7 @@ plots the system frequency response. Here omegaSet is a vector of frequencies in
 {
    DATE => 'Dec 9, 2014',
    path => 'ece1254/HarmonicBalanceBigF/FourierMatrix.m',
-   WHAT => qq(
-Determines the fourier matrix for the discrete
-fourier transform and its inverse.
-)
+   WHAT => qq(Compute the fourier matrix for the discrete fourier transform and its inverse.),
 },
 {
    DATE => 'Dec 9, 2014',
@@ -363,7 +360,8 @@ for the voltages contained in x. (Time domain)
    x is the vector of all unknown quantities
    Nh is the number of harmonics used in the analysis
    Nm is the number of physical unknowns of the MNA
-)
+),
+   SHORT => qq(Determines the nonlinear contribution to the currents.),
 },
 {
    DATE => 'Dec 9, 2014',
@@ -376,19 +374,9 @@ required to solve a nonlinear circuit using Newton's Method
    x is the vector of all unknown quantities
    Nh is the number of harmonics used in the analysis
    Nm is the number of physical unknowns of the MNA
-)
-},
-{
-   DATE => 'Dec 9, 2014',
-   path => 'ece1254/HarmonicBalanceBigF/HarmonicBalance.m',
-   WHAT => qq(
-Generates the Harmonic balance modified nodal analysis (MNA) equations from the time domain MNA
-representation.
-
-   Y V = B U = I + II,                                        (1)
-
-where II represents non-linear contributions not returned directly as a matrix.
-)
+),
+   SHORT => qq(Produces the nonlinear contribution to the Jacobean
+   required to solve a nonlinear circuit using Newton's Method),
 },
 {
    DATE => 'Dec 9, 2014',
@@ -400,7 +388,8 @@ Frequencies are limited to N.
 It returns the vector containing the unknowns of the circuit, x, ordered as
 described in HarmonicBalance.m and the cpu time required to solve the
 circuit using Newton's Method
-)
+),
+   SHORT => qq(Harmonic Balance workhorse.),
 },
 # dead code? :
 #{
@@ -411,12 +400,7 @@ circuit using Newton's Method
 {
    DATE => 'Dec 9, 2014',
    path => 'ece1254/HarmonicBalanceBigF/PlotWaveforms.m',
-   WHAT => qq(
-Calls the HBSolve function to solve the
-circuit described in fileName using the Harmonic Balance method,
-truncating the harmonics to N multiples of fundamental.
-Various Parameters of interest are plotted
-)
+   WHAT => qq(Calls HBSolve() for a netlist file and caches the result.  Then plots the results using a set of plot specifications.),
 },
 {
    DATE => 'Dec 9, 2014',
@@ -428,7 +412,8 @@ truncating the harmonics to N multiples of fundamental.
 The circuit is solved for varying values of N and the cputime required
 to solve and the maximum error between the solution and a solution of
 ``sufficiently large'' N is computed
-)
+),
+   SHORT => qq(Generates the cputime/error plots),
 },
 {
    DATE => 'Dec 9, 2014',
@@ -514,6 +499,11 @@ N is the number of Harmonics to be used
    DATE => 'Dec 9, 2014',
    path => 'ece1254/HarmonicBalanceSmallF/testH.m',
    WHAT => qq(ad-hoc test driver to call NewtonsHarmonicBalance() and display output)
+},
+{
+   DATE => 'Dec 10, 2014',
+   path => 'ece1254/HarmonicBalanceBigF/makefigures.m',
+   WHAT => qq(Driver for all the plots.  Calls PlotWaveforms()),
 },
 ) ; # @matlab
 
