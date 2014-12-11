@@ -48,15 +48,21 @@ function setFigureProperties( s, fontSize, width, height, lineWidth )
       % "1in" equals "90px"
    end
 
-   % http://dgleich.github.io/hq-matlab-figs/#1
-   %
-   % Creating high-quality graphics in MATLAB for papers and presentations
-   %
-   pos = get( s, 'Position' ) ;
+   % not useful if using export_fig().
+   if ( 0 )
+      % http://dgleich.github.io/hq-matlab-figs/#1
+      %
+      % Creating high-quality graphics in MATLAB for papers and presentations
+      %
+      pos = get( s, 'Position' ) ;
 
-   % Set size
-   set( s, 'Position', [pos(1) pos(2) width*100, height*100] ) ;
+      % Set size
+      set( s, 'Position', [pos(1) pos(2) width*100, height*100] ) ;
 
-   % Set properties
-   set( gca, 'FontSize', fontSize, 'LineWidth', lineWidth ) ;
+      % Set properties
+      set( gca, 'FontSize', fontSize, 'LineWidth', lineWidth ) ;
+   end
+
+   % eliminate the background that makes the saved plot look like the GUI display window background color:
+   set( s, 'Color', 'w' ) ;
 end

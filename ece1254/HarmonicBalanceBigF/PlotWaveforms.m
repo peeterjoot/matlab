@@ -1,119 +1,70 @@
-function PlotWaveforms( fileName, saveBaseName, withTitle )
+function PlotWaveforms( p )
    % Calls the HBSolve function to solve the
    % circuit described in fileName using the Harmonic Balance method,
    % truncating the harmonics to N multiples of fundamental.
    % Various Parameters of interest are plotted
 
-   %clear
-   %clc
-   if ( nargin < 1 )
-      fileName = '../circuits/BridgeRectifier.netlist' ;
-   end
+   cacheFile = sprintf( '%s.mat', p.figName ) ;
 
-   if ( nargin < 3 )
-      withTitle = 0 ;
-   end
-
-   cacheFile = 'psave.mat' ;   
-
-   %for quick experimentation with plot alternatives.
-   %if ( exist( cacheFile, 'file' ) )
-   %   load( cacheFile ) ;
-   %else
+   if ( exist( cacheFile, 'file' ) )
+      load( cacheFile ) ;
+   else
 
       % Harmonic Balance Parameters
       N = 50 ;
-      [x, X, ecputime, omega, R ] = HBSolve( N, fileName ) ;
+      h = HBSolve( N, p.fileName ) ;
 
-   %   save( cacheFile ) ;
-   %end
+      % explicitly name the vars to avoid saving input param 'p'
+      save( cacheFile, 'N', 'h' ) ;
+   end
+%h.xnames
+
+   x = h.x ;
+   X = h.X ;
+   R = h.R ;
 
    saveExtension = 'pdf' ;
    %saveExtension = 'png' ;
-   figPathExtension = sprintf( '.%s', saveExtension ) ;
 
-   f0 = omega/( 2*pi ) ;
+   f0 = h.omega/( 2 * pi ) ;
    T = 1/f0 ;
-   dt = T/( 2*N+1 ) ;
+   dt = T/( 2 * N + 1 ) ;
    k = -N:N ;
    t = dt*k ;
 
-   % Plot Voltages
-   v1 = real( x( 1:R:end ) ) ;
-   v2 = real( x( 2:R:end ) ) ;
-   v3 = real( x( 3:R:end ) ) ;
-   % v4 = real( x( 4:M:end ) ) ;
-   % v5 = real( x( 5:M:end ) ) ;
-   %
-   i = real( x( 4:R:end ) ) ;
-   vr = v3 ;
-   close all ;
-
-   figNum = 2 ;
-   f = figure ;
-   plot( t, v2-v1, t, vr, 'linewidth', 2 ) ;
-   legend( 'Source Voltage', 'Output Voltage', 'Location', 'SouthEast' ) ;
-   xlabel( 'Time (s)' ) ;
-   ylabel( 'Voltage (V)' ) ;
-   %setFigureProperties( f ) ;
-
-   if ( nargin == 2 )
-      saveName = sprintf( '%sOutputVoltageFig%d%s', saveBaseName, figNum, figPathExtension ) ;
-      %saveas( f, saveName, saveExtension ) ;
-
-      % white background
-      set( f, 'Color', 'w' ) ;
-      export_fig( saveName ) ;
-
-      figNum = figNum + 1 ;
-   end
-
-   %
-   f = figure ;
-   plot( t, i, 'linewidth', 2 ) ;
-   if ( withTitle )
-      title( 'Source Current' ) ;
-   end
-   xlabel( 'Time (s)' ) ;
-   ylabel( 'Current (A)' ) ;
-   %setFigureProperties( f ) ;
-
-   if ( nargin == 2 )
-      saveName = sprintf( '%sSourceCurrentFig%d%s', saveBaseName, figNum, figPathExtension ) ;
-      saveas( f, saveName, saveExtension ) ;
-
-      % white background
-      set( f, 'Color', 'w' ) ;
-      export_fig( saveName ) ;
-
-      figNum = figNum + 1 ;
-   end
-
-
-
-   vd1 = v2 - v3 ;
-   vd2 = -v1 ;
-   vd3 = v1 - v3 ;
-   vd4 = -v2 ;
+   numPlots = size( p.nPlus, 2 ) ;
 
    f = figure ;
-   plot( t, vd1, t, vd2, t, vd3, t, vd4, 'linewidth', 2 ) ;
-   if ( withTitle )
-      title( 'Diode Voltages' ) ;
+
+   for m = 1:numPlots
+      hold on ;
+
+      if ( p.nPlus(m) && p.nMinus(m) )
+         v = real( x( p.nPlus(m):R:end ) ) - real( x( p.nMinus(m):R:end ) ) ;
+      elseif ( p.nPlus(m) )
+         v = real( x( p.nPlus(m):R:end ) ) ;
+      else
+         v = -real( x( p.nMinus(m):R:end ) ) ;
+      end
+
+      plot( t, v, 'linewidth', 2 ) ;
+
+      if ( size({}) ~= size( p.legends ) )
+         legend( p.legends, 'Location', 'SouthEast' ) ;
+      end
    end
-   legend( 'vd1', 'vd2', 'vd3', 'vd4', 'Location', 'SouthEast' ) ;
-   xlabel( 'Time (s)' ) ;
-   ylabel( 'Voltage (V)' ) ;
-   %setFigureProperties( f ) ;
 
-   if ( nargin == 2 )
-      saveName = sprintf( '%sDiodeVoltagesFig%d%s', saveBaseName, figNum, figPathExtension ) ;
-      saveas( f, saveName, saveExtension ) ;
+   xlabel( p.xLabel ) ;
+   ylabel( p.yLabel ) ;
 
-      % white background
-      set( f, 'Color', 'w' ) ;
-      export_fig( saveName ) ;
-
-      figNum = figNum + 1 ;
+   if ( size(p.title, 2) )
+      title( p.title ) ;
    end
+
+   setFigureProperties( f ) ;
+   hold off ;
+
+   saveName = sprintf( '%sOutputVoltageFig%d.%s', p.figName, p.figNum, saveExtension ) ;
+
+   export_fig( saveName ) ;
 end
