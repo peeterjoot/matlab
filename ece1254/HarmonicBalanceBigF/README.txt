@@ -7,7 +7,7 @@ gnl.m
    Determines the nonlinear contribution to the currents.
 
 Gprime.m
-   Produces the nonlinear contribution to the Jacobean
+   Produces the nonlinear contribution to the Jacobian
    required to solve a nonlinear circuit using Newton's Method
 
 HBSolve.m

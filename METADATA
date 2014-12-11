@@ -367,7 +367,7 @@ for the voltages contained in x. (Time domain)
    DATE => 'Dec 9, 2014',
    path => 'ece1254/HarmonicBalanceBigF/Gprime.m',
    WHAT => qq(
-Produces the nonlinear contribution to the Jacobean
+Produces the nonlinear contribution to the Jacobian
 required to solve a nonlinear circuit using Newton's Method
    bdiodes is a cell matrix containing the infromation describing the
    location and parameters of all diodes in the circuit
@@ -375,7 +375,7 @@ required to solve a nonlinear circuit using Newton's Method
    Nh is the number of harmonics used in the analysis
    Nm is the number of physical unknowns of the MNA
 ),
-   SHORT => qq(Produces the nonlinear contribution to the Jacobean
+   SHORT => qq(Produces the nonlinear contribution to the Jacobian
    required to solve a nonlinear circuit using Newton's Method),
 },
 {

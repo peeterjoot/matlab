@@ -1,5 +1,5 @@
 function [ Gprime ] = Gprime( bdiodes, x, Nh , Nm )
-   %Gprime This function produces the nonlinear contribution to the Jacobean
+   %Gprime This function produces the nonlinear contribution to the Jacobian
    %required to solve a nonlinear circuit using Newton's Method
    %   bdiodes is a cell matrix containing the infromation describing the
    %   location and parameters of all diodes in the circuit
