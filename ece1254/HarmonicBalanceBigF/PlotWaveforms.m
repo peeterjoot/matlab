@@ -85,7 +85,10 @@ function PlotWaveforms( p )
       title( p.title ) ;
    end
 
-   setFigureProperties( f ) ;
+   % eliminate the background that makes the saved plot look
+   % like the GUI display window background color:
+   set( s, 'Color', 'w' ) ;
+
    hold off ;
 
    saveName = sprintf( '%s%sFig%d.%s', p.figName, p.figDesc, p.figNum, fileExtension ) ;
