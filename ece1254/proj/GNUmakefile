@@ -3,8 +3,6 @@ COPYFROM += ../ps1/disableTrace.m
 COPYFROM += ../ps1/enableTrace.m
 COPYFROM += ../ps1/traceit.m
 COPYFROM += ../ps1/isDebugEnabled.m
-COPYFROM += ../HarmonicBalanceSmallF/NodalAnalysis.m
-COPYFROM += ../HarmonicBalanceSmallF/HarmonicBalance.m
 
 # git clone git@github.com:ojwoodford/export_fig.git ~/export_fig
 COPYFROM += $(wildcard $(HOME)/export_fig/*.m)
@@ -14,6 +12,8 @@ COPYFROM += $(wildcard $(HOME)/export_fig/*.m)
 CLEAN += *.mat
 CLEAN += *.png
 CLEAN += *.pdf
+CLEAN += *.bak
+CLEAN += *~
 
 LOCALFILES := $(notdir $(COPYFROM))
 
