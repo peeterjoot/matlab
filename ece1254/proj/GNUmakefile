@@ -1,13 +1,12 @@
-COPYFROM += ../ps1/changeTrace.m
-COPYFROM += ../ps1/disableTrace.m
-COPYFROM += ../ps1/enableTrace.m
-COPYFROM += ../ps1/traceit.m
-COPYFROM += ../ps1/isDebugEnabled.m
-
 # git clone git@github.com:ojwoodford/export_fig.git ~/export_fig
-COPYFROM += $(wildcard $(HOME)/export_fig/*.m)
+EFIGDIR := $(HOME)/export_fig
+PS1DIR := ../ps1
 
-#COPYFROM += $(wildcard $(HOME)/plot2svg/cur/*.m)
+PS1FILENAMES := changeTrace.m disableTrace.m enableTrace.m traceit.m isDebugEnabled.m
+PS1PATHNAMES := $(addprefix $(PS1DIR)/,$(PS1FILENAMES))
+
+EFIGPATHNAMES := $(wildcard $(EFIGDIR)/*.m)
+EFIGFILENAMES := $(notdir $(EFIGPATHNAMES))
 
 CLEAN += *.mat
 CLEAN += *.png
@@ -15,21 +14,22 @@ CLEAN += *.pdf
 CLEAN += *.bak
 CLEAN += *~
 
-LOCALFILES := $(notdir $(COPYFROM))
+LOCALFILES := $(PS1FILENAMES) $(EFIGFILENAMES)
 
 EPSFILES := $(wildcard *.eps)
 PDFFILES := $(EPSFILES:.eps=.pdf)
 
-all : copy
-
-#.PHONY: copy
-copy : $(LOCALFILES)
+all : $(LOCALFILES)
 
 pdf : $(PDFFILES)
 
-# This is a hack.  It is run for every file over and over.
-$(LOCALFILES) :: $(COPYTARGETS)
-	cp $(COPYFROM) .
+# static rules for these copies to avoid recursion.
+# http://www.gnu.org/software/make/manual/make.html#Static-Pattern
+$(PS1FILENAMES) : %.m: $(PS1DIR)/%.m
+	cp $< $@
+
+$(EFIGFILENAMES) : %.m: $(EFIGDIR)/%.m
+	cp $< $@
 
 clean: 
 	rm -f $(CLEAN) $(LOCALFILES)
