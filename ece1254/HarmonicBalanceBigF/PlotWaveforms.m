@@ -9,9 +9,9 @@ function PlotWaveforms( p )
    end
 
    if ( p.logPlot )
-      cacheSuffix = 'Log' ;
+      cacheSuffix = 'TestSolver' ;
    else
-      cacheSuffix = '' ;
+      cacheSuffix = 'HBSolve' ;
    end
 
    cacheFile = sprintf( '%s%s.mat', p.figName, cacheSuffix ) ;
@@ -37,8 +37,8 @@ function PlotWaveforms( p )
 %p
    if ( ~p.logPlot )
 
-      x = h.x ;
-      X = h.X ;
+      v = h.v ;
+      V = h.V ;
       R = h.R ;
 
       f0 = h.omega/( 2 * pi ) ;
@@ -84,19 +84,19 @@ function PlotWaveforms( p )
          hold on ;
 
          if ( p.spectrum )
-            v = abs( X( p.nPlus(m):R:end ) ) ;
+            vd = abs( V( p.nPlus(m):R:end ) ) ;
 
-            stem( fMHz, v ) ;
+            stem( fMHz, vd ) ;
          else
             if ( p.nPlus(m) && p.nMinus(m) )
-               v = real( x( p.nPlus(m):R:end ) ) - real( x( p.nMinus(m):R:end ) ) ;
+               vd = real( v( p.nPlus(m):R:end ) ) - real( v( p.nMinus(m):R:end ) ) ;
             elseif ( p.nPlus(m) )
-               v = real( x( p.nPlus(m):R:end ) ) ;
+               vd = real( v( p.nPlus(m):R:end ) ) ;
             else
-               v = -real( x( p.nMinus(m):R:end ) ) ;
+               vd = -real( v( p.nMinus(m):R:end ) ) ;
             end
 
-            plot( t, v, 'linewidth', 2 ) ;
+            plot( t, vd, 'linewidth', 2 ) ;
          end
       end
    end

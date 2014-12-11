@@ -5,18 +5,14 @@ function testH(filename)
       %filename = '../circuits/rc.netlist' ;
       %filename = '../circuits/rcVsource.netlist' ;
       %filename = '../circuits/rc2.netlist' ;
-      filename = '../circuits/res2.netlist' ;
+      %filename = '../circuits/res2.netlist' ;
+      filename = '../circuits/LCLowpass.netlist' ;
    end
 
    N = 20 ;
-   tol = 1e-6 ;
-   tolF = 1e-6 ;
-   tolV = 1e-6 ;
-   tolRel = 1e-6 ;
-   maxIter = 50 ;
-   useStepping = 0 ;
 
-   r = NewtonsHarmonicBalance( filename, N, tolF, tolV, tolRel, maxIter, useStepping ) ;
+   p = struct( 'useStepping', 0 ) ;
+   r = NewtonsHarmonicBalance( N, filename, p ) ;
 
    %full(real(r.B))
    %full(imag(r.B))
@@ -39,19 +35,13 @@ function testH(filename)
 
    twoNplusOne = 2 * N + 1 ;
    R = size( r.xnames, 1 ) ;
-   V = zeros( twoNplusOne, R ) ;
-   v = zeros( twoNplusOne, R ) ;
+   v = real( r.v ) ;
    tk = 2 * pi * (-N:N)/ (r.omega * twoNplusOne ) ;
 
    for i = 1:R
-      X = r.V( i : R : end ) ;
-      V( :, i ) = X ;
-      x = real( r.F * X ) ;
-      v( :, i ) = x ;
-
       %disp( r.xnames{i} ) ;
       figure ;
-      plot( tk, v( :, i ) ) ;
+      plot( tk, v( i : R : end ) ) ;
       xlabel( 't' ) ;
       ylabel( r.xnames{i} ) ;
    end

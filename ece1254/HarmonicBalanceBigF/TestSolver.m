@@ -12,8 +12,8 @@ function r = TestSolver( fileName )
    % Reference Harmonic Balance Parameters
    Nref = 100 ;
    h = HBSolve( Nref, fileName ) ;
-   xref        = h.x ;
-   Xref        = h.X ;
+   xref        = h.v ;
+   Xref        = h.V ;
    ecputimeref = h.ecputime ;
    omegaref    = h.omega ;
    Rref        = h.R ;
@@ -33,8 +33,8 @@ function r = TestSolver( fileName )
    n = 0 ;
    for N = Nvalues
       hn = HBSolve( N, fileName ) ;
-      x        = hn.x ;
-      X        = hn.X ;
+      v        = hn.v ;
+      V        = hn.V ;
       ecputime = hn.ecputime ;
       omega    = hn.omega ;
       R        = hn.R ;
@@ -48,7 +48,7 @@ function r = TestSolver( fileName )
 
       % Determine error in the frequency domain to avoid time scaling issues
       % Need to zero pad the truncated soltuion
-      Xz = [ zeros( R * ( Nref - N ), 1 ) ; X ; zeros( R * ( Nref - N ), 1 ) ] ;
+      Xz = [ zeros( R * ( Nref - N ), 1 ) ; V ; zeros( R * ( Nref - N ), 1 ) ] ;
       eX = norm( Xz - Xref ) ;
       n = n + 1 ;
       errorValues( n ) = eX ;

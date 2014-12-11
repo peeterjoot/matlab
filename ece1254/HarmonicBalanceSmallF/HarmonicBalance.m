@@ -154,5 +154,4 @@ function results = HarmonicBalance( inputs, N, omega )
    results.Y = Y ;
    results.I = I ;
    results.Vnames = Vnames ;
-
 end
