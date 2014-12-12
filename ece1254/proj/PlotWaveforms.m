@@ -12,6 +12,11 @@ function PlotWaveforms( p )
       p.solver = @HBSolve ;
    end
 
+   if ( ~isfield( p, 'N' ) )
+      p.N = 50 ; 
+   end
+   N = p.N ;
+
    finfo = functions( p.solver ) ;
 
    if ( p.logPlot )
@@ -20,7 +25,7 @@ function PlotWaveforms( p )
       solutionMethodString = sprintf( 'DirectSolution%s', finfo.function ) ;
    end
 
-   cacheFile = sprintf( '%s%s.mat', p.figName, solutionMethodString ) ;
+   cacheFile = sprintf( '%s_%s_N%d.mat', p.figName, solutionMethodString, N ) ;
    traceit( sprintf( 'cacheFile: %s', cacheFile ) ) ;
 
    if ( exist( cacheFile, 'file' ) )
@@ -33,7 +38,6 @@ function PlotWaveforms( p )
          save( cacheFile, 'h' ) ;
       else
          % Harmonic Balance Parameters
-         N = 50 ;
          h = p.solver( N, p.fileName ) ;
 
          % explicitly name the vars to avoid saving input param 'p'

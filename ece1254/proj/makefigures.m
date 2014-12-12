@@ -6,13 +6,15 @@ function makefigures()
 
    doAll = 0 ;
 
+   solvers = { @HBSolve } ;
    %solvers = { @HBSolve, @NewtonsHarmonicBalance } ;
-   solvers = { @NewtonsHarmonicBalance } ;
+   %solvers = { @NewtonsHarmonicBalance } ;
 
    for i = 1:length( solvers )
       if ( doAll || 1 )
          p = struct( 'fileName', '../circuits/BridgeRectifier.netlist' ) ;
          p.figName = 'bridgeRectifier' ;
+         %p.N = 3 ;
          p.solver = solvers{i} ;
          p.xLabel = 'Time (s)' ;
 

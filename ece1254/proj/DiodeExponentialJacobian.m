@@ -32,11 +32,14 @@ function JE = DiodeExponentialJacobian( d, V, R, F, Finv )
                u = m + (b - 1) * R ;
                v = n + (b - 1) * R ;
 
-               arg = V( u ) * (m ~= 0) - V( v ) * ( n ~= 0 ) ;
+%traceit( sprintf('r, s, a, b, u, v, m, n = %d, %d, %d, %d, %d, %d, %d, %d', r, s, a, b, u, v, m, n ) ) ;
+
+% m != 0 check is not good enough.  Can end up with u = 0 with b = 1 && m = 0.  also looks like V( u ) gets evaluated first.
+               arg = ( m && u ) * V( u ) - ( n && v ) * V( v ) ;
                delta = (m ~= 0) * kronDel( s, u ) - ( n ~= 0 ) * kronDel( s, v ) ;
                expValue = exp( F(a, b) * arg / vt ) ;
 
-%traceit( sprintf('r, s, a, b, u, v, arg, delta, exp() = %d, %d, %d, %d, %d, %d, %e, %e, %d, %e', r, s, a, b, u, v, arg, delta, expValue ) ) ;
+%traceit( sprintf('arg, delta, exp() = %e, %d, %e', arg, delta, expValue ) ) ;
 
                JE(r, s) = JE(r, s) + Finv(r, a) * F(a, b) * expValue * delta ;
             end

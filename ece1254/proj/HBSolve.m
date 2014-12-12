@@ -139,7 +139,7 @@ function h = HBSolve( N, fileName, p )
    ecputime = cputime - ecputime ;
 
    if ( converged )
-      disp( ['solution converged after ' num2str( totalIterations ) ' p.iterations '] ) ;
+      disp( ['solution converged after ' num2str( totalIterations ) ' iterations '] ) ;
    else
       disp( 'solution did not converge' ) ;
    end
