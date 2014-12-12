@@ -6,19 +6,19 @@ Infrastructure:
       Parse the netlist file and return the time domain MNA equation matrices and an
       encoding of any non-linear elements.
       
-   FourierMatrixComplex.m
-
-      Compute the "Small F" fourier matrix for the discrete fourier transform.
-
    HarmonicBalance.m
       Construct the Frequency domain equivalents of the linear portions of the network.
       Consumes results from NodalAnalysis().
 
--------------------------------------------------------------------
-"Big F" solver:
+   FourierMatrixComplex.m
+
+      Compute the "Small F" Fourier matrix for the discrete Fourier transform.
 
    FourierMatrix.m
-      Compute the "Big F" fourier matrix for the discrete fourier transform and its inverse.
+      Compute the "Big F" Fourier matrix for the discrete Fourier transform and its inverse.
+
+-------------------------------------------------------------------
+"Big F" solver:
 
    gnl.m
       Determines the nonlinear contribution to the currents.
@@ -34,8 +34,11 @@ Infrastructure:
 "Small F" solver:
 
    DiodeCurrentAndJacobian.m
+
    DiodeExponentialDFT.m
+
    DiodeExponentialJacobian.m
+
    NewtonsHarmonicBalance.m
 
 -------------------------------------------------------------------
@@ -45,7 +48,8 @@ Plotting and test related:
       Generates the cputime/error plots
 
    PlotWaveforms.m
-      Calls HBSolve() for a netlist file and caches the result.  Then plots the results using a set 
+      Calls HBSolve() or NewtonsHarmonicBalance() for a netlist file and caches the result.
+      Then plots the results using a set 
       of plot specifications.
 
    makefigures.m

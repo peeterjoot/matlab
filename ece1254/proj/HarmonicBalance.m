@@ -108,7 +108,7 @@ function results = HarmonicBalance( inputs, N, omega )
    angularVelocities = inputs.angularVelocities ;
    xnames            = inputs.xnames ;
 
-   traceit( ['N, omega: ', N, omega] ) ;
+   traceit( sprintf( 'N = %d, omega: %e', N, omega) ) ;
 
    twoNplusOne = 2 * N + 1 ;
 
@@ -121,7 +121,7 @@ function results = HarmonicBalance( inputs, N, omega )
    Vnames = cell( twoNplusOne * R, 1 ) ;
    I = zeros( twoNplusOne * R, 1 ) ;
 
-   jOmega = j * omega ;
+   jOmega = 1j * omega ;
 
    r = 0 ;
    s = 0 ;
@@ -138,7 +138,7 @@ function results = HarmonicBalance( inputs, N, omega )
       thisOmega = omega * n ;
       omegaIndex = find( angularVelocities == thisOmega ) ;
 
-      traceit( sprintf('HarmonicBalance: n=%d, omega = %e, thisOmega = %e, omegaIndex = %s', n, omega, thisOmega, mat2str( omegaIndex ) ) ) ;
+      %traceit( sprintf('HarmonicBalance: n=%d, omega = %e, thisOmega = %e, omegaIndex = %s', n, omega, thisOmega, mat2str( omegaIndex ) ) ) ;
 
       if ( size(omegaIndex) == size(1) )
          % found one (not an error not to find a matching frequency.  Our input sources may not have all the frequencies that
@@ -146,7 +146,7 @@ function results = HarmonicBalance( inputs, N, omega )
 
          I( q+1:q+R ) = B( :, omegaIndex ) ;
       else
-         traceit( sprintf('HarmonicBalance: no omega match from: %s', mat2str( angularVelocities ) ) ) ;
+         %traceit( sprintf('HarmonicBalance: no omega match from: %s', mat2str( angularVelocities ) ) ) ;
       end
       q = q + R ;
    end

@@ -7,7 +7,7 @@ function testFourierMatrixComplex( N )
    twoNplusOne = 2*N + 1 ;
 
    F2 = zeros( twoNplusOne, twoNplusOne ) ;
-   alpha = exp( (2 * pi * j)/twoNplusOne ) ;
+   alpha = exp( (2 * pi * 1j)/twoNplusOne ) ;
    for n = 1:twoNplusOne
       for m = 1:twoNplusOne
           F2( n, m ) = alpha^( r(n)*r(m) ) ;

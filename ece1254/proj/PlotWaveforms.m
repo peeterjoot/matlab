@@ -93,7 +93,7 @@ function PlotWaveforms( p )
          if ( p.spectrum )
             vd = abs( V( p.nPlus(m):R:end ) ) ;
 
-            stem( fMHz, vd ) ;
+            stem( fMHz, vd, 'linewidth', 2 ) ;
          else
             if ( p.nPlus(m) && p.nMinus(m) )
                vd = real( v( p.nPlus(m):R:end ) ) - real( v( p.nMinus(m):R:end ) ) ;

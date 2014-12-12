@@ -103,10 +103,11 @@ function r = NewtonsHarmonicBalance( N, filename, p )
    if ( p.useStepping )
       lambdas = 0:p.deltaLambda:1 ;
    else
-      lambdas = [ 1 ] ;
+      lambdas = 1 ;
    end
 
    haveFirstV = 0 ;
+   totalIters = 0 ;
 
    for lambda = lambdas
       %-------------------------------------------------------------------------------------------------
@@ -137,7 +138,8 @@ function r = NewtonsHarmonicBalance( N, filename, p )
       % is the fundamental frequency.  To force this, a very small magnitude source with the fundamental frequency
       % could be included in the .netlist file if it is not already there.
       %
-      omega = min( r.angularVelocities( find( r.angularVelocities > 0 ) ) ) ;
+      %omega = min( r.angularVelocities( find( r.angularVelocities > 0 ) ) ) ;
+      omega = min( r.angularVelocities( r.angularVelocities > 0 ) ) ;
 
       traceit( sprintf( 'angularVelocities = %s, omega = %e', mat2str( r.angularVelocities ), omega ) ) ;
       %------------------------------------------------------------------------------------------
@@ -168,15 +170,15 @@ function r = NewtonsHarmonicBalance( N, filename, p )
       J = r.Y - JI ;
 
       f = r.Y * V - r.I - II ;
+      normF = norm( f ) ;
       %-------------------------------------------------------------------------------------------------
 
       iter = 0 ;
-      totalIters = 0 ;
       while ( iter < p.maxIter )
-         totalIters = totalIters + 1 ;
+         traceit( sprintf( 'lambda:%e: %d iterations (%d total). |f| = %e', lambda, iter, totalIters, normF ) ) ;
 
-         lastV = V ;
-         lastF = f ;
+         iter = iter + 1 ;
+         totalIters = totalIters + 1 ;
 
          deltaV = -J\f ;
          V = V + deltaV ;
@@ -198,12 +200,12 @@ function r = NewtonsHarmonicBalance( N, filename, p )
          if ( (normF < p.tolF) && (normDeltaV < p.tolV) && (relDiffV < p.tolRel) )
             break ;
          end
-
-         iter = iter + 1 ;
       end
 
       if ( iter >= p.maxIter )
-         disp( 'did not converge after %d iterations', iter ) ;
+         disp( sprintf( 'lambda:%e: did not converge after %d iterations. |f| = %e', lambda, iter, normF ) ) ;
+      else
+         disp( sprintf( 'lambda:%e: converged after %d iterations (%d total). |f| = %e', lambda, iter, totalIters, normF ) ) ;
       end
    end
 

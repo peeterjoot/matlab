@@ -16,9 +16,7 @@ function E = DiodeExponentialDFT( d, V, R, F, Finv )
    %  F:    [matrix]:  (2N + 1) DFT matrix.
    %  Finv: [matrix]:  conj(F)/(2 N + 1)
 
-   if ( d.vn )
-      vn = - V( d.vn : R : end ) ;
-   end
+   traceit( sprintf( 'entry. R,io,vp,vn,vt = %d,%e,%d,%d,%e', R, d.io, d.vp, d.vn, d.vt ) ) ;
 
    if ( d.vp )
       diffV = V( d.vp : R : end ) ;
@@ -32,9 +30,10 @@ function E = DiodeExponentialDFT( d, V, R, F, Finv )
 
    diffV = diffV/d.vt ;
 
-   twoNplusOne = size( F, 1 ) ;
    vTimeDomain = F * diffV ;
    ExpV = exp( vTimeDomain ) ;
 
    E = Finv * ExpV ;
+
+   traceit( sprintf( 'exit' ) ) ;
 end

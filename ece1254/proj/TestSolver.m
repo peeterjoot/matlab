@@ -16,17 +16,17 @@ function r = TestSolver( p )
    % Reference Harmonic Balance Parameters
    Nref = 100 ;
    h = p.solver( Nref, p.fileName ) ;
-   xref        = h.v ;
+   %xref        = h.v ;
    Xref        = h.V ;
    ecputimeref = h.ecputime ;
    omegaref    = h.omega ;
-   Rref        = h.R ;
+   %Rref        = h.R ;
 
    f0ref = omegaref/( 2 * pi ) ;
    Tref = 1/f0ref ;
-   dtref = Tref/( 2 * Nref + 1 ) ;
-   kref = -Nref:Nref ;
-   tref = dtref * kref ;
+   %dtref = Tref/( 2 * Nref + 1 ) ;
+   %kref = -Nref:Nref ;
+   %tref = dtref * kref ;
 
    Nvalues = [ 1  5  9 10 50 90 ] ;
 
@@ -37,7 +37,7 @@ function r = TestSolver( p )
    n = 0 ;
    for N = Nvalues
       hn = p.solver( N, p.fileName ) ;
-      v        = hn.v ;
+      %v        = hn.v ;
       V        = hn.V ;
       ecputime = hn.ecputime ;
       omega    = hn.omega ;
@@ -46,9 +46,9 @@ function r = TestSolver( p )
       % Harmonic Balance Parameters
       f0 = omega/( 2 * pi ) ;
       T = 1/f0 ;
-      dt = T/( 2 * N + 1 ) ;
-      k = -N:N ;
-      t = dt * k' ;
+      %dt = T/( 2 * N + 1 ) ;
+      %k = -N:N ;
+      %t = dt * k' ;
 
       % Determine error in the frequency domain to avoid time scaling issues
       % Need to zero pad the truncated soltuion

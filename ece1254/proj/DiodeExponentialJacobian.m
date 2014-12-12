@@ -13,6 +13,8 @@ function JE = DiodeExponentialJacobian( d, V, R, F, Finv )
    %  F:    [matrix]:  (2N + 1) DFT matrix.
    %  Finv: [matrix]:  conj(F)/(2 N + 1)
 
+   traceit( sprintf( 'entry' ) ) ;
+
    twoNplusOne = size( F, 1 ) ;
    vSize = size( V, 1 ) ;
    JE = zeros( twoNplusOne, vSize, 'like', sparse(1) ) ;
@@ -43,4 +45,6 @@ function JE = DiodeExponentialJacobian( d, V, R, F, Finv )
    end
 
    JE = JE/vt ;
+
+   traceit( sprintf( 'exit' ) ) ;
 end

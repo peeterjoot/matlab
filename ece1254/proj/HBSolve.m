@@ -38,7 +38,8 @@ function h = HBSolve( N, fileName, p )
 
    % Harmonic Balance Parameters
    % Only intend on using one frequency for all AC sources
-   omega = min( r.angularVelocities( find ( r.angularVelocities > 0 ) ) ) ;
+   %omega = min( r.angularVelocities( find ( r.angularVelocities > 0 ) ) ) ;
+   omega = min( r.angularVelocities( r.angularVelocities > 0 ) ) ;
 
    h = HarmonicBalance( r, N, omega ) ;
    Y = h.Y ;
@@ -127,7 +128,7 @@ function h = HBSolve( N, fileName, p )
       end
 
       if ( lambda >= 1 )
-       lambda = 1
+         lambda = 1 ;
       end
 
       if ( dlambda <= 0.0001 )
@@ -140,7 +141,7 @@ function h = HBSolve( N, fileName, p )
    if ( converged )
       disp( ['solution converged after ' num2str( totalIterations ) ' p.iterations '] ) ;
    else
-      disp( ['solution did not converge'] ) ;
+      disp( 'solution did not converge' ) ;
    end
 
    % return this function's data along with the return data from HarmonicBalance().

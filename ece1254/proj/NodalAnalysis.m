@@ -478,19 +478,19 @@ function results = NodalAnalysis( filename, sourceStepScaling )
    B = zeros( biggestNodeNumber + numAdditionalSources, numFrequencies, 'like', G ) ;
 
    xnames = cell( biggestNodeNumber + numAdditionalSources, 1 ) ;
-   for i = [1:biggestNodeNumber]
-      xnames{i} = sprintf( 'V_%d', i ) ;
+   for k = 1:biggestNodeNumber
+      xnames{k} = sprintf( 'V_%d', k ) ;
    end
 
    % process the resistor lines:
    % note: matlab for loop appears to iterate over matrix by assigning each column to a temp variable
    labelNumber = 0 ;
-   for r = resistorLines
+   for res = resistorLines
       labelNumber = labelNumber + 1 ;
       label     = resistorLables{labelNumber} ;
-      plusNode  = r(1) ;
-      minusNode = r(2) ;
-      z         = 1/r(3) ;
+      plusNode  = res(1) ;
+      minusNode = res(2) ;
+      z         = 1/res(3) ;
 
       traceit( sprintf( '%s %d,%d -> %d\n', label, plusNode, minusNode, 1/z ) ) ;
 
@@ -509,12 +509,12 @@ function results = NodalAnalysis( filename, sourceStepScaling )
 
    % process the capacitor lines:
    labelNumber = 0 ;
-   for c = capLines
+   for cap = capLines
       labelNumber = labelNumber + 1 ;
       label     = capLables{labelNumber} ;
-      plusNode  = c(1) ;
-      minusNode = c(2) ;
-      cv        = c(3) ;
+      plusNode  = cap(1) ;
+      minusNode = cap(2) ;
+      cv        = cap(3) ;
 
       traceit( sprintf( '%s %d,%d -> %d\n', label, plusNode, minusNode, cv ) ) ;
 
@@ -534,15 +534,15 @@ function results = NodalAnalysis( filename, sourceStepScaling )
    % process the voltage sources:
    r = biggestNodeNumber ;
    labelNumber = 0 ;
-   for v = voltageLines
+   for vol = voltageLines
       r = r + 1 ;
       labelNumber     = labelNumber + 1 ;
       label           = voltageLables{labelNumber} ;
-      plusNode        = v(1) ;
-      minusNode       = v(2) ;
-      magnitude       = v(3) * sourceStepScaling ;
-      omega           = v(4) ;
-      phi             = v(5) ;
+      plusNode        = vol(1) ;
+      minusNode       = vol(2) ;
+      magnitude       = vol(3) * sourceStepScaling ;
+      omega           = vol(4) ;
+      phi             = vol(5) ;
 
       traceit( sprintf( '%s %d,%d -> %d (%e, %e)\n', label, plusNode, minusNode, magnitude, omega, phi ) ) ;
       xnames{r} = sprintf( 'i_{%s_{%d,%d}}', label, minusNode, plusNode ) ;
@@ -567,30 +567,30 @@ function results = NodalAnalysis( filename, sourceStepScaling )
       if ( omega == 0 )
          B( r, omegaIndex ) = B( r, omegaIndex ) + magnitude ;
       else
-         B( r, omegaIndex ) = B( r, omegaIndex ) + magnitude * exp( -j * phi )/2 ;
+         B( r, omegaIndex ) = B( r, omegaIndex ) + magnitude * exp( - 1j * phi )/2 ;
 
          omegaIndex = find( angularVelocities == -omega ) ;
          if ( size(omegaIndex) ~= size(1) )
             error( 'NodalAnalysis:find', 'failed to find angular velocity %e in angularVelocities: %s', -omega, mat2str(angularVelocities) ) ;
          end
 
-         B( r, omegaIndex ) = B( r, omegaIndex ) + magnitude * exp( j * phi )/2 ;
+         B( r, omegaIndex ) = B( r, omegaIndex ) + magnitude * exp( 1j * phi )/2 ;
       end
    end
 
    % value for r (fall through from loop above)
    % process the voltage controlled lines
    labelNumber = 0 ;
-   for a = ampLines
+   for amp = ampLines
       r = r + 1 ;
       labelNumber = labelNumber + 1 ;
 
       label                = ampLables{labelNumber} ;
-      plusNodeNum          = a(1) ;
-      minusNodeNum         = a(2) ;
-      plusControlNodeNum   = a(3) ;
-      minusControlNodeNum  = a(4) ;
-      gain                 = a(5) ;
+      plusNodeNum          = amp(1) ;
+      minusNodeNum         = amp(2) ;
+      plusControlNodeNum   = amp(3) ;
+      minusControlNodeNum  = amp(4) ;
+      gain                 = amp(5) ;
 
       traceit( sprintf( '%s %d,%d (%d,%d) -> %d\n', label, plusNodeNum, minusNodeNum, plusControlNodeNum, minusControlNodeNum, gain ) ) ;
 
@@ -615,13 +615,13 @@ function results = NodalAnalysis( filename, sourceStepScaling )
    % value for r (fall through from loop above)
    % process the inductors:
    labelNumber = 0 ;
-   for i = indLines
+   for ind = indLines
       r = r + 1 ;
       labelNumber = labelNumber + 1 ;
       label       = indLables{labelNumber} ;
-      plusNode    = i(1) ;
-      minusNode   = i(2) ;
-      value       = i(3) ;
+      plusNode    = ind(1) ;
+      minusNode   = ind(2) ;
+      value       = ind(3) ;
 
       traceit( sprintf( '%s %d,%d -> %d\n', label, plusNode, minusNode, value ) ) ;
 
@@ -641,14 +641,14 @@ function results = NodalAnalysis( filename, sourceStepScaling )
 
    % process the current sources:
    labelNumber = 0 ;
-   for i = currentLines
+   for cur = currentLines
       labelNumber     = labelNumber + 1 ;
       label           = currentLables{labelNumber} ;
-      plusNode        = i(1) ;
-      minusNode       = i(2) ;
-      magnitude       = i(3) * sourceStepScaling ;
-      omega           = i(4) ;
-      phi             = i(5) ;
+      plusNode        = cur(1) ;
+      minusNode       = cur(2) ;
+      magnitude       = cur(3) * sourceStepScaling ;
+      omega           = cur(4) ;
+      phi             = cur(5) ;
 
       traceit( sprintf( '%s %d,%d -> %d (%e, %e)\n', label, plusNode, minusNode, magnitude, omega, phi ) ) ;
 
@@ -668,10 +668,10 @@ function results = NodalAnalysis( filename, sourceStepScaling )
          end
       else
          if ( plusNode )
-            B( plusNode, omegaIndex ) = B( plusNode, omegaIndex ) - magnitude * exp( -j * phi )/2 ;
+            B( plusNode, omegaIndex ) = B( plusNode, omegaIndex ) - magnitude * exp( - 1j * phi )/2 ;
          end
          if ( minusNode )
-            B( minusNode, omegaIndex ) = B( minusNode, omegaIndex ) + magnitude * exp( -j * phi )/2 ;
+            B( minusNode, omegaIndex ) = B( minusNode, omegaIndex ) + magnitude * exp( - 1j * phi )/2 ;
          end
 
          omegaIndex = find( angularVelocities == -omega ) ;
@@ -681,10 +681,10 @@ function results = NodalAnalysis( filename, sourceStepScaling )
          end
 
          if ( plusNode )
-            B( plusNode, omegaIndex ) = B( plusNode, omegaIndex ) - magnitude * exp( j * phi )/2 ;
+            B( plusNode, omegaIndex ) = B( plusNode, omegaIndex ) - magnitude * exp( 1j * phi )/2 ;
          end
          if ( minusNode )
-            B( minusNode, omegaIndex ) = B( minusNode, omegaIndex ) + magnitude * exp( j * phi )/2 ;
+            B( minusNode, omegaIndex ) = B( minusNode, omegaIndex ) + magnitude * exp( 1j * phi )/2 ;
          end
       end
    end
@@ -697,13 +697,13 @@ function results = NodalAnalysis( filename, sourceStepScaling )
    D = zeros( size(B, 1), 1, 'like', G ) ;
    bdiode = cell( numberOfDiodes, 1 ) ;
 
-   for i = diodeLines
+   for dio = diodeLines
       labelNumber = labelNumber + 1 ;
       label       = diodeLables{labelNumber} ;
-      plusNode    = i(1) ;
-      minusNode   = i(2) ;
-      io          = i(3) ;
-      vt          = i(4) ;
+      plusNode    = dio(1) ;
+      minusNode   = dio(2) ;
+      io          = dio(3) ;
+      vt          = dio(4) ;
       d = d + 1 ;
 
       traceit( sprintf( '%s %d,%d -> %d\n', label, plusNode, minusNode, -io ) ) ;

@@ -22,12 +22,12 @@ function F = FourierMatrixComplex( N )
    % where \bar{F} is the complex conjugate of F.
 
    r = -N:N ;
-   twoNplusOne = 2*N + 1 ;
+   twoNplusOne = 2 * N + 1 ;
 
    % http://stackoverflow.com/a/20388887/189270
    % http://www.mathworks.com/help/matlab/ref/ndgrid.html (Example: Evaluate Function over gridded domain)
    [X1, X2] = ndgrid( r, r ) ;
-   F = exp( j * 2 * pi * X1.*X2 / twoNplusOne ) ;
+   F = exp( 1j * 2 * pi * X1.*X2 / twoNplusOne ) ;
 
    % visual verification of the method.  This part is just the index pairs multiplied:
    % X1.*X2
