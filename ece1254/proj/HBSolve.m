@@ -1,17 +1,13 @@
-function h = HBSolve( N, fileName, p )
+function h = HBSolve( N, p )
    % HB Solve - This function uses the Harmonic Balance Method to solve the
-   % steady state condtion of the circuit described in fileName. Harmonic
+   % steady state condtion of the circuit described in p.fileName. Harmonic
    % Frequencies are limited to N.
    % It returns the vector containing the unknowns of the circuit, v, ordered as
    % described in HarmonicBalance.m and the cpu time required to solve the
    % circuit using Newton's Method
 
    % p is an optional struct() parameter
-   defp = struct( 'tolF', 1e-6, 'edV', 1e-3, 'JcondTol', 1e-23, 'iterations', 50, 'subiterations', 50 ) ;
-
-   if ( nargin < 3 )
-      p = defp ;
-   end
+   defp = struct( 'tolF', 1e-6, 'edV', 1e-3, 'JcondTol', 1e-23, 'iterations', 50, 'subiterations', 50, 'useBigF', 1 ) ;
 
    % tolerances
    if ( ~isfield( p, 'tolF' ) )
@@ -34,7 +30,11 @@ function h = HBSolve( N, fileName, p )
       p.subiterations = defp.subiterations ;
    end
 
-   r = NodalAnalysis( fileName ) ;
+   if ( ~isfield( p, 'useBigF' ) )
+      p.useBigF = defp.useBigF ;
+   end
+
+   r = NodalAnalysis( p.fileName ) ;
 
    % Harmonic Balance Parameters
    % Only intend on using one frequency for all AC sources
@@ -44,9 +44,7 @@ function h = HBSolve( N, fileName, p )
    r = HarmonicBalance( r, N, omega ) ;
    R = length( r.G ) ;
 
-   bigF = 1 ;
-
-   if ( bigF )
+   if ( p.useBigF )
       % Fourier Transform Matrix
       F = FourierMatrix( N, R ) ;
    end
@@ -65,7 +63,7 @@ function h = HBSolve( N, fileName, p )
    for i = 1:p.iterations
       V = V0 ;
 
-      if ( bigF )
+      if ( p.useBigF )
          v = F * V ;
 
          % determine non linear currents
@@ -93,7 +91,7 @@ function h = HBSolve( N, fileName, p )
          dV = J\-f ;
          V = V + dV ;
 
-         if ( bigF )
+         if ( p.useBigF )
             v = F * V ;
 
             % determine non linear currents
@@ -159,7 +157,7 @@ function h = HBSolve( N, fileName, p )
 
    % return this function's data along with the return data from HarmonicBalance().
    h = r ;
-   if ( ~bigF )
+   if ( ~p.useBigF )
       % also return a time domain conversion right out of the box:
       v = zeros( size( V ) ) ;
       for i = 1:R

@@ -9,13 +9,9 @@ function r = TestSolver( p )
 %   clear
 %   clc
 
-   if ( ~isfield( p, 'solver' ) )
-      p.solver = @HBSolve ;
-   end
-
    % Reference Harmonic Balance Parameters
    Nref = 100 ;
-   h = p.solver( Nref, p.fileName ) ;
+   h = HBSolve( Nref, p ) ;
    %xref        = h.v ;
    Xref        = h.V ;
    ecputimeref = h.ecputime ;
@@ -36,7 +32,7 @@ function r = TestSolver( p )
    errorValues = zeros( M, 1 ) ;
    n = 0 ;
    for N = Nvalues
-      hn = p.solver( N, p.fileName ) ;
+      hn = HBSolve( N, p ) ;
       %v        = hn.v ;
       V        = hn.V ;
       ecputime = hn.ecputime ;

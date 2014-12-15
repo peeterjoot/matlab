@@ -383,11 +383,19 @@ required to solve a nonlinear circuit using Newton's Method
    path => 'ece1254/proj/HBSolve.m',
    WHAT => qq(
 This function uses the Harmonic Balance Method to solve the
-steady state condtion of the circuit described in fileName. Harmonic
-Frequencies are limited to N.
-It returns the vector containing the unknowns of the circuit, x, ordered as
-described in HarmonicBalance.m and the cpu time required to solve the
-circuit using Newton's Method
+steady state condtion of the circuit described in fileName for frequencies in the -N,N range.
+
+Harmonic Balance equations of the form
+
+     f(V) = Y V - I -II(V),
+
+are constructed from the supplied .netlist specification.  The zeros of this function are sought, determining the
+the DFT Fourier coefficent vector V that solves the system in the frequency domain.
+
+The vectors containing the unknowns V,v of the circuit are returned (in the frequency and
+time domain respectively), ordered as
+described in HarmonicBalance.m.  The cpu time required to solve the
+circuit using Newton's Method is also returned.
 ),
    SHORT => qq(Harmonic Balance workhorse.),
 },
@@ -460,18 +468,18 @@ where II represents non-linear contributions not returned directly as a matrix.
       Construct the Frequency domain equivalents of the linear portions of the network.
       Consumes results from NodalAnalysis().)
 },
-{
-   DATE => 'Dec 9, 2014',
-   path => 'ece1254/proj/NewtonsHarmonicBalance.m',
-   WHAT => qq(
-Harmonic Balance equations of the form
-
-     f(V) = Y V - I -II(V),
-
-  are constructed from the supplied .netlist specification.  The zeros of this function are sought, determining the
-  the DFT Fourier coefficent vector V that solves the system in the frequency domain.
-)
-},
+%{
+%   DATE => 'Dec 9, 2014',
+%   path => 'ece1254/proj/NewtonsHarmonicBalance.m',
+%   WHAT => qq(
+%Harmonic Balance equations of the form
+%
+%     f(V) = Y V - I -II(V),
+%
+%  are constructed from the supplied .netlist specification.  The zeros of this function are sought, determining the
+%  the DFT Fourier coefficent vector V that solves the system in the frequency domain.
+%)
+%},
 {
    DATE => 'Dec 9, 2014',
    path => 'ece1254/proj/NodalAnalysis.m',

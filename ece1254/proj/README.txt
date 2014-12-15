@@ -41,10 +41,6 @@ Infrastructure:
 
       Precalculate matrices that can be used repeatedly in DiodeCurrentAndJacobian.
 
-   NewtonsHarmonicBalance.m
-
-      Newton's method iterations using the current and Jacobian calculated in DiodeCurrentAndJacobian.
-
 -------------------------------------------------------------------
 Plotting and test related:
 
