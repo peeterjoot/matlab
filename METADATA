@@ -421,7 +421,7 @@ The circuit is solved for varying values of N and the cputime required
 to solve and the maximum error between the solution and a solution of
 ``sufficiently large'' N is computed
 ),
-   SHORT => qq(Generates the cputime/error plots),
+   SHORT => qq(Generates the cputime/error plot data),
 },
 {
    DATE => 'Dec 9, 2014',
@@ -468,18 +468,18 @@ where II represents non-linear contributions not returned directly as a matrix.
       Construct the Frequency domain equivalents of the linear portions of the network.
       Consumes results from NodalAnalysis().)
 },
-%{
-%   DATE => 'Dec 9, 2014',
-%   path => 'ece1254/proj/NewtonsHarmonicBalance.m',
-%   WHAT => qq(
-%Harmonic Balance equations of the form
-%
-%     f(V) = Y V - I -II(V),
-%
-%  are constructed from the supplied .netlist specification.  The zeros of this function are sought, determining the
-%  the DFT Fourier coefficent vector V that solves the system in the frequency domain.
-%)
-%},
+#{
+#   DATE => 'Dec 9, 2014',
+#   path => 'ece1254/proj/NewtonsHarmonicBalance.m',
+#   WHAT => qq(
+#Harmonic Balance equations of the form
+#
+#     f(V) = Y V - I -II(V),
+#
+#  are constructed from the supplied .netlist specification.  The zeros of this function are sought, determining the
+#  the DFT Fourier coefficent vector V that solves the system in the frequency domain.
+#)
+#},
 {
    DATE => 'Dec 9, 2014',
    path => 'ece1254/proj/NodalAnalysis.m',
@@ -506,17 +506,19 @@ encoding of any non-linear elements.)
 Verify FourierMatrixComplex( N ), produced with vectorized code, against dumb
 programmatic loop construction method.
 N is the number of Harmonics to be used
-)
+),
+   FILTERIF => '/proj',
 },
-%{
-%   DATE => 'Dec 9, 2014',
-%   path => 'ece1254/proj/testH.m',
-%   WHAT => qq(ad-hoc test driver to call NewtonsHarmonicBalance() and display output)
-%},
+#{
+#   DATE => 'Dec 9, 2014',
+#   path => 'ece1254/proj/testH.m',
+#   WHAT => qq(ad-hoc test driver to call NewtonsHarmonicBalance() and display output)
+#},
 {
    DATE => 'Dec 10, 2014',
    path => 'ece1254/proj/makefigures.m',
    WHAT => qq(Driver for all the plots.  Calls PlotWaveforms()),
+   FILTERIF => '/proj',
 },
 {
    DATE => 'Dec 14, 2014',
