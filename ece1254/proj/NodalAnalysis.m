@@ -717,11 +717,11 @@ function results = NodalAnalysis( filename, sourceStepScaling )
       bdiode{ d } = struct( 'io', -io, 'type', 'exp', 'vt', vt, 'vp', plusNode, 'vn', minusNode ) ;
       if ( plusNode )
          B( plusNode, omegaIndex ) = B( plusNode, omegaIndex ) + io ;
-         D( plusNode, d ) = -1 ;
+         D( plusNode, d ) = 1 ;
       end
       if ( minusNode )
          B( minusNode, omegaIndex ) = B( minusNode, omegaIndex ) - io ;
-         D( minusNode, d ) = 1 ;
+         D( minusNode, d ) = -1 ;
       end
    end
 

@@ -6,12 +6,13 @@ function makefigures()
 
    doAll = 0 ;
 
-   if ( doAll || 0 )
+   if ( doAll || 1 )
       p = struct( 'fileName', '../circuits/BridgeRectifier.netlist' ) ;
       p.figName = 'bridgeRectifier' ;
       %p.N = 3 ;
       p.xLabel = 'Time (s)' ;
-      %p.allowCaching = 0 ;
+      p.allowCaching = 0 ;
+      p.useBigF = 0 ;
 
       %p.title = 'Source and Output Voltages' ;
       p.figNum = 2 ;
@@ -143,7 +144,7 @@ function makefigures()
       %PlotWaveforms( p ) ;
    end
 
-   if ( doAll || 1 )
+   if ( doAll || 0 )
       % in:
       %V1 1 6 AC 1 1e6
       %V1 6 0 AC 1 8e6

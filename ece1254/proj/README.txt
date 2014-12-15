@@ -57,7 +57,4 @@ Plotting and test related:
 
    testFourierMatrixComplex.m
       verification that vectorized construction of "small F" matrix works as expected.
-
-   testH.m
-      small F manual unit test driver.
 -------------------------------------------------------------------

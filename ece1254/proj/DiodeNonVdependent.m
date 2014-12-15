@@ -15,6 +15,7 @@ traceit( sprintf('%d', i ) ) ;
       dio = bdiode{i} ;
 
       D = zeros( vSize, twoNplusOne, 'like', sparse(1) ) ;
+
       d = p.D( :, i ) ;
 
       for j = 1:twoNplusOne

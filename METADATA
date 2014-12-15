@@ -508,11 +508,11 @@ programmatic loop construction method.
 N is the number of Harmonics to be used
 )
 },
-{
-   DATE => 'Dec 9, 2014',
-   path => 'ece1254/proj/testH.m',
-   WHAT => qq(ad-hoc test driver to call NewtonsHarmonicBalance() and display output)
-},
+%{
+%   DATE => 'Dec 9, 2014',
+%   path => 'ece1254/proj/testH.m',
+%   WHAT => qq(ad-hoc test driver to call NewtonsHarmonicBalance() and display output)
+%},
 {
    DATE => 'Dec 10, 2014',
    path => 'ece1254/proj/makefigures.m',

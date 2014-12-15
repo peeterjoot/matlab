@@ -3,7 +3,7 @@ function [II, JI] = DiodeCurrentAndJacobian( in, V )
    % and its associated Jacobian.
 
    S = length( in.nonlinearMatrices ) ;
-   traceit( sprintf( 'entry.  S = %d', S ) ) ;
+   %traceit( sprintf( 'entry.  S = %d', S ) ) ;
 
    vSize = size( in.Y, 1 ) ;
    twoNplusOne = size( in.F, 1 ) ;
@@ -27,5 +27,5 @@ function [II, JI] = DiodeCurrentAndJacobian( in, V )
       JI = JI + in.nonlinearMatrices{ i }.A * he ;
    end
 
-   traceit( 'exit' ) ;
+   %traceit( 'exit' ) ;
 end
