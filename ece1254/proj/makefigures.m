@@ -11,7 +11,7 @@ function makefigures()
    %solvers = { @NewtonsHarmonicBalance } ;
 
    for i = 1:length( solvers )
-      if ( doAll || 1 )
+      if ( doAll || 0 )
          p = struct( 'fileName', '../circuits/BridgeRectifier.netlist' ) ;
          p.figName = 'bridgeRectifier' ;
          %p.N = 3 ;
@@ -151,7 +151,7 @@ function makefigures()
          %PlotWaveforms( p ) ;
       end
 
-      if ( doAll || 0 )
+      if ( doAll || 1 )
          % in:
          %V1 1 6 AC 1 1e6
          %V1 6 0 AC 1 8e6

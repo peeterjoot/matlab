@@ -2,7 +2,7 @@ function [II, JI] = DiodeCurrentAndJacobian( in, V )
    % DiodeCurrentAndJacobian: Calculate the non-linear current contributions of the diode
    % and its associated Jacobian.
 
-   S = length( in.bdiode ) ;
+   S = length( in.nonlinearMatrices ) ;
    traceit( sprintf( 'entry.  S = %d', S ) ) ;
 
    vSize = size( in.Y, 1 ) ;
@@ -12,17 +12,19 @@ function [II, JI] = DiodeCurrentAndJacobian( in, V )
    JI = zeros( vSize, vSize ) ;
 
    for i = 1:S
+      H = in.nonlinearMatrices{ i }.H ;
+
       ee = zeros( twoNplusOne, 1 ) ;
       he = zeros( twoNplusOne, vSize ) ;
 
-      for i = 1:twoNplusOne
-         ht = in.bdiode{i}.H(i, :) ;
-         ee(i) = exp( ht * V ) ;
-         he(i, :) = ht * ee( i ) ;
+      for j = 1:twoNplusOne
+         ht = H( j, : ) ;
+         ee( j ) = exp( ht * V ) ;
+         he( j, : ) = ht * ee( j ) ;
       end
 
-      II = II + in.bdiode{i}.A * ee ;
-      JI = JI + in.bdiode{i}.A * he ;
+      II = II + in.nonlinearMatrices{ i }.A * ee ;
+      JI = JI + in.nonlinearMatrices{ i }.A * he ;
    end
 
    traceit( 'exit' ) ;

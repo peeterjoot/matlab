@@ -73,7 +73,7 @@ function r = NewtonsHarmonicBalance( N, filename, p )
    %      Sum of last iter counts if useStepping is set (otherwise == iter).
    %
 
-   defp = struct( 'tol', 1e-6, 'maxIter', 50, 'useStepping', 0, 'deltaLambda', 0.1 ) ;
+   defp = struct( 'tol', 1e-6, 'maxIter', 50, 'useStepping', 1, 'deltaLambda', 0.1 ) ;
    if ( nargin < 3 )
       p = defp ;
    end
@@ -109,73 +109,64 @@ function r = NewtonsHarmonicBalance( N, filename, p )
    haveFirstV = 0 ;
    totalIters = 0 ;
 
+   %-------------------------------------------------------------------------------------------------
+   %
+   % Setup for first Newton's iteration
+   %
+
+   r = NodalAnalysis( filename ) ;
+
+   %
+   % Question: How to find the fundamental frequency?  
+   % We have a set that we want to cast into the following form:
+   %
+   %  [omega1, omega2, omega3, ...] = \omega_0 [k, j, l, ...] (k, j, l, ...: integers)
+   %
+   % and then find the biggest \omega_0 for which this can be solved in integers (k,j, l, ...)
+   %
+   % Example:
+   %
+   %   [3.3 5.5 7.7] = 1.1 * [3 5 7]
+   %
+   % I'm not sure how to do such a non-integer factoring in general?
+   %
+   % This could be avoided if the .netlist file specifies the fundamental frequency explicitly, and this is
+   % passed back from NodalAnalysis as metadata.
+   %
+   % For now, just assume that the smallest nonzero frequency source that came out of the netlist
+   % is the fundamental frequency.  To force this, a very small magnitude source with the fundamental frequency
+   % could be included in the .netlist file if it is not already there.
+   %
+   %omega = min( r.angularVelocities( find( r.angularVelocities > 0 ) ) ) ;
+   omega = min( r.angularVelocities( r.angularVelocities > 0 ) ) ;
+
+   traceit( sprintf( 'angularVelocities = %s, omega = %e', mat2str( r.angularVelocities ), omega ) ) ;
+   %------------------------------------------------------------------------------------------
+
+   r = HarmonicBalance( r, N, omega ) ;
+
+   %-----------------
+
+   R = size( r.xnames, 1 ) ;
+
+   % for stepping use the last computed value of V
+   V = rand( size( r.Y, 1 ), 1 ) + 1j * rand( size( r.Y, 1 ), 1 ) ;
+   %V = zeros( size( r.Y, 1 ), 1 ) ;
+   %V = ones( size( r.Y, 1 ), 1 ) ;
+
    for lambda = lambdas
-      %-------------------------------------------------------------------------------------------------
-      %
-      % Setup for first Newton's iteration
-      %
-
-      r = NodalAnalysis( filename, lambda ) ;
-
-      %
-      % Question: How to find the fundamental frequency?  
-      % We have a set that we want to cast into the following form:
-      %
-      %  [omega1, omega2, omega3, ...] = \omega_0 [k, j, l, ...] (k, j, l, ...: integers)
-      %
-      % and then find the biggest \omega_0 for which this can be solved in integers (k,j, l, ...)
-      %
-      % Example:
-      %
-      %   [3.3 5.5 7.7] = 1.1 * [3 5 7]
-      %
-      % I'm not sure how to do such a non-integer factoring in general?
-      %
-      % This could be avoided if the .netlist file specifies the fundamental frequency explicitly, and this is
-      % passed back from NodalAnalysis as metadata.
-      %
-      % For now, just assume that the smallest nonzero frequency source that came out of the netlist
-      % is the fundamental frequency.  To force this, a very small magnitude source with the fundamental frequency
-      % could be included in the .netlist file if it is not already there.
-      %
-      %omega = min( r.angularVelocities( find( r.angularVelocities > 0 ) ) ) ;
-      omega = min( r.angularVelocities( r.angularVelocities > 0 ) ) ;
-
-      traceit( sprintf( 'angularVelocities = %s, omega = %e', mat2str( r.angularVelocities ), omega ) ) ;
-      %------------------------------------------------------------------------------------------
-
-      r = HarmonicBalance( r, N, omega ) ;
-
-      %-----------------
-      % precalculate the Fourier transform matrix pairs and cache them:
-      F = FourierMatrixComplex( N ) ;
-
-      Finv = conj( F )/( 2 * N + 1 ) ;
-
-      r.F = F ;
-      r.Finv = Finv ;
-      %-----------------
-
-      R = size( r.xnames, 1 ) ;
-
-      % for stepping use the last computed value of V
-      if ( ~haveFirstV )
-         V = rand( size( r.Y, 1 ), 1 ) + 1j * rand( size( r.Y, 1 ), 1 ) ;
-         %V = zeros( size( r.Y, 1 ), 1 ) ;
-         %V = ones( size( r.Y, 1 ), 1 ) ;
-      end
-
       [II, JI] = DiodeCurrentAndJacobian( r, V ) ;
 
-      J = r.Y - JI ;
+      J = r.Y - lambda * JI ;
 
-      f = r.Y * V - r.I - II ;
+      f = r.Y * V - lambda * (r.I + II) ;
+
       normF = norm( f ) ;
       %-------------------------------------------------------------------------------------------------
 
       iter = 0 ;
       while ( iter < p.maxIter )
-         traceit( sprintf( 'lambda:%e: %d iterations (%d total). |f| = %e', lambda, iter, totalIters, normF ) ) ;
+         traceit( sprintf( 'lambda:%2.2e: %d iterations (%d total). |f| = %e', lambda, iter, totalIters, normF ) ) ;
 
          iter = iter + 1 ;
          totalIters = totalIters + 1 ;
@@ -187,9 +178,9 @@ function r = NewtonsHarmonicBalance( N, filename, p )
          % repeat all the non-linear calculations that are V dependent
          [II, JI] = DiodeCurrentAndJacobian( r, V ) ;
 
-         J = r.Y - JI ;
+         J = r.Y - lambda * JI ;
 
-         f = r.Y * V - r.I - II ;
+         f = r.Y * V - lambda * (r.I + II) ;
          %---------------------------------------------------------------
 
          normF = norm( f ) ;
@@ -197,15 +188,23 @@ function r = NewtonsHarmonicBalance( N, filename, p )
          normDeltaV = norm( deltaV ) ;
          relDiffV = normDeltaV/normV ;
 
-         if ( (normF < p.tolF) && (normDeltaV < p.tolV) && (relDiffV < p.tolRel) )
+         nextStep = ((normF < p.tolF) && (normDeltaV < p.tolV)) ;
+
+         % don't do relative checks for lambda == 0.  Have absolute convergence there, but also really small
+         % normV.
+         if ( lambda )
+            nextStep == (nextStep && (relDiffV < p.tolRel)) ;
+         end
+
+         if ( nextStep )
             break ;
          end
       end
 
       if ( iter >= p.maxIter )
-         disp( sprintf( 'lambda:%e: did not converge after %d iterations. |f| = %e', lambda, iter, normF ) ) ;
+         disp( sprintf( 'lambda:%e: did not converge after %d iterations. |f| = %e, |V| = %e', lambda, iter, normF, normV ) ) ;
       else
-         disp( sprintf( 'lambda:%e: converged after %d iterations (%d total). |f| = %e', lambda, iter, totalIters, normF ) ) ;
+         disp( sprintf( 'lambda:%e: converged after %d iterations (%d total). |f| = %e, |V| = %e', lambda, iter, totalIters, normF, normV ) ) ;
       end
    end
 

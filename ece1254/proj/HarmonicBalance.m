@@ -154,4 +154,19 @@ function results = HarmonicBalance( inputs, N, omega )
    results.Y = Y ;
    results.I = I ;
    results.Vnames = Vnames ;
+
+   %-----------------
+   % precalculate the Fourier transform matrix pairs and cache them:
+   F = FourierMatrixComplex( N ) ;
+
+   Finv = conj( F )/( 2 * N + 1 ) ;
+
+   results.F = F ;
+   results.Finv = Finv ;
+   %-----------------
+
+   nm = DiodeNonVdependent( results ) ;
+   results.nonlinearMatrices = nm ;
+
+   %-----------------
 end

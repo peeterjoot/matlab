@@ -35,7 +35,15 @@ Infrastructure:
 
    DiodeCurrentAndJacobian.m
 
+      Do the V dependent parts of the I(V) and J(V) current and Jacobian calculations.
+
+   DiodeNonVdependent.m
+
+      Precalculate matrices that can be used repeatedly in DiodeCurrentAndJacobian.
+
    NewtonsHarmonicBalance.m
+
+      Newton's method iterations using the current and Jacobian calculated in DiodeCurrentAndJacobian.
 
 -------------------------------------------------------------------
 Plotting and test related:

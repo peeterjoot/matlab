@@ -345,12 +345,12 @@ plots the system frequency response. Here omegaSet is a vector of frequencies in
 },
 {
    DATE => 'Dec 9, 2014',
-   path => 'ece1254/HarmonicBalanceBigF/FourierMatrix.m',
+   path => 'ece1254/proj/FourierMatrix.m',
    WHAT => qq(Compute the fourier matrix for the discrete fourier transform and its inverse.),
 },
 {
    DATE => 'Dec 9, 2014',
-   path => 'ece1254/HarmonicBalanceBigF/gnl.m',
+   path => 'ece1254/proj/gnl.m',
    WHAT => qq(
 Determines the nonlinear currents of the diodes in bdiodes
 for the voltages contained in x. (Time domain)
@@ -365,7 +365,7 @@ for the voltages contained in x. (Time domain)
 },
 {
    DATE => 'Dec 9, 2014',
-   path => 'ece1254/HarmonicBalanceBigF/Gprime.m',
+   path => 'ece1254/proj/Gprime.m',
    WHAT => qq(
 Produces the nonlinear contribution to the Jacobian
 required to solve a nonlinear circuit using Newton's Method
@@ -380,7 +380,7 @@ required to solve a nonlinear circuit using Newton's Method
 },
 {
    DATE => 'Dec 9, 2014',
-   path => 'ece1254/HarmonicBalanceBigF/HBSolve.m',
+   path => 'ece1254/proj/HBSolve.m',
    WHAT => qq(
 This function uses the Harmonic Balance Method to solve the
 steady state condtion of the circuit described in fileName. Harmonic
@@ -394,17 +394,17 @@ circuit using Newton's Method
 # dead code? :
 #{
 #   DATE => 'Dec 9, 2014',
-#   path => 'ece1254/HarmonicBalanceBigF/deadcode/NewtonsMethod.m',
+#   path => 'ece1254/proj/deadcode/NewtonsMethod.m',
 #   WHAT => qq(Harmonic Balance Newton's method iterations)
 #},
 {
    DATE => 'Dec 9, 2014',
-   path => 'ece1254/HarmonicBalanceBigF/PlotWaveforms.m',
+   path => 'ece1254/proj/PlotWaveforms.m',
    WHAT => qq(Calls HBSolve() for a netlist file and caches the result.  Then plots the results using a set of plot specifications.),
 },
 {
    DATE => 'Dec 9, 2014',
-   path => 'ece1254/HarmonicBalanceBigF/TestSolver.m',
+   path => 'ece1254/proj/TestSolver.m',
    WHAT => qq(
 Calls the HBSolve function to solve the
 circuit described in fileName using the Harmonic Balance method,
@@ -417,7 +417,7 @@ to solve and the maximum error between the solution and a solution of
 },
 {
    DATE => 'Dec 9, 2014',
-   path => 'ece1254/HarmonicBalanceSmallF/DiodeCurrentAndJacobian.m',
+   path => 'ece1254/proj/DiodeCurrentAndJacobian.m',
    WHAT => qq(
 Calculate the non-linear current contributions of the diode
 and its associated Jacobian.
@@ -425,7 +425,7 @@ and its associated Jacobian.
 },
 %{
 %   DATE => 'Dec 9, 2014',
-%   path => 'ece1254/HarmonicBalanceSmallF/DiodeExponentialDFT.m',
+%   path => 'ece1254/proj/DiodeExponentialDFT.m',
 %   WHAT => qq(
 %Given a diode struct descriptor, generate the DFT
 %calculation associated with a specific value of V for (1/F)exp( F V ).
@@ -433,21 +433,21 @@ and its associated Jacobian.
 %},
 %{
 %   DATE => 'Dec 9, 2014',
-%   path => 'ece1254/HarmonicBalanceSmallF/DiodeExponentialJacobian.m',
+%   path => 'ece1254/proj/DiodeExponentialJacobian.m',
 %   WHAT => qq(
 %Given a diode struct descriptor, calculate the Jacobian for (1/F)exp( F V ).
 %)
 %},
 {
    DATE => 'Dec 9, 2014',
-   path => 'ece1254/HarmonicBalanceSmallF/FourierMatrixComplex.m',
+   path => 'ece1254/proj/FourierMatrixComplex.m',
    WHAT => qq(
 Determines the fourier matrix for the discrete fourier transform and its inverse.
 )
 },
 {
    DATE => 'Dec 9, 2014',
-   path => 'ece1254/HarmonicBalanceSmallF/HarmonicBalance.m',
+   path => 'ece1254/proj/HarmonicBalance.m',
    WHAT => qq(
 Generates the Harmonic balance modified nodal analysis (MNA) equations from the time domain MNA
 representation.
@@ -459,7 +459,7 @@ where II represents non-linear contributions not returned directly as a matrix.
 },
 {
    DATE => 'Dec 9, 2014',
-   path => 'ece1254/HarmonicBalanceSmallF/NewtonsHarmonicBalance.m',
+   path => 'ece1254/proj/NewtonsHarmonicBalance.m',
    WHAT => qq(
 Harmonic Balance equations of the form
 
@@ -471,7 +471,7 @@ Harmonic Balance equations of the form
 },
 {
    DATE => 'Dec 9, 2014',
-   path => 'ece1254/HarmonicBalanceSmallF/NodalAnalysis.m',
+   path => 'ece1254/proj/NodalAnalysis.m',
    WHAT => qq(
 Generates the modified nodal analysis (MNA) equations from a text file
 
@@ -488,7 +488,7 @@ Here the column vector u(t) contains all sources, and x(t) is a vector of all th
 },
 {
    DATE => 'Dec 9, 2014',
-   path => 'ece1254/HarmonicBalanceSmallF/testFourierMatrixComplex.m',
+   path => 'ece1254/proj/testFourierMatrixComplex.m',
    WHAT => qq(
 Verify FourierMatrixComplex( N ), produced with vectorized code, against dumb
 programmatic loop construction method.
@@ -497,13 +497,18 @@ N is the number of Harmonics to be used
 },
 {
    DATE => 'Dec 9, 2014',
-   path => 'ece1254/HarmonicBalanceSmallF/testH.m',
+   path => 'ece1254/proj/testH.m',
    WHAT => qq(ad-hoc test driver to call NewtonsHarmonicBalance() and display output)
 },
 {
    DATE => 'Dec 10, 2014',
-   path => 'ece1254/HarmonicBalanceBigF/makefigures.m',
+   path => 'ece1254/proj/makefigures.m',
    WHAT => qq(Driver for all the plots.  Calls PlotWaveforms()),
+},
+{
+   DATE => 'Dec 14, 2014',
+   path => 'ece1254/proj/DiodeNonVdependent.m',
+   WHAT => qq(V independent portions of the nonlinear current and Jacobian calculations)
 },
 ) ; # @matlab
 
