@@ -423,21 +423,21 @@ Calculate the non-linear current contributions of the diode
 and its associated Jacobian.
 )
 },
-%{
-%   DATE => 'Dec 9, 2014',
-%   path => 'ece1254/proj/DiodeExponentialDFT.m',
-%   WHAT => qq(
-%Given a diode struct descriptor, generate the DFT
-%calculation associated with a specific value of V for (1/F)exp( F V ).
-%)
-%},
-%{
-%   DATE => 'Dec 9, 2014',
-%   path => 'ece1254/proj/DiodeExponentialJacobian.m',
-%   WHAT => qq(
-%Given a diode struct descriptor, calculate the Jacobian for (1/F)exp( F V ).
-%)
-%},
+#{
+#   DATE => 'Dec 9, 2014',
+#   path => 'ece1254/proj/DiodeExponentialDFT.m',
+#   WHAT => qq(
+#Given a diode struct descriptor, generate the DFT
+#calculation associated with a specific value of V for (1/F)exp( F V ).
+#)
+#},
+#{
+#   DATE => 'Dec 9, 2014',
+#   path => 'ece1254/proj/DiodeExponentialJacobian.m',
+#   WHAT => qq(
+#Given a diode struct descriptor, calculate the Jacobian for (1/F)exp( F V ).
+#)
+#},
 {
    DATE => 'Dec 9, 2014',
    path => 'ece1254/proj/FourierMatrixComplex.m',
@@ -455,7 +455,10 @@ representation.
    Y V = B U = I + II,                                        (1)
 
 where II represents non-linear contributions not returned directly as a matrix.
-)
+),
+   SHORT => qq(
+      Construct the Frequency domain equivalents of the linear portions of the network.
+      Consumes results from NodalAnalysis().)
 },
 {
    DATE => 'Dec 9, 2014',
@@ -484,7 +487,9 @@ generates the modified nodal analysis (MNA) equations
    G x(t) + C x'(t)= B u(t) + D n(t)
 
 Here the column vector u(t) contains all sources, and x(t) is a vector of all the sources.
-)
+),
+   SHORT => qq(Parse the netlist file and return the time domain MNA equation matrices and an
+encoding of any non-linear elements.)
 },
 {
    DATE => 'Dec 9, 2014',
