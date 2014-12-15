@@ -8,23 +8,6 @@ function [II, JI] = DiodeCurrentAndJacobian( in, V )
    vSize = size( in.Y, 1 ) ;
    twoNplusOne = size( in.F, 1 ) ;
 
-   for i = 1:S
-      D = zeros( vSize, twoNplusOne, 'like', sparse(1) ) ;
-      d = in.D( :, i ) ;
-
-      for i = 1:twoNplusOne
-         D( 1 + (i-1) * S : i * S, i ) = d ;
-      end
-
-      A = in.bdiode{i}.io * D * in.Finv ;
-
-      H = F * D.' /in.bdiode{i}.vt ;
-
-      in.bdiode{i}.D = D ; % don't really have to cache.  Keep for debug for now.
-      in.bdiode{i}.A = A ;
-      in.bdiode{i}.H = H ;
-   end
-
    II = zeros( vSize, 1 ) ;
    JI = zeros( vSize, vSize ) ;
 
