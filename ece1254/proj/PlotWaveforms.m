@@ -8,6 +8,10 @@ function PlotWaveforms( p )
       p.logPlot = 0 ;
    end
 
+   if ( ~isfield( p, 'allowCaching' ) )
+      p.allowCaching = 1 ;
+   end
+
    if ( ~isfield( p, 'solver' ) )
       p.solver = @HBSolve ;
    end
@@ -28,7 +32,7 @@ function PlotWaveforms( p )
    cacheFile = sprintf( '%s_%s_N%d.mat', p.figName, solutionMethodString, N ) ;
    traceit( sprintf( 'cacheFile: %s', cacheFile ) ) ;
 
-   if ( exist( cacheFile, 'file' ) )
+   if ( exist( cacheFile, 'file' ) && p.allowCaching )
       load( cacheFile ) ;
    else
 

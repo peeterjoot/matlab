@@ -7,15 +7,15 @@ function h = HBSolve( N, fileName, p )
    % circuit using Newton's Method
 
    % p is an optional struct() parameter
-   defp = struct( 'eI', 1e-6, 'edV', 1e-3, 'JcondTol', 1e-23, 'iterations', 50, 'subiterations', 50 ) ;
+   defp = struct( 'tolF', 1e-6, 'edV', 1e-3, 'JcondTol', 1e-23, 'iterations', 50, 'subiterations', 50 ) ;
 
    if ( nargin < 3 )
       p = defp ;
    end
 
    % tolerances
-   if ( ~isfield( p, 'eI' ) )
-      p.eI = defp.eI ;
+   if ( ~isfield( p, 'tolF' ) )
+      p.tolF = defp.tolF ;
    end
    if ( ~isfield( p, 'edV' ) )
       p.edV = defp.edV ;
@@ -41,16 +41,18 @@ function h = HBSolve( N, fileName, p )
    %omega = min( r.angularVelocities( find ( r.angularVelocities > 0 ) ) ) ;
    omega = min( r.angularVelocities( r.angularVelocities > 0 ) ) ;
 
-   h = HarmonicBalance( r, N, omega ) ;
-   Y = h.Y ;
-   Is = h.I ;
+   r = HarmonicBalance( r, N, omega ) ;
    R = length( r.G ) ;
 
-   % Fourier Transform Matrix
-   F = FourierMatrix( N, R ) ;
+   bigF = 1 ;
+
+   if ( bigF )
+      % Fourier Transform Matrix
+      F = FourierMatrix( N, R ) ;
+   end
 
    % Newton's Method Parameters
-   V0 = zeros( R * ( 2 * N+1 ), 1 ) ;
+   V0 = zeros( R * ( 2 * N + 1 ), 1 ) ;
 
    totalIterations = 0 ;
 
@@ -62,18 +64,24 @@ function h = HBSolve( N, fileName, p )
    ecputime = cputime ;
    for i = 1:p.iterations
       V = V0 ;
-      v = F * V ;
 
-      % determine non linear currents
-      inl = gnl( r.bdiode, v, N, R ) ;
-      Inl = F\inl ;
+      if ( bigF )
+         v = F * V ;
 
-      % Function to minimize I
-      I = Y * V + Inl - lambda * Is ;
+         % determine non linear currents
+         inl = gnl( r.bdiode, v, N, R ) ;
+         Inl = - F\inl ;
 
-      % Construct Jacobian
-      Gp = Gprime( r.bdiode, v, N, R ) ;
-      J = Y + Gp ;
+         % Construct Jacobian
+         JI = - Gprime( r.bdiode, v, N, R ) ;
+      else
+         [Inl, JI] = DiodeCurrentAndJacobian( r, V ) ;
+      end
+
+      % Function to minimize:
+      f = r.Y * V - Inl - lambda * r.I ;
+
+      J = r.Y - JI ;
 
       disp( ['starting iteration ' num2str( i ) ' lambda is ' num2str( lambda ) ' norm of V0 = ' num2str( norm( V0 ) )] ) ;
 
@@ -82,33 +90,38 @@ function h = HBSolve( N, fileName, p )
       for k = 1:p.subiterations
 
          % Newton Iteration Update
-         dX = J\-I ;
-         V = V + dX ;
-         v = F * V ;
+         dV = J\-f ;
+         V = V + dV ;
 
-         % determine non linear currents
-         inl = gnl( r.bdiode, v, N, R ) ;
-         Inl = F\inl ;
+         if ( bigF )
+            v = F * V ;
 
-         % Function to minimize I
-         I = Y * V + Inl - lambda * Is ;
+            % determine non linear currents
+            inl = gnl( r.bdiode, v, N, R ) ;
+            Inl = - F\inl ;
+            JI = - Gprime( r.bdiode, v, N, R ) ;
+         else
+            [Inl, JI] = DiodeCurrentAndJacobian( r, V ) ;
+         end
+
+         % Function to minimize:
+         f = r.Y * V - Inl - lambda * r.I ;
 
          % Construct Jacobian
-         Gp = Gprime( r.bdiode, v, N, R ) ;
-         J = Y + Gp ;
+         J = r.Y - JI ;
 
          if ( ( rcond( J ) < p.JcondTol ) || ( isnan( rcond( J ) ) ) )
             stepConverged = 0 ;
             break
          end
 
-         if ( norm( I ) < p.eI ) || ( norm( dX ) < p.edV )
+         if ( norm( f ) < p.tolF ) || ( norm( dV ) < p.edV )
             stepConverged = 1 ;
             break ;
          end
       end
 
-      if ( stepConverged ) % solution did not converge
+      if ( stepConverged )
          % disp( 'solution converged' )
          V0 = V ;
          dlambda = 2 * dlambda ;
@@ -145,6 +158,14 @@ function h = HBSolve( N, fileName, p )
    end
 
    % return this function's data along with the return data from HarmonicBalance().
+   h = r ;
+   if ( ~bigF )
+      % also return a time domain conversion right out of the box:
+      v = zeros( size( V ) ) ;
+      for i = 1:R
+         v( i : R : end ) = r.F * V( i : R : end ) ;
+      end
+   end
    h.v = v ;
    h.V = V ;
    h.ecputime = ecputime ;

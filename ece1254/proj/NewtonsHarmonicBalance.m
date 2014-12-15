@@ -73,7 +73,7 @@ function r = NewtonsHarmonicBalance( N, filename, p )
    %      Sum of last iter counts if useStepping is set (otherwise == iter).
    %
 
-   defp = struct( 'tol', 1e-6, 'maxIter', 50, 'useStepping', 1, 'deltaLambda', 0.1 ) ;
+   defp = struct( 'tol', 1e-6, 'maxIter', 50, 'useStepping', 1, 'deltaLambda', 0.1, 'JcondTol', 1e-23 ) ;
    if ( nargin < 3 )
       p = defp ;
    end
@@ -99,11 +99,9 @@ function r = NewtonsHarmonicBalance( N, filename, p )
    if ( ~isfield( p, 'deltaLambda' ) )
       p.deltaLambda = defp.deltaLambda ;
    end
-
-   if ( p.useStepping )
-      lambdas = 0:p.deltaLambda:1 ;
-   else
-      lambdas = 1 ;
+   % maximum allowed Jacobian Condition
+   if ( ~isfield( p, 'JcondTol' ) )
+      p.JcondTol = defp.JcondTol ;
    end
 
    haveFirstV = 0 ;
@@ -150,16 +148,24 @@ function r = NewtonsHarmonicBalance( N, filename, p )
    R = size( r.xnames, 1 ) ;
 
    % for stepping use the last computed value of V
-   V = rand( size( r.Y, 1 ), 1 ) + 1j * rand( size( r.Y, 1 ), 1 ) ;
+   V = rand( size( r.Y, 1 ), 1 ) ; %+ 1j * rand( size( r.Y, 1 ), 1 ) ;
    %V = zeros( size( r.Y, 1 ), 1 ) ;
    %V = ones( size( r.Y, 1 ), 1 ) ;
 
-   for lambda = lambdas
+   lambda = p.deltaLambda/2 ;
+   dLambda = p.deltaLambda ;
+   dLambdas = [] ;
+
+   while ( lambda <= 1 )
+      stepConverged = 1 ;
+      
+%save( 'a.mat' ) ;
+%break ;
       [II, JI] = DiodeCurrentAndJacobian( r, V ) ;
 
       J = r.Y - lambda * JI ;
 
-      f = r.Y * V - lambda * (r.I + II) ;
+      f = r.Y * V - lambda * II - r.I ;
 
       normF = norm( f ) ;
       %-------------------------------------------------------------------------------------------------
@@ -180,7 +186,7 @@ function r = NewtonsHarmonicBalance( N, filename, p )
 
          J = r.Y - lambda * JI ;
 
-         f = r.Y * V - lambda * (r.I + II) ;
+         f = r.Y * V - lambda * II - r.I ;
          %---------------------------------------------------------------
 
          normF = norm( f ) ;
@@ -189,6 +195,13 @@ function r = NewtonsHarmonicBalance( N, filename, p )
          relDiffV = normDeltaV/normV ;
 
          nextStep = ((normF < p.tolF) && (normDeltaV < p.tolV)) ;
+
+         rc = rcond( J ) ;
+
+         if ( ( rc < p.JcondTol ) || isnan( rc ) )
+            stepConverged = 0 ;
+            break
+         end
 
          % don't do relative checks for lambda == 0.  Have absolute convergence there, but also really small
          % normV.
@@ -201,10 +214,23 @@ function r = NewtonsHarmonicBalance( N, filename, p )
          end
       end
 
-      if ( iter >= p.maxIter )
-         disp( sprintf( 'lambda:%e: did not converge after %d iterations. |f| = %e, |V| = %e', lambda, iter, normF, normV ) ) ;
+      if ( (iter >= p.maxIter) || ~stepConverged )
+         disp( sprintf( 'lambda:%e: did not converge after %d iterations. |f| = %e, |V| = %e, rcond(J) = %e', lambda, iter, normF, normV, rc ) ) ;
       else
          disp( sprintf( 'lambda:%e: converged after %d iterations (%d total). |f| = %e, |V| = %e', lambda, iter, totalIters, normF, normV ) ) ;
+      end
+
+      if ( stepConverged )
+         lambda = lambda + dLambda ;
+
+         dLambdas(end+1) = dLambda ;
+   
+         movingAverageNumTerms = 2 ;
+         if ( length(dLambdas) >= (movingAverageNumTerms) )
+            dLambda = sum(dLambdas(end-movingAverageNumTerms+1:end))/movingAverageNumTerms ;
+         end
+      else
+         dLambda = dLambda/2 ;
       end
    end
 
