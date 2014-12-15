@@ -12,7 +12,7 @@ function results = NodalAnalysis( filename, sourceStepScaling )
 % Here:
 %    - x(t) is a column vector of all the sources. [returned as xnames]
 %    - u(t) is a column vector of all the linear sources. [returned as angularVelocities]
-%    - n(t) is a column vector of all the linear sources. [returned as bdiode]
+%    - n(t) is a column vector of all the non-linear sources. [returned as bdiode]
 %
 %---------------------------------------------------------------------------------------
 %
@@ -157,9 +157,10 @@ function results = NodalAnalysis( filename, sourceStepScaling )
 %
 %   i_d = I_0 ( e^{(v1 -v2)/V_T} - 1 )
 %
-%   Then there will be +- I_0 values in the i-th column of D associated with the I_0 e^{(v1 -v2)/V_T}
+%   Then there will be +- 1 values in the i-th column of D associated with the I_0 e^{(v1 -v2)/V_T}
 %   portion of this current source.  The constant portion of these -+ I_0 values will be stored in the
-%   matrix B associated with a zero-frequency (linear) source.
+%   matrix B associated with a zero-frequency (linear) source.  These columns are not scaled by
+%   each of the I_0 values, which are returned in bdiode.
 %
 % All of G,C,B,D are returned as sparse matrices since they can potentially have many zeros.
 %
@@ -716,11 +717,11 @@ function results = NodalAnalysis( filename, sourceStepScaling )
       bdiode{ d } = struct( 'io', -io, 'type', 'exp', 'vt', vt, 'vp', plusNode, 'vn', minusNode ) ;
       if ( plusNode )
          B( plusNode, omegaIndex ) = B( plusNode, omegaIndex ) + io ;
-         D( plusNode, d ) = -io ;
+         D( plusNode, d ) = -1 ;
       end
       if ( minusNode )
          B( minusNode, omegaIndex ) = B( minusNode, omegaIndex ) - io ;
-         D( minusNode, d ) = io ;
+         D( minusNode, d ) = 1 ;
       end
    end
 

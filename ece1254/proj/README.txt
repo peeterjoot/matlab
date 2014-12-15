@@ -35,10 +35,6 @@ Infrastructure:
 
    DiodeCurrentAndJacobian.m
 
-   DiodeExponentialDFT.m
-
-   DiodeExponentialJacobian.m
-
    NewtonsHarmonicBalance.m
 
 -------------------------------------------------------------------

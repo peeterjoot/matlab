@@ -2,26 +2,44 @@ function [II, JI] = DiodeCurrentAndJacobian( in, V )
    % DiodeCurrentAndJacobian: Calculate the non-linear current contributions of the diode
    % and its associated Jacobian.
 
-   R = length( in.bdiode ) ;
-   traceit( sprintf( 'entry.  R = %d', R ) ) ;
+   S = length( in.bdiode ) ;
+   traceit( sprintf( 'entry.  S = %d', S ) ) ;
 
    vSize = size( in.Y, 1 ) ;
-   II = zeros( vSize, 1 ) ;
-   JI = zeros( vSize, vSize ) ;
    twoNplusOne = size( in.F, 1 ) ;
 
-   for i = 1:R
-      E = DiodeExponentialDFT( in.bdiode{i}, V, R, in.F, in.Finv ) ;
-      JE = DiodeExponentialJacobian( in.bdiode{i}, V, R, in.F, in.Finv ) ;
+   for i = 1:S
+      D = zeros( vSize, twoNplusOne, 'like', sparse(1) ) ;
       d = in.D( :, i ) ;
 
-      % concatenate the D[]'s and the E's to form II.
-      for j = 1:twoNplusOne
-
-         II( 1 + (j - 1) * R: j * R, 1 ) = II( 1 + (j - 1) * R: j * R, 1 ) + d * E( j ) ;
-
-         JI( 1 + (j - 1) * R: j * R, : ) = JI( 1 + (j - 1) * R: j * R, : ) + d * JE( j, : ) ;
+      for i = 1:twoNplusOne
+         D( 1 + (i-1) * S : i * S, i ) = d ;
       end
+
+      A = in.bdiode{i}.io * D * in.Finv ;
+
+      H = F * D.' /in.bdiode{i}.vt ;
+
+      in.bdiode{i}.D = D ; % don't really have to cache.  Keep for debug for now.
+      in.bdiode{i}.A = A ;
+      in.bdiode{i}.H = H ;
+   end
+
+   II = zeros( vSize, 1 ) ;
+   JI = zeros( vSize, vSize ) ;
+
+   for i = 1:S
+      ee = zeros( twoNplusOne, 1 ) ;
+      he = zeros( twoNplusOne, vSize ) ;
+
+      for i = 1:twoNplusOne
+         ht = in.bdiode{i}.H(i, :) ;
+         ee(i) = exp( ht * V ) ;
+         he(i, :) = ht * ee( i ) ;
+      end
+
+      II = II + in.bdiode{i}.A * ee ;
+      JI = JI + in.bdiode{i}.A * he ;
    end
 
    traceit( 'exit' ) ;

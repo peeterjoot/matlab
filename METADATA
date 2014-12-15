@@ -423,21 +423,21 @@ Calculate the non-linear current contributions of the diode
 and its associated Jacobian.
 )
 },
-{
-   DATE => 'Dec 9, 2014',
-   path => 'ece1254/HarmonicBalanceSmallF/DiodeExponentialDFT.m',
-   WHAT => qq(
-Given a diode struct descriptor, generate the DFT
-calculation associated with a specific value of V for (1/F)exp( F V ).
-)
-},
-{
-   DATE => 'Dec 9, 2014',
-   path => 'ece1254/HarmonicBalanceSmallF/DiodeExponentialJacobian.m',
-   WHAT => qq(
-Given a diode struct descriptor, calculate the Jacobian for (1/F)exp( F V ).
-)
-},
+%{
+%   DATE => 'Dec 9, 2014',
+%   path => 'ece1254/HarmonicBalanceSmallF/DiodeExponentialDFT.m',
+%   WHAT => qq(
+%Given a diode struct descriptor, generate the DFT
+%calculation associated with a specific value of V for (1/F)exp( F V ).
+%)
+%},
+%{
+%   DATE => 'Dec 9, 2014',
+%   path => 'ece1254/HarmonicBalanceSmallF/DiodeExponentialJacobian.m',
+%   WHAT => qq(
+%Given a diode struct descriptor, calculate the Jacobian for (1/F)exp( F V ).
+%)
+%},
 {
    DATE => 'Dec 9, 2014',
    path => 'ece1254/HarmonicBalanceSmallF/FourierMatrixComplex.m',
