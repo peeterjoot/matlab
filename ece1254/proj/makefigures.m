@@ -6,7 +6,7 @@ function makefigures()
 
    doAll = 0 ;
 
-   if ( doAll || 1 )
+   if ( doAll || 0 )
       p = struct( 'fileName', '../circuits/BridgeRectifier.netlist' ) ;
       p.figName = 'bridgeRectifier' ;
       %p.N = 3 ;
@@ -21,7 +21,6 @@ function makefigures()
       p.nMinus = [ 1 0 ] ;
       p.legends = { 'Source Voltage', 'Output Voltage' } ;
       p.yLabel = 'Voltage (V)' ;
-p
       PlotWaveforms( p ) ;
 
       %p.title = 'Source Current' ;
@@ -144,7 +143,7 @@ p
       %PlotWaveforms( p ) ;
    end
 
-   if ( doAll || 0 )
+   if ( doAll || 1 )
       % in:
       %V1 1 6 AC 1 1e6
       %V1 6 0 AC 1 8e6
@@ -171,6 +170,7 @@ p
 
       p = struct( 'fileName', '../circuits/LCLowpass.netlist' ) ;
       p.figName = 'lowPassFilter' ;
+%      p.useBigF = 0 ;
 
       p.xLabel = 'Time (s)' ;
       p.yLabel = 'Voltage (V)' ;
