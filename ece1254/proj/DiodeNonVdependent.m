@@ -4,14 +4,15 @@ function nonlinearMatrices = DiodeNonVdependent( p )
    bdiode = p.bdiode ;
 
    S = length( bdiode ) ;
-   traceit( sprintf( 'entry.  S = %d', S ) ) ;
+   dsz = size( p.D, 1 ) ;
+   traceit( sprintf( 'entry.  S = %d, dsz = %d', S, dsz ) ) ;
 
    vSize = size( p.Y, 1 ) ;
    twoNplusOne = size( p.F, 1 ) ;
    nonlinearMatrices = cell( S, 1 ) ;
 
    for i = 1:S
-traceit( sprintf('%d', i ) ) ;
+%traceit( sprintf('%d', i ) ) ;
       dio = bdiode{i} ;
 
       D = zeros( vSize, twoNplusOne, 'like', sparse(1) ) ;
@@ -19,7 +20,7 @@ traceit( sprintf('%d', i ) ) ;
       d = p.D( :, i ) ;
 
       for j = 1:twoNplusOne
-         D( 1 + (j-1) * S : j * S, j ) = d ;
+         D( 1 + (j-1) * dsz : j * dsz, j ) = d ;
       end
 
       A = dio.io * D * p.Finv ;

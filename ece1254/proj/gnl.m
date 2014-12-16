@@ -8,11 +8,9 @@ function [ gnl ] = gnl(  bdiodes, x, N , R )
    %   N is the number of harmonics used in the analysis
    %   R is the number of physical unknowns of the MNA
    % 
-   % This should be functionally equivalent to ../HarmonicBalanceSmallF/DiodeExponentialDFT.m
+   % This should be functionally equivalent to DiodeCurrentAndJacobian.m
    % except the results of this function are computed in the time domain and returned that way
    % converted to the frequency domain using the big F matrix.
-   % The results of DiodeExponentialDFT are returned in the frequency domain, but are not distributed
-   % across all the R * ( 2 * N + 1 ).
 
    %Standard Diode Expression
    %Diode = @( v, io, Vt ) io * ( exp( v/Vt ) - 1 ) ;

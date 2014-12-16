@@ -4,15 +4,15 @@ function makefigures()
    %clc
    close all ;
 
-   doAll = 0 ;
+   doAll = 1 ;
 
-   if ( doAll || 1 )
+   if ( doAll || 0 )
       p = struct( 'fileName', '../circuits/BridgeRectifier.netlist' ) ;
       p.figName = 'bridgeRectifier' ;
       %p.N = 3 ;
       p.xLabel = 'Time (s)' ;
-      p.allowCaching = 0 ;
-      p.useBigF = 0 ;
+      %p.allowCaching = 0 ;
+      %p.useBigF = 0 ;
 
       %p.title = 'Source and Output Voltages' ;
       p.figNum = 2 ;
@@ -83,9 +83,10 @@ function makefigures()
       PlotWaveforms( p ) ;
    end
 
-   if ( doAll || 0 )
+   if ( doAll || 1 )
       p = struct( 'fileName', '../circuits/simpleSingleNodeRectifier.netlist' ) ;
       p.figName = 'simpleRectifierCircuit' ;
+      %p.useBigF = 1 ;
       p.figNum = 3 ;
       p.logPlot = 1 ;
       p.figDesc = 'ErrorAndCpuTimes' ;

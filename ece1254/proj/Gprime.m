@@ -1,6 +1,6 @@
-function [ Gprime ] = Gprime( bdiodes, x, Nh , Nm )
-   %Gprime This function produces the nonlinear contribution to the Jacobian
-   %required to solve a nonlinear circuit using Newton's Method
+function [ Gprime ] = Gprime( bdiodes, x, Nh, Nm )
+   % Gprime This function produces the nonlinear contribution to the Jacobian
+   % required to solve a nonlinear circuit using Newton's Method
    %   bdiodes is a cell matrix containing the infromation describing the
    %   location and parameters of all diodes in the circuit
    %   x is the vector of all unknown quantities
@@ -12,15 +12,17 @@ function [ Gprime ] = Gprime( bdiodes, x, Nh , Nm )
 
    dDiode = @(v,io,Vt) (io/Vt)*(exp(v/Vt)) ;
 
-   %Generate the Jacobian corresponding to a single circuit for each time step
-   %then combine them as a block column matrix. This form allows the fourier
-   %matrix to be used in obtaining the DFT
+   % Generate the Jacobian corresponding to a single circuit for each time step
+   % then combine them as a block column matrix. This form allows the Fourier
+   % matrix to be used in obtaining the DFT
 
    gprime = zeros(Nm*(2*Nh+1)) ;
-   %for each time step
+
+   % for each time step
    for j = 0:2*Nh ;
        gprimecell = zeros(Nm) ;
-   %for each diode
+
+       % for each diode
        for i = 1:N ;
            d = bdiodes{i} ;
 

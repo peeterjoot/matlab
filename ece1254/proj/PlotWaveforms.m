@@ -18,7 +18,7 @@ function PlotWaveforms( p )
    N = p.N ;
 
    if ( ~isfield( p, 'useBigF' ) )
-      p.useBigF = 1 ;
+      p.useBigF = 0 ;
    end
 
    if ( p.useBigF )
@@ -76,8 +76,9 @@ function PlotWaveforms( p )
       h.xnames
    end
 
-   fileExtension = 'pdf' ;
+   %fileExtension = 'pdf' ;
    %fileExtension = 'png' ;
+   fileExtension = 'svg' ;
 
    f = figure ;
 
@@ -96,7 +97,7 @@ function PlotWaveforms( p )
 
    if ( p.logPlot )
 
-      loglog( h.Nvalues, h.errorValues, h.Nvalues, h.ecputimeValues, 'linewidth', 2 ) ;
+      loglog( h.Nvalues, h.errorValues, '-o', h.Nvalues, h.ecputimeValues, '-o', 'linewidth', 2 ) ;
 
    else
       for m = 1:numPlots
@@ -142,4 +143,5 @@ function PlotWaveforms( p )
    saveName = sprintf( '%s%sFig%d.%s', p.figName, p.figDesc, p.figNum, fileExtension ) ;
 
    export_fig( saveName ) ;
+%   plot2svg( saveName ) ;
 end
