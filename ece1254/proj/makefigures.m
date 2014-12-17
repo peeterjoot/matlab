@@ -4,7 +4,7 @@ function makefigures()
    %clc
    close all ;
 
-   doAll = 1 ;
+   doAll = 0 ;
 
    if ( doAll || 0 )
       p = struct( 'fileName', '../circuits/BridgeRectifier.netlist' ) ;
@@ -12,6 +12,7 @@ function makefigures()
 
       p.figNum = 5 ;
       p.logPlot = 1 ;
+      p.verbose = 1 ;
       p.figDesc = 'ErrorAndCpuTimes' ;
       p.legends = { 'Normalized Error', 'CPU Time' } ;
       p.xLabel = 'N (Number of Harmonics)' ;
@@ -52,13 +53,16 @@ function makefigures()
       PlotWaveforms( p ) ;
    end
 
-   if ( doAll || 0 )
+   if ( doAll || 1 )
       p = struct( 'fileName', '../circuits/BridgeRectifierPow.netlist' ) ;
       p.figName = 'bridgeRectifierPow' ;
       p.xLabel = 'Time (s)' ;
       %p.allowCaching = 0 ;
       p.useBigF = 0 ; % can't use BigF method for this circuit.
-      %p.minStep = 0.000001 ;
+      %p.minStep = 1e-6 ;
+      %p.dlambda = 0.001 ;
+      %p.iterations = 500 ;
+      p.verbose = 1 ;
 
       p.figNum = 2 ;
       p.figDesc = 'SourceAndOutputVoltages' ;
@@ -159,6 +163,35 @@ function makefigures()
       p.legends = { 'Source Voltage', 'Output Voltage' } ;
       p.nPlus = [ 1 2 ] ;
       p.nMinus = [ 0 0 ] ;
+      %p.verbose = 1 ;
+      %p.allowCaching = 0 ;
+      PlotWaveforms( p ) ;
+
+      p.figNum = 3 ;
+      p.yLabel = 'Voltage (V)' ;
+      p.figDesc = 'Diode Current' ;
+      %p.title = p.figDesc ;
+      p.legends = {} ;
+      p.nPlus = [ 3 ] ;
+      p.nMinus = [ 0 ] ;
+      p.yLabel = 'Current (A)' ;
+      p.verbose = 1 ;
+      PlotWaveforms( p ) ;
+   end
+
+   if ( doAll || 0 )
+      p = struct( 'fileName', '../circuits/halfWaveRectifierPow.netlist' ) ;
+      p.figName = 'halfWaveRectifierPow' ;
+      p.figNum = 2 ;
+
+      p.xLabel = 'Time (s)' ;
+      p.yLabel = 'Voltage (V)' ;
+      %p.title = 'Voltage' ;
+      p.figDesc = 'Voltage' ;
+      p.legends = { 'Source Voltage', 'Output Voltage' } ;
+      p.nPlus = [ 1 2 ] ;
+      p.nMinus = [ 0 0 ] ;
+      %p.verbose = 1 ;
       %p.allowCaching = 0 ;
       PlotWaveforms( p ) ;
    end
@@ -189,6 +222,7 @@ function makefigures()
       p.figDesc = 'SourceAndOutputVoltages' ;
       p.nPlus = [ 1 2 ] ;
       p.nMinus = [ 0 0 ] ;
+      %p.allowCaching = 0 ;
       p.legends = { 'Source Voltage', 'Output Voltage' } ;
       p.yLabel = 'Voltage (V)' ;
       PlotWaveforms( p ) ;
@@ -200,6 +234,31 @@ function makefigures()
       %p.legends = {} ;
       %p.yLabel = 'Current (A)' ;
       %PlotWaveforms( p ) ;
+   end
+
+   if ( doAll || 0 )
+      p = struct( 'fileName', '../circuits/simpleVrectSmallerCap.netlist' ) ;
+      p.figName = 'typicalRectifierCircuitSmallerCap' ;
+
+      p.xLabel = 'Time (s)' ;
+      p.logPlot = 0 ;
+      p.figNum = 2 ;
+      p.figDesc = 'SourceAndOutputVoltages' ;
+      p.nPlus = [ 1 2 ] ;
+      p.nMinus = [ 0 0 ] ;
+      %p.allowCaching = 0 ;
+      p.legends = { 'Source Voltage', 'Output Voltage' } ;
+      p.yLabel = 'Voltage (V)' ;
+      PlotWaveforms( p ) ;
+
+      p.figNum = 3 ;
+      p.figName = 'DiodeCurrent' ;
+      p.figDesc = 'Diode Current' ;
+      p.nPlus = [ 3 ] ;
+      p.nMinus = [ 0 ] ;
+      p.legends = {} ;
+      p.yLabel = 'Current (A)' ;
+      PlotWaveforms( p ) ;
    end
 
    if ( doAll || 0 )

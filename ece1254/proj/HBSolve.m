@@ -105,13 +105,19 @@ function h = HBSolve( N, p )
 
       % half wave rectifier (and perhaps other circuits) can't converge when lambda == 0.  have to start off bigger.
       if ( 0 == lambda )
-         while ( ( jcond < p.JcondTol ) || isnan( jcond ) )
+         while ( isnan( jcond ) )
+            disp( sprintf( 'lambda: %e, cond = %e', dlambda, jcond ) ) ;
+
             dlambda = dlambda + p.dlambda ;
 
             f = r.Y * V - Inl - dlambda * r.I ;
 
             J = r.Y - JI ;
             jcond = rcond( J ) ;
+
+            if ( dlambda > 1 )
+               error( 'could not find an initital source load step' ) ;
+            end
          end
 
          lambda = dlambda ;
@@ -192,7 +198,7 @@ function h = HBSolve( N, p )
       end
 
       if ( dlambda <= p.minStep )
-save( 'a.mat' ) ;
+%save( 'a.mat' ) ;
          error( 'source load step %e too small (> %e), function not converging', dlambda, p.minStep ) ;
       end
    end
