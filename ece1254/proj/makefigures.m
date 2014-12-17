@@ -11,7 +11,7 @@ function makefigures()
       p.figName = 'bridgeRectifier' ;
       %p.N = 3 ;
       p.xLabel = 'Time (s)' ;
-      p.allowCaching = 0 ;
+      %p.allowCaching = 0 ;
       %p.useBigF = 0 ;
 
       %p.title = 'Source and Output Voltages' ;
@@ -31,7 +31,7 @@ function makefigures()
       p.nMinus = 0 ;
       p.legends = {} ;
       p.yLabel = 'Current (A)' ;
-      PlotWaveforms( p ) ;
+%      PlotWaveforms( p ) ;
 
       %p.title = 'Diode Voltages' ;
       p.figDesc = 'DiodeVoltages' ;
@@ -40,8 +40,24 @@ function makefigures()
       p.nMinus = [ 3 1 3 2 ] ;
       p.legends = { 'vd1', 'vd2', 'vd3', 'vd4' } ;
       p.yLabel = 'Voltage (V)' ;
-      PlotWaveforms( p ) ;
+%      PlotWaveforms( p ) ;
    end
+
+      p = struct( 'fileName', '../circuits/BridgeRectifierPow.netlist' ) ;
+      p.figName = 'bridgeRectifierPow' ;
+      p.xLabel = 'Time (s)' ;
+      p.allowCaching = 0 ;
+      p.useBigF = 0 ; % can't use BigF for this one as-is.
+      %p.minStep = 0.000001 ;
+
+      p.figNum = 2 ;
+      p.figDesc = 'SourceAndOutputVoltages' ;
+
+      p.nPlus = [ 2 3 ] ;
+      p.nMinus = [ 1 0 ] ;
+      p.legends = { 'Source Voltage', 'Output Voltage' } ;
+      p.yLabel = 'Voltage (V)' ;
+      PlotWaveforms( p ) ;
 
    if ( doAll || 0 )
       p = struct( 'fileName', '../circuits/BridgeRectifierCap.netlist' ) ;

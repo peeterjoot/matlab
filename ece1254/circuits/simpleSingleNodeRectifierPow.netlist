@@ -1,7 +1,0 @@
-* Simple single node Rectifier using a three non-zero terms of the Taylor expansion of I_0( e^v/vt - 1), with I_0 = 10e-12.
-I1 1 0 AC 0.01 1e6
-P1 1 0 5e-12 25e-3 2
-P2 1 0 1.666e-12 25e-3 3
-P3 1 0 0.4166e-12 25e-3 4
-R1 1 0 100
-.end

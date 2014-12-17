@@ -7,7 +7,7 @@ function h = HBSolve( N, p )
    % circuit using Newton's Method
 
    % p is an optional struct() parameter
-   defp = struct( 'tolF', 1e-6, 'edV', 1e-3, 'JcondTol', 1e-23, 'iterations', 50, 'subiterations', 50, 'useBigF', 1 ) ;
+   defp = struct( 'tolF', 1e-6, 'edV', 1e-3, 'JcondTol', 1e-23, 'iterations', 50, 'subiterations', 50, 'useBigF', 1, 'minStep', 0.0001 ) ;
 
    % tolerances
    if ( ~isfield( p, 'tolF' ) )
@@ -28,6 +28,9 @@ function h = HBSolve( N, p )
    end
    if ( ~isfield( p, 'subiterations' ) )
       p.subiterations = defp.subiterations ;
+   end
+   if ( ~isfield( p, 'minStep' ) )
+      p.minStep = defp.minStep ;
    end
 
    if ( ~isfield( p, 'useBigF' ) )
@@ -51,6 +54,8 @@ function h = HBSolve( N, p )
 
    % Newton's Method Parameters
    V0 = zeros( R * ( 2 * N + 1 ), 1 ) ;
+   %V0 = rand( R * ( 2 * N + 1 ), 1 ) ;
+   %V0 = rand( R * ( 2 * N + 1 ), 1 ) + 1j * rand( R * ( 2 * N + 1 ), 1 ) ;
 
    totalIterations = 0 ;
 
@@ -142,7 +147,7 @@ function h = HBSolve( N, p )
          lambda = 1 ;
       end
 
-      if ( dlambda <= 0.0001 )
+      if ( dlambda <= p.minStep )
          error( 'source load step too small, function not converging' ) ;
       end
    end

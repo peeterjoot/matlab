@@ -29,11 +29,11 @@ function [II, JI] = DiodeCurrentAndJacobian( in, V )
          x = ht * V ;
 
          if ( expType )
-            g = exp( x ) ;
+            g      = exp( x ) ;
             gPrime = g ;
          else
-            g            = ( x )^( exponentValue ) ;
-            gPrime       = exponentValue * ( x )^( exponentValue - 1 ) ;
+            g      = ( x )^( exponentValue ) ;
+            gPrime = exponentValue * ( x )^( exponentValue - 1 ) ;
          end
 
          ee( j ) = g ;
