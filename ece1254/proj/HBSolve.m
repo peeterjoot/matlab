@@ -7,7 +7,7 @@ function h = HBSolve( N, p )
    % circuit using Newton's Method
 
    % p is an optional struct() parameter
-   defp = struct( 'tolF', 1e-6, 'edV', 1e-3, 'JcondTol', 1e-23, 'iterations', 50, 'subiterations', 50, 'useBigF', 1, 'minStep', 0.0001, 'dlambda', 0.01 ) ;
+   defp = struct( 'tolF', 1e-6, 'edV', 1e-3, 'JcondTol', 1e-23, 'iterations', 50, 'subiterations', 50, 'useBigF', 1, 'minStep', 0.0001, 'dlambda', 0.01, 'dispfrequency', 1, 'maxStepMultiples', 50 ) ;
 
    % tolerances
    if ( ~isfield( p, 'tolF' ) )
@@ -41,6 +41,14 @@ function h = HBSolve( N, p )
       p.dlambda = defp.dlambda ;
    end
 
+   if ( ~isfield( p, 'maxStepMultiples' ) )
+      p.maxStepMultiples = defp.maxStepMultiples ;
+   end
+
+   if ( ~isfield( p, 'dispfrequency' ) )
+      p.dispfrequency = defp.dispfrequency ;
+   end
+
    r = NodalAnalysis( p.fileName ) ;
 
    % Harmonic Balance Parameters
@@ -71,6 +79,8 @@ function h = HBSolve( N, p )
    ecputime = cputime ;
    for i = 1:p.iterations
       V = V0 ;
+%max(isnan(V))
+%norm(V)
 
       if ( p.useBigF )
          v = F * V ;
@@ -84,14 +94,32 @@ function h = HBSolve( N, p )
       else
          [Inl, JI] = DiodeCurrentAndJacobian( r, V ) ;
       end
+%max(isnan(Inl))
+%norm(Inl)
 
       % Function to minimize:
       f = r.Y * V - Inl - lambda * r.I ;
 
       J = r.Y - JI ;
+      jcond = rcond( J ) ;
 
-      if ( 0 == mod(i, 10) )
-         disp( ['starting iteration ' num2str( i ) ' lambda is ' num2str( lambda ) ' norm of V0 = ' num2str( norm( V0 ) )] ) ;
+      % half wave rectifier (and perhaps other circuits) can't converge when lambda == 0.  have to start off bigger.
+      if ( 0 == lambda )
+         while ( ( jcond < p.JcondTol ) || isnan( jcond ) )
+            dlambda = dlambda + p.dlambda ;
+
+            f = r.Y * V - Inl - dlambda * r.I ;
+
+            J = r.Y - JI ;
+            jcond = rcond( J ) ;
+         end
+
+         lambda = dlambda ;
+         plambda = dlambda ;
+      end
+
+      if ( 0 == mod(i, p.dispfrequency) )
+         disp( sprintf( 'iteration %d: lambda: %e, |V0| = %e, cond = %e', i, lambda, norm( V0 ), jcond ) ) ;
       end
 
       stepConverged = 0 ;
@@ -118,8 +146,9 @@ function h = HBSolve( N, p )
 
          % Construct Jacobian
          J = r.Y - JI ;
+         jcond = rcond( J ) ;
 
-         if ( ( rcond( J ) < p.JcondTol ) || ( isnan( rcond( J ) ) ) )
+         if ( ( jcond < p.JcondTol ) || isnan( jcond ) )
             stepConverged = 0 ;
             break
          end
@@ -134,17 +163,14 @@ function h = HBSolve( N, p )
          % disp( 'solution converged' )
          V0 = V ;
 
-         dlambda = 2 * dlambda ;
+         trialLambda = 2 * dlambda ;
 
-% probably want to cap dlambda so it doesn't grow exponentially as the iteration continues
-%         if ( (1.01 * dlambda) > (2 * p.dlambda) )
-%            dlambda = p.dlambda ;
-%         else
-%            dlambda = 1.01 * dlambda ;
-%         end
-%         dlambda = 1.01 * dlambda ;
-% or:
-%         dlambda = min( p.dlambda, 2 * dlambda ) ;
+         % don't allow the step size to go too many multiples bigger than the default step size if it has been decreased.
+         if ( trialLambda < (p.maxStepMultiples * p.dlambda) )
+            dlambda = trialLambda ;
+         else
+            dlambda = p.dlambda ;
+         end
 
          plambda = lambda ;
          lambda = lambda + dlambda ;
@@ -166,7 +192,8 @@ function h = HBSolve( N, p )
       end
 
       if ( dlambda <= p.minStep )
-         error( 'source load step too small, function not converging' ) ;
+save( 'a.mat' ) ;
+         error( 'source load step %e too small (> %e), function not converging', dlambda, p.minStep ) ;
       end
    end
 

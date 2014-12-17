@@ -4,7 +4,7 @@ function makefigures()
    %clc
    close all ;
 
-   doAll = 0 ;
+   doAll = 1 ;
 
    if ( doAll || 0 )
       p = struct( 'fileName', '../circuits/BridgeRectifier.netlist' ) ;
@@ -70,7 +70,7 @@ function makefigures()
       PlotWaveforms( p ) ;
    end
 
-   if ( doAll || 1 )
+   if ( doAll || 0 )
       p = struct( 'fileName', '../circuits/BridgeRectifierCap.netlist' ) ;
       p.figName = 'bridgeRectifierCapFilter' ;
       p.xLabel = 'Time (s)' ;
@@ -109,16 +109,18 @@ function makefigures()
       p.yLabel = 'Voltage (V)' ;
       PlotWaveforms( p ) ;
 
-      p.N = 100 ;
-      p.figNum = 5 ;
+      %p.N = 100 ;
+      %p.figNum = 5 ;
       %PlotWaveforms( p ) ;
 
-      p.N = 50 ;
+      %p.N = 50 ;
       p.figNum = 6 ;
-      p.dlambda = 0.0001 ;
+      p.dlambda = 0.001 ;
       p.allowCaching = 0 ;
       p.iterations = 20000 ;
-      p.minStep = 0.000001 ;
+      p.minStep = 1e-14 ;
+      p.dispfrequency = 10 ;
+      p.JcondTol = 1e-12 ;
       %PlotWaveforms( p ) ;
    end
 
@@ -146,24 +148,18 @@ function makefigures()
    end
 
    if ( doAll || 0 )
-      p = struct( 'fileName', '../circuits/simpleSingleNodeRectifierPow.netlist' ) ;
-      p.figName = 'simpleRectifierCircuitPow' ;
-      p.figNum = 3 ;
-      p.logPlot = 1 ;
-      p.figDesc = 'ErrorAndCpuTimes' ;
-      p.legends = { 'Normalized Error', 'CPU Time' } ;
-      p.xLabel = 'N (Number of Harmonics)' ;
-%      PlotWaveforms( p ) ;
+      p = struct( 'fileName', '../circuits/halfWaveRectifier.netlist' ) ;
+      p.figName = 'halfWaveRectifier' ;
+      p.figNum = 2 ;
 
       p.xLabel = 'Time (s)' ;
       p.yLabel = 'Voltage (V)' ;
       %p.title = 'Voltage' ;
       p.figDesc = 'Voltage' ;
-      p.logPlot = 0 ;
-      p.legends = { } ;
-      p.figNum = 2 ;
-      p.nPlus = 1 ;
-      p.nMinus = 0 ;
+      p.legends = { 'Source Voltage', 'Output Voltage' } ;
+      p.nPlus = [ 1 2 ] ;
+      p.nMinus = [ 0 0 ] ;
+      %p.allowCaching = 0 ;
       PlotWaveforms( p ) ;
    end
 
