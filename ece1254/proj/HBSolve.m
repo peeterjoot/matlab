@@ -7,7 +7,7 @@ function h = HBSolve( N, p )
    % circuit using Newton's Method
 
    % p is an optional struct() parameter
-   defp = struct( 'tolF', 1e-6, 'edV', 1e-3, 'JcondTol', 1e-23, 'iterations', 50, 'subiterations', 50, 'useBigF', 1, 'minStep', 0.0001 ) ;
+   defp = struct( 'tolF', 1e-6, 'edV', 1e-3, 'JcondTol', 1e-23, 'iterations', 50, 'subiterations', 50, 'useBigF', 1, 'minStep', 0.0001, 'dlambda', 0.01 ) ;
 
    % tolerances
    if ( ~isfield( p, 'tolF' ) )
@@ -37,6 +37,10 @@ function h = HBSolve( N, p )
       p.useBigF = defp.useBigF ;
    end
 
+   if ( ~isfield( p, 'dlambda' ) )
+      p.dlambda = defp.dlambda ;
+   end
+
    r = NodalAnalysis( p.fileName ) ;
 
    % Harmonic Balance Parameters
@@ -62,7 +66,7 @@ function h = HBSolve( N, p )
    % Source Stepping
    lambda = 0 ;
    plambda = 0 ;
-   dlambda = 0.01 ;
+   dlambda = p.dlambda ;
    converged = 0 ;
    ecputime = cputime ;
    for i = 1:p.iterations
@@ -127,7 +131,11 @@ function h = HBSolve( N, p )
       if ( stepConverged )
          % disp( 'solution converged' )
          V0 = V ;
+
          dlambda = 2 * dlambda ;
+%            dlambda = 1.1 * dlambda ;
+%            dlambda = min( p.dlambda, 2 * dlambda ) ;
+
          plambda = lambda ;
          lambda = lambda + dlambda ;
       else

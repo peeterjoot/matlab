@@ -76,9 +76,9 @@ function PlotWaveforms( p )
       h.xnames
    end
 
-   %fileExtension = 'pdf' ;
+   fileExtension = 'pdf' ;
    %fileExtension = 'png' ;
-   fileExtension = 'svg' ;
+   %fileExtension = 'svg' ;
 
    f = figure ;
 
@@ -98,6 +98,21 @@ function PlotWaveforms( p )
    if ( p.logPlot )
 
       loglog( h.Nvalues, h.errorValues, '-o', h.Nvalues, h.ecputimeValues, '-o', 'linewidth', 2 ) ;
+
+      logN = log( h.Nvalues.' ) ;
+      logErr = log( h.errorValues ) ;
+      logCpu = log( h.ecputimeValues ) ;
+
+      %plot( logN, logErr, '-o', logN, logCpu, '-o', 'linewidth', 2 ) ;
+
+      pCpu = polyfit( logN, logCpu, 1 ) ;
+      bCpu = pCpu(2) ;
+      mCpu = pCpu(1) 
+
+      % hack: bridge recitifier has -Inf error for the last N?
+      pErr = polyfit( logN(1:end-1), logErr(1:end-1), 1 ) ;
+      bErr = pErr(2) ;
+      mErr = pErr(1) 
 
    else
       for m = 1:numPlots

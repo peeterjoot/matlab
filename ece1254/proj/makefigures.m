@@ -6,10 +6,19 @@ function makefigures()
 
    doAll = 0 ;
 
-   if ( doAll || 1 )
+   if ( doAll || 0 )
       p = struct( 'fileName', '../circuits/BridgeRectifier.netlist' ) ;
       p.figName = 'bridgeRectifier' ;
+
+      p.figNum = 5 ;
+      p.logPlot = 1 ;
+      p.figDesc = 'ErrorAndCpuTimes' ;
+      p.legends = { 'Normalized Error', 'CPU Time' } ;
+      p.xLabel = 'N (Number of Harmonics)' ;
+      PlotWaveforms( p ) ;
+
       %p.N = 3 ;
+      p.logPlot = 0 ;
       p.xLabel = 'Time (s)' ;
       %p.allowCaching = 0 ;
       %p.useBigF = 0 ;
@@ -43,12 +52,12 @@ function makefigures()
       PlotWaveforms( p ) ;
    end
 
-   if ( doAll || 1 )
+   if ( doAll || 0 )
       p = struct( 'fileName', '../circuits/BridgeRectifierPow.netlist' ) ;
       p.figName = 'bridgeRectifierPow' ;
       p.xLabel = 'Time (s)' ;
-      p.allowCaching = 0 ;
-      p.useBigF = 0 ; % can't use BigF for this one as-is.
+      %p.allowCaching = 0 ;
+      p.useBigF = 0 ; % can't use BigF method for this circuit.
       %p.minStep = 0.000001 ;
 
       p.figNum = 2 ;
@@ -61,7 +70,7 @@ function makefigures()
       PlotWaveforms( p ) ;
    end
 
-   if ( doAll || 0 )
+   if ( doAll || 1 )
       p = struct( 'fileName', '../circuits/BridgeRectifierCap.netlist' ) ;
       p.figName = 'bridgeRectifierCapFilter' ;
       p.xLabel = 'Time (s)' ;
@@ -99,6 +108,18 @@ function makefigures()
       p.legends = { 'vd1', 'vd2', 'vd3', 'vd4' } ;
       p.yLabel = 'Voltage (V)' ;
       PlotWaveforms( p ) ;
+
+      p.N = 100 ;
+      p.figNum = 5 ;
+      %PlotWaveforms( p ) ;
+
+      p.N = 50 ;
+      p.figNum = 6 ;
+      p.dlambda = 0.005 ;
+      p.allowCaching = 0 ;
+      p.iterations = 1000 ;
+      p.minStep = 0.00001 ;
+      %PlotWaveforms( p ) ;
    end
 
    if ( doAll || 0 )
@@ -186,33 +207,10 @@ function makefigures()
    end
 
    if ( doAll || 0 )
-      % in:
-      %V1 1 6 AC 1 1e6
-      %V1 6 0 AC 1 8e6
-      %R1 1 2 50
-      %L1 2 3 983.63e-9
-      %L2 3 4 3183.099e-9
-      %C1 3 0 1030e-12
-      %C2 4 0 1030e-12
-      %L3 4 5 983.6316e-9
-      %R2 5 0 50
-
-      % out:
-      %'V_1'
-      %'V_2'
-      %'V_3'
-      %'V_4'
-      %'V_5'
-      %'V_6'
-      %'i_{V1_{6,1}}'
-      %'i_{V1_{0,6}}'
-      %'i_{L1_{2,3}}'
-      %'i_{L2_{3,4}}'
-      %'i_{L3_{4,5}}'
-
       p = struct( 'fileName', '../circuits/LCLowpass.netlist' ) ;
       p.figName = 'lowPassFilter' ;
 %      p.useBigF = 0 ;
+%      p.verbose = 1 ;
 
       p.xLabel = 'Time (s)' ;
       p.yLabel = 'Voltage (V)' ;
