@@ -115,10 +115,10 @@ function makefigures()
 
       p.N = 50 ;
       p.figNum = 6 ;
-      p.dlambda = 0.005 ;
+      p.dlambda = 0.0001 ;
       p.allowCaching = 0 ;
-      p.iterations = 1000 ;
-      p.minStep = 0.00001 ;
+      p.iterations = 20000 ;
+      p.minStep = 0.000001 ;
       %PlotWaveforms( p ) ;
    end
 

@@ -90,7 +90,9 @@ function h = HBSolve( N, p )
 
       J = r.Y - JI ;
 
-      disp( ['starting iteration ' num2str( i ) ' lambda is ' num2str( lambda ) ' norm of V0 = ' num2str( norm( V0 ) )] ) ;
+      if ( 0 == mod(i, 10) )
+         disp( ['starting iteration ' num2str( i ) ' lambda is ' num2str( lambda ) ' norm of V0 = ' num2str( norm( V0 ) )] ) ;
+      end
 
       stepConverged = 0 ;
 
@@ -133,8 +135,16 @@ function h = HBSolve( N, p )
          V0 = V ;
 
          dlambda = 2 * dlambda ;
-%            dlambda = 1.1 * dlambda ;
-%            dlambda = min( p.dlambda, 2 * dlambda ) ;
+
+% probably want to cap dlambda so it doesn't grow exponentially as the iteration continues
+%         if ( (1.01 * dlambda) > (2 * p.dlambda) )
+%            dlambda = p.dlambda ;
+%         else
+%            dlambda = 1.01 * dlambda ;
+%         end
+%         dlambda = 1.01 * dlambda ;
+% or:
+%         dlambda = min( p.dlambda, 2 * dlambda ) ;
 
          plambda = lambda ;
          lambda = lambda + dlambda ;
