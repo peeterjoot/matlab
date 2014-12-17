@@ -14,13 +14,30 @@ function [II, JI] = DiodeCurrentAndJacobian( in, V )
    for i = 1:S
       H = in.nonlinearMatrices{ i }.H ;
 
+      expType = ( strcmp( in.nonlinear{ i }.type, 'exp' ) ) ;
+      if ( ~expType )
+         exponentValue = in.nonlinear{ i }.exponent ;
+      end
+
       ee = zeros( twoNplusOne, 1 ) ;
+      eeprime = zeros( twoNplusOne, 1 ) ;
       he = zeros( twoNplusOne, vSize ) ;
 
       for j = 1:twoNplusOne
          ht = H( j, : ) ;
-         ee( j ) = exp( ht * V ) ;
-         he( j, : ) = ht * ee( j ) ;
+
+         x = ht * V ;
+
+         if ( expType )
+            g = exp( x ) ;
+            gPrime = g ;
+         else
+            g            = ( x )^( exponentValue ) ;
+            gPrime       = exponentValue * ( x )^( exponentValue - 1 ) ;
+         end
+
+         ee( j ) = g ;
+         he( j, : ) = ht * gPrime ;
       end
 
       II = II + in.nonlinearMatrices{ i }.A * ee ;

@@ -1,9 +1,9 @@
 function nonlinearMatrices = DiodeNonVdependent( p )
    % DiodeNonVdependent: V independent parts of the diode current and Jacobian calculations.
 
-   bdiode = p.bdiode ;
+   nonlinear = p.nonlinear ;
 
-   S = length( bdiode ) ;
+   S = length( nonlinear ) ;
    dsz = size( p.D, 1 ) ;
    traceit( sprintf( 'entry.  S = %d, dsz = %d', S, dsz ) ) ;
 
@@ -13,7 +13,7 @@ function nonlinearMatrices = DiodeNonVdependent( p )
 
    for i = 1:S
 %traceit( sprintf('%d', i ) ) ;
-      dio = bdiode{i} ;
+      dio = nonlinear{i} ;
 
       D = zeros( vSize, twoNplusOne, 'like', sparse(1) ) ;
 

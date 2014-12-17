@@ -12,7 +12,7 @@ function results = NodalAnalysis( filename, sourceStepScaling )
 % Here:
 %    - x(t) is a column vector of all the sources. [returned as xnames]
 %    - u(t) is a column vector of all the linear sources. [returned as angularVelocities]
-%    - n(t) is a column vector of all the non-linear sources. [returned as bdiode]
+%    - n(t) is a column vector of all the non-linear sources. [returned as nonlinear]
 %
 %---------------------------------------------------------------------------------------
 %
@@ -91,7 +91,13 @@ function results = NodalAnalysis( filename, sourceStepScaling )
 %
 %     Dlabel node1 node2 I_0 V_T
 %
-%   where V = V_n1 - V_n2, and the current flows from n1 to n2.
+%   where V = V_node1 - V_node2, and the current flows from n1 to n2.
+%
+% - The syntax for specifying a power-law non-linear term modelled by I = I_0 (V/V_t)^alpha is:
+%
+%     Plabel node1 node2 I_0 V_T alpha
+%
+%   where V is defined as for a diode line above.
 %
 % - Comment lines, starting with *, as described in the following, are allowed:
 %     http://jjc.hydrus.net/jjc/technical/ee/documents/spicehowto.pdf
@@ -145,7 +151,7 @@ function results = NodalAnalysis( filename, sourceStepScaling )
 %   Current variables will be added for each DC voltage source, each DC voltage
 %   controlled voltage source, as well as any inductor currents.
 %
-% - results.bdiode [array of struct]
+% - results.nonlinear [array of struct]
 %
 %   An Sx1 array that encodes all the non-linear source information, where S is the number
 %   of non-linear sources.
@@ -160,7 +166,7 @@ function results = NodalAnalysis( filename, sourceStepScaling )
 %   Then there will be +- 1 values in the i-th column of D associated with the I_0 e^{(v1 -v2)/V_T}
 %   portion of this current source.  The constant portion of these -+ I_0 values will be stored in the
 %   matrix B associated with a zero-frequency (linear) source.  These columns are not scaled by
-%   each of the I_0 values, which are returned in bdiode.
+%   each of the I_0 values, which are returned in nonlinear.
 %
 % All of G,C,B,D are returned as sparse matrices since they can potentially have many zeros.
 %
@@ -183,6 +189,7 @@ function results = NodalAnalysis( filename, sourceStepScaling )
    capLines       = [] ;
    indLines       = [] ;
    diodeLines     = [] ;
+   powerLines     = [] ;
 
    currentLables  = {} ;
    resistorLables = {} ;
@@ -191,6 +198,7 @@ function results = NodalAnalysis( filename, sourceStepScaling )
    capLables      = {} ;
    indLables      = {} ;
    diodeLables    = {} ;
+   powerLables    = {} ;
 
    %----------------------------------------------------------------------------
    %
@@ -295,6 +303,28 @@ function results = NodalAnalysis( filename, sourceStepScaling )
 
          diodeLines(:,end+1) = a ;
          diodeLables{end+1} = tmp{1} ;
+
+      case 'P'
+         % Plabel node1 node2 I_0 V_T alpha
+
+         firstLineRead = 1 ;
+         tmp = strsplit( line ) ;
+         sz = size( tmp, 2 ) ;
+
+         if ( sz ~= 6 )
+            error( 'NodalAnalysis:parseline:P', 'expected 6 fields, but read %d fields from power line "%s"', sz, line ) ;
+         end
+
+         n1 = str2num( tmp{2} ) ;
+         n2 = str2num( tmp{3} ) ;
+         io = str2num( tmp{4} ) ;
+         vt = str2num( tmp{5} ) ;
+         alpha = str2num( tmp{6} ) ;
+         a = [ n1 n2 io vt alpha ] ;
+
+         powerLines(:,end+1) = a ;
+         powerLables{end+1} = tmp{1} ;
+
       case 'I'
          % Ilabel node1 node2 DC value
          % Ilabel node1 node2 AC value freq [phase]
@@ -424,6 +454,13 @@ function results = NodalAnalysis( filename, sourceStepScaling )
       traceit( sprintf( 'diodeLines: %d', sz ) ) ;
 
       allnodes = horzcat( allnodes, diodeLines(1:2, :) ) ;
+      allfrequencies = horzcat( allfrequencies, 0 ) ;
+   end
+   sz = size( powerLines, 2 ) ;
+   if ( sz )
+      traceit( sprintf( 'powerLines: %d', sz ) ) ;
+
+      allnodes = horzcat( allnodes, powerLines(1:2, :) ) ;
       allfrequencies = horzcat( allfrequencies, 0 ) ;
    end
    sz = size( voltageLines, 2 ) ;
@@ -694,9 +731,10 @@ function results = NodalAnalysis( filename, sourceStepScaling )
    labelNumber = 0 ;
    d = 0 ;
    numberOfDiodes = size( diodeLines, 2 ) ;
+   numberOfPowers = size( powerLines, 2 ) ;
 
    D = zeros( size(B, 1), 1, 'like', G ) ;
-   bdiode = cell( numberOfDiodes, 1 ) ;
+   nonlinear = cell( numberOfDiodes + numberOfPowers, 1 ) ;
 
    for dio = diodeLines
       labelNumber = labelNumber + 1 ;
@@ -714,7 +752,7 @@ function results = NodalAnalysis( filename, sourceStepScaling )
          error( 'NodalAnalysis:find', 'failed to find DC frequency entry in angularVelocities: %s', -omega, mat2str(angularVelocities) ) ;
       end
 
-      bdiode{ d } = struct( 'io', -io, 'type', 'exp', 'vt', vt, 'vp', plusNode, 'vn', minusNode ) ;
+      nonlinear{ d } = struct( 'io', -io, 'type', 'exp', 'vt', vt, 'vp', plusNode, 'vn', minusNode ) ;
       if ( plusNode )
          B( plusNode, omegaIndex ) = B( plusNode, omegaIndex ) + io ;
          D( plusNode, d ) = 1 ;
@@ -725,5 +763,29 @@ function results = NodalAnalysis( filename, sourceStepScaling )
       end
    end
 
-   results = struct( 'G', G, 'C', C, 'B', B, 'angularVelocities', angularVelocities, 'D', D, 'xnames', {xnames}, 'bdiode', {bdiode} ) ;
+   % process the power law elements:
+   labelNumber = 0 ;
+
+   for pow = powerLines
+      labelNumber = labelNumber + 1 ;
+      label       = powerLables{labelNumber} ;
+      plusNode    = pow(1) ;
+      minusNode   = pow(2) ;
+      io          = pow(3) ;
+      vt          = pow(4) ;
+      alpha       = pow(5) ;
+      d = d + 1 ;
+
+      traceit( sprintf( '%s %d,%d -> %d\n', label, plusNode, minusNode, -io ) ) ;
+
+      nonlinear{ d } = struct( 'io', -io, 'type', 'power', 'vt', vt, 'vp', plusNode, 'vn', minusNode, 'exponent', alpha ) ;
+      if ( plusNode )
+         D( plusNode, d ) = 1 ;
+      end
+      if ( minusNode )
+         D( minusNode, d ) = -1 ;
+      end
+   end
+
+   results = struct( 'G', G, 'C', C, 'B', B, 'angularVelocities', angularVelocities, 'D', D, 'xnames', {xnames}, 'nonlinear', {nonlinear} ) ;
 end

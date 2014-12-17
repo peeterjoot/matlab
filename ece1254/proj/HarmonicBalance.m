@@ -8,7 +8,7 @@ function results = HarmonicBalance( inputs, N, omega )
    %
    % The Harmonic balance results returned are associated with the time domain equations
    %
-   %    G x(t) + C \dot{x}(t)= B angularVelocities(t) + D bdiode(t),  (2)
+   %    G x(t) + C \dot{x}(t)= B angularVelocities(t) + D nonlinear(t),  (2)
    %
    % as returned from HarmonicBalance(),
    % where the column vector angularVelocities(t) contains all sources, and x(t) is a vector of all the sources.
@@ -62,7 +62,7 @@ function results = HarmonicBalance( inputs, N, omega )
    %
    %       results = NodalAnalyis(...)
    %
-   %    a struct() return with fields including: G, C, B, angularVelocities, D, bdiode.
+   %    a struct() return with fields including: G, C, B, angularVelocities, D, nonlinear.
    %
    %    That struct output is passed into this function as inputs.
    %

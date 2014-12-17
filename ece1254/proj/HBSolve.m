@@ -67,11 +67,11 @@ function h = HBSolve( N, p )
          v = F * V ;
 
          % determine non linear currents
-         inl = gnl( r.bdiode, v, N, R ) ;
+         inl = gnl( r.nonlinear, v, N, R ) ;
          Inl = - F\inl ;
 
          % Construct Jacobian
-         JI = - Gprime( r.bdiode, v, N, R ) ;
+         JI = - Gprime( r.nonlinear, v, N, R ) ;
       else
          [Inl, JI] = DiodeCurrentAndJacobian( r, V ) ;
       end
@@ -95,9 +95,9 @@ function h = HBSolve( N, p )
             v = F * V ;
 
             % determine non linear currents
-            inl = gnl( r.bdiode, v, N, R ) ;
+            inl = gnl( r.nonlinear, v, N, R ) ;
             Inl = - F\inl ;
-            JI = - Gprime( r.bdiode, v, N, R ) ;
+            JI = - Gprime( r.nonlinear, v, N, R ) ;
          else
             [Inl, JI] = DiodeCurrentAndJacobian( r, V ) ;
          end

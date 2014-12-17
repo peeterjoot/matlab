@@ -4,14 +4,14 @@ function makefigures()
    %clc
    close all ;
 
-   doAll = 1 ;
+   doAll = 0 ;
 
-   if ( doAll || 0 )
+   if ( doAll || 1 )
       p = struct( 'fileName', '../circuits/BridgeRectifier.netlist' ) ;
       p.figName = 'bridgeRectifier' ;
       %p.N = 3 ;
       p.xLabel = 'Time (s)' ;
-      %p.allowCaching = 0 ;
+      p.allowCaching = 0 ;
       %p.useBigF = 0 ;
 
       %p.title = 'Source and Output Voltages' ;
@@ -83,7 +83,7 @@ function makefigures()
       PlotWaveforms( p ) ;
    end
 
-   if ( doAll || 1 )
+   if ( doAll || 0 )
       p = struct( 'fileName', '../circuits/simpleSingleNodeRectifier.netlist' ) ;
       p.figName = 'simpleRectifierCircuit' ;
       %p.useBigF = 1 ;
@@ -93,6 +93,28 @@ function makefigures()
       p.legends = { 'Normalized Error', 'CPU Time' } ;
       p.xLabel = 'N (Number of Harmonics)' ;
       PlotWaveforms( p ) ;
+
+      p.xLabel = 'Time (s)' ;
+      p.yLabel = 'Voltage (V)' ;
+      %p.title = 'Voltage' ;
+      p.figDesc = 'Voltage' ;
+      p.logPlot = 0 ;
+      p.legends = { } ;
+      p.figNum = 2 ;
+      p.nPlus = 1 ;
+      p.nMinus = 0 ;
+      PlotWaveforms( p ) ;
+   end
+
+   if ( doAll || 0 )
+      p = struct( 'fileName', '../circuits/simpleSingleNodeRectifierPow.netlist' ) ;
+      p.figName = 'simpleRectifierCircuitPow' ;
+      p.figNum = 3 ;
+      p.logPlot = 1 ;
+      p.figDesc = 'ErrorAndCpuTimes' ;
+      p.legends = { 'Normalized Error', 'CPU Time' } ;
+      p.xLabel = 'N (Number of Harmonics)' ;
+%      PlotWaveforms( p ) ;
 
       p.xLabel = 'Time (s)' ;
       p.yLabel = 'Voltage (V)' ;
