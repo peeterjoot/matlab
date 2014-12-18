@@ -151,7 +151,7 @@ function makefigures()
       PlotWaveforms( p ) ;
    end
 
-   if ( doAll || 1 )
+   if ( doAll || 0 )
       p = struct( 'fileName', '../circuits/halfWaveRectifier.netlist' ) ;
       p.figName = 'halfWaveRectifier' ;
       p.figNum = 2 ;
@@ -262,7 +262,7 @@ function makefigures()
       PlotWaveforms( p ) ;
    end
 
-   if ( doAll || 0 )
+   if ( doAll || 1 )
       p = struct( 'fileName', '../circuits/LCLowpass.netlist' ) ;
       p.figName = 'lowPassFilter' ;
 %      p.useBigF = 0 ;
@@ -286,12 +286,12 @@ function makefigures()
       p.nPlus = 1 ;
       p.legends = {} ;
       %p.verbose = 1 ;
-      PlotWaveforms( p ) ;
+%      PlotWaveforms( p ) ;
 
       %p.title = 'Output Voltage Spectrum' ;
       p.figDesc = 'OutputVoltageSpectrum' ;
       p.figNum = 4 ;
       p.nPlus = 5 ;
-      PlotWaveforms( p ) ;
+%      PlotWaveforms( p ) ;
    end
 end

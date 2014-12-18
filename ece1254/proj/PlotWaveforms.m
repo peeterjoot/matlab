@@ -77,10 +77,6 @@ function PlotWaveforms( p )
 %      h.xnames
 %   end
 
-   fileExtension = 'pdf' ;
-   %fileExtension = 'png' ;
-   %fileExtension = 'svg' ;
-
    f = figure ;
 
    if ( ~isfield( p, 'spectrum' ) )
@@ -156,8 +152,25 @@ function PlotWaveforms( p )
 
    hold off ;
 
+   if ( exist( 'export_fig.m', 'file' ) )
+
+      fileExtension = 'pdf' ;
+
+      savePlot = @(f,n) export_fig( n ) ;
+
+   elseif ( exist( 'plot2svg.m', 'file' ) )
+
+      fileExtension = 'svg' ;
+
+      savePlot = @(f,n) plot2svg( n ) ;
+   else
+
+      fileExtension = 'png' ;
+
+      savePlot = @(f,n) saveas( f, n ) ;
+   end
+
    saveName = sprintf( '%s%sFig%d.%s', p.figName, p.figDesc, p.figNum, fileExtension ) ;
 
-   export_fig( saveName ) ;
-%   plot2svg( saveName ) ;
+   savePlot( f, saveName ) ;
 end
