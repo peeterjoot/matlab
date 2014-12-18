@@ -1,0 +1,4 @@
+# static rules for these copies to avoid recursion.
+# http://www.gnu.org/software/make/manual/make.html#Static-Pattern
+$(PDFILENAMES) : %.m: $(PDDIR)/%.m
+	cp $< $@
