@@ -65,15 +65,15 @@ function h = HBSolve( N, p )
    end
 
    % Newton's Method Parameters
-%   if ( rcond( r.Y ) > 1e-6 )
-%      % suggested by wikipedia HB article: use the linear solution
-%      % as a seed, but this doens't work out well for some circuits ( i.e. halfWaveRectifier )
-%      V0 = r.Y\r.I ;
-%   else
+   if ( (rcond( r.Y ) > 1e-6) || 0 )
+      % suggested by wikipedia HB article: use the linear solution
+      % as a seed, but this doens't work out well for some circuits ( i.e. halfWaveRectifier )
+      V0 = r.Y\r.I ;
+   else
       V0 = zeros( R * ( 2 * N + 1 ), 1 ) ;
       %V0 = rand( R * ( 2 * N + 1 ), 1 ) ;
       %V0 = rand( R * ( 2 * N + 1 ), 1 ) + 1j * rand( R * ( 2 * N + 1 ), 1 ) ;
-%   end
+   end
 
    totalIterations = 0 ;
 
@@ -110,7 +110,7 @@ function h = HBSolve( N, p )
       jcond = rcond( J ) ;
 
       % half wave rectifier (and perhaps other circuits) can't converge when lambda == 0.  have to start off bigger.
-      if ( 0 == lambda )
+      if ( (0 == lambda) && 1 )
          while ( isnan( jcond ) )
             disp( sprintf( 'lambda: %e, cond = %e', dlambda, jcond ) ) ;
 

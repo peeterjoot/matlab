@@ -4,7 +4,7 @@ function makefigures()
    %clc
    close all ;
 
-   doAll = 1 ;
+   doAll = 0 ;
 
    if ( doAll || 0 )
       p = struct( 'fileName', '../circuits/BridgeRectifier.netlist' ) ;
@@ -53,7 +53,7 @@ function makefigures()
       PlotWaveforms( p ) ;
    end
 
-   if ( doAll || 1 )
+   if ( doAll || 0 )
       p = struct( 'fileName', '../circuits/BridgeRectifierPow.netlist' ) ;
       p.figName = 'bridgeRectifierPow' ;
       p.xLabel = 'Time (s)' ;
@@ -151,10 +151,11 @@ function makefigures()
       PlotWaveforms( p ) ;
    end
 
-   if ( doAll || 0 )
+   if ( doAll || 1 )
       p = struct( 'fileName', '../circuits/halfWaveRectifier.netlist' ) ;
       p.figName = 'halfWaveRectifier' ;
       p.figNum = 2 ;
+      %p.N = 1 ;
 
       p.xLabel = 'Time (s)' ;
       p.yLabel = 'Voltage (V)' ;
@@ -176,7 +177,7 @@ function makefigures()
       p.nMinus = [ 0 ] ;
       p.yLabel = 'Current (A)' ;
       %p.verbose = 1 ;
-      PlotWaveforms( p ) ;
+      %PlotWaveforms( p ) ;
    end
 
    if ( doAll || 0 )
