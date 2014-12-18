@@ -1,6 +1,6 @@
 include ../pd/make.vars
 
-FROMPS1 := backSubst.m forwardSubst.m noPivotLU.m withPivotLU.m
+FROMPS1 += backSubst.m forwardSubst.m noPivotLU.m withPivotLU.m
 
 LOCALFILES += $(FROMPS1)
 
@@ -12,15 +12,5 @@ clean:
 
 include ../pd/make.rules
 
-backSubst.m : ../ps1/backSubst.m
-	cp $^ $@
-
-forwardSubst.m : ../ps1/forwardSubst.m
-	cp $^ $@
-
-noPivotLU.m : ../ps1/noPivotLU.m
-	cp $^ $@
-
-withPivotLU.m : ../ps1/withPivotLU.m
-	cp $^ $@
-
+$(FROMPS1) : %.m: ../ps1/%.m
+	cp $< $@
