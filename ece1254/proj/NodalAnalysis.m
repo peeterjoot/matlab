@@ -776,7 +776,7 @@ function results = NodalAnalysis( filename, sourceStepScaling )
       alpha       = pow(5) ;
       d = d + 1 ;
 
-      traceit( sprintf( '%s %d,%d -> %d\n', label, plusNode, minusNode, -io ) ) ;
+      traceit( sprintf( '%s %d,%d -> %e, %e, %e\n', label, plusNode, minusNode, io, vt, alpha ) ) ;
 
       nonlinear{ d } = struct( 'io', -io, 'type', 'power', 'vt', vt, 'vp', plusNode, 'vn', minusNode, 'exponent', alpha ) ;
       if ( plusNode )

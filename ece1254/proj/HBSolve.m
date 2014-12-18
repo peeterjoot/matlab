@@ -65,9 +65,15 @@ function h = HBSolve( N, p )
    end
 
    % Newton's Method Parameters
-   V0 = zeros( R * ( 2 * N + 1 ), 1 ) ;
-   %V0 = rand( R * ( 2 * N + 1 ), 1 ) ;
-   %V0 = rand( R * ( 2 * N + 1 ), 1 ) + 1j * rand( R * ( 2 * N + 1 ), 1 ) ;
+%   if ( rcond( r.Y ) > 1e-6 )
+%      % suggested by wikipedia HB article: use the linear solution
+%      % as a seed, but this doens't work out well for some circuits ( i.e. halfWaveRectifier )
+%      V0 = r.Y\r.I ;
+%   else
+      V0 = zeros( R * ( 2 * N + 1 ), 1 ) ;
+      %V0 = rand( R * ( 2 * N + 1 ), 1 ) ;
+      %V0 = rand( R * ( 2 * N + 1 ), 1 ) + 1j * rand( R * ( 2 * N + 1 ), 1 ) ;
+%   end
 
    totalIterations = 0 ;
 

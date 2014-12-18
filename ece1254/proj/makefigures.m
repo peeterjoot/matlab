@@ -4,7 +4,7 @@ function makefigures()
    %clc
    close all ;
 
-   doAll = 0 ;
+   doAll = 1 ;
 
    if ( doAll || 0 )
       p = struct( 'fileName', '../circuits/BridgeRectifier.netlist' ) ;
@@ -12,7 +12,7 @@ function makefigures()
 
       p.figNum = 5 ;
       p.logPlot = 1 ;
-      p.verbose = 1 ;
+      %p.verbose = 1 ;
       p.figDesc = 'ErrorAndCpuTimes' ;
       p.legends = { 'Normalized Error', 'CPU Time' } ;
       p.xLabel = 'N (Number of Harmonics)' ;
@@ -61,8 +61,8 @@ function makefigures()
       p.useBigF = 0 ; % can't use BigF method for this circuit.
       %p.minStep = 1e-6 ;
       %p.dlambda = 0.001 ;
-      %p.iterations = 500 ;
-      p.verbose = 1 ;
+      p.iterations = 100 ;
+      %p.verbose = 1 ;
 
       p.figNum = 2 ;
       p.figDesc = 'SourceAndOutputVoltages' ;
@@ -175,7 +175,7 @@ function makefigures()
       p.nPlus = [ 3 ] ;
       p.nMinus = [ 0 ] ;
       p.yLabel = 'Current (A)' ;
-      p.verbose = 1 ;
+      %p.verbose = 1 ;
       PlotWaveforms( p ) ;
    end
 

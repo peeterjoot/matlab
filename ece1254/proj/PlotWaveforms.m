@@ -72,9 +72,10 @@ function PlotWaveforms( p )
       numPlots = size( p.nPlus, 2 ) ;
    end
 
-   if ( isfield( p, 'verbose' ) )
-      h.xnames
-   end
+% FIXME: not returning this in all cases. (probably TestSolver)
+%   if ( isfield( p, 'verbose' ) )
+%      h.xnames
+%   end
 
    fileExtension = 'pdf' ;
    %fileExtension = 'png' ;
