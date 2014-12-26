@@ -530,6 +530,11 @@ N is the number of Harmonics to be used
    path => 'ece1254/proj/DiodeNonVdependent.m',
    WHAT => qq(V independent portions of the nonlinear current and Jacobian calculations)
 },
+{
+   DATE => 'Dec 26, 2014',
+   path => 'ece1254/ps2b/plotConvergence.m',
+   WHAT => qq(Generate the convergence log log plots.)
+},
 ) ; # @matlab
 
    return @matlab ;
