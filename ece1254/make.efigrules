@@ -1,0 +1,2 @@
+$(EFIGFILENAMES) : %.m: $(EFIGDIR)/%.m
+	cp $< $@

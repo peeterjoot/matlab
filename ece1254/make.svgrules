@@ -1,0 +1,7 @@
+$(SVGSRCFILENAMES) : %.m: $(SVGDIR)/src/%.m
+	cp $< $@
+
+$(SVGEXFILENAMES) : %.m: $(SVGDIR)/example/%.m
+	cp $< $@
+
+

@@ -7,6 +7,8 @@ N = 20 ;
 R = [ 0.1 1 10 ] ;
 %R = [ 0.1 ] ;
 
+[fileExtension, savePlot] = saveHelper() ;
+
 % sample points for circle plot
 np = 30 ;
 
@@ -26,6 +28,7 @@ for r = R
       % test plot logic with fewer points:
       G = sprandsym( 6, 0.5, 1:6 ) ;
    else
+      % run: generateNodalEquationsPartEH(0) first:
       savename = sprintf( 'nodal.N%d.R%d.mat', N, r ) ;
       load( savename ) ;
    end
@@ -41,7 +44,15 @@ for r = R
       showSymmetryDebug = 0 ;
 
       if ( withPreconditioning )
-         pInvHalf = inv( sqrt( P ) ) ;
+%save('a.mat') ;
+         %pInvHalf = inv( sqrt( P ) ) ;
+
+         % using the direct calculation of P^{-1/2} 
+         % results in the eigenvalues of G going off the real axis.  (matrices have many square roots
+         % so that must have been one, but not the real root wanted).
+
+         [v, d] = eig( full(P) ) ;
+         pInvHalf = v * sqrt(d) * inv(v) ;
 
          if ( showSymmetryDebug )
             disp( r ) ;
@@ -50,7 +61,7 @@ for r = R
             disp( max(max(abs( pInvHalf - pInvHalf.' ))) ) ;
          end
 
-         G = full( pInvHalf * G * pInvHalf ) ;
+         G = pInvHalf * G * pInvHalf ;
 
          if ( showSymmetryDebug )
             disp( max(max(abs(full(G - G.')))) ) ;
@@ -80,9 +91,9 @@ for r = R
          end
 
          if ( withPreconditioning )
-            saveas( f, sprintf( 'gershgorinPlotPreconditionedR%dFig%d.png', r, fignum ) ) ;
+            savePlot( f, sprintf( 'gershgorinPlotPreconditionedR%dFig%d.%s', r, fignum, fileExtension ) ) ;
          else
-            saveas( f, sprintf( 'gershgorinPlotR%dFig%d.png', r, fignum ) ) ;
+            savePlot( f, sprintf( 'gershgorinPlotR%dFig%d.%s', r, fignum, fileExtension ) ) ;
          end
       end
    else
@@ -94,7 +105,7 @@ for r = R
       xlabel( 'iteration' ) ;
       ylabel( sprintf('residual, R = %2.1f', r) ) ;
 
-      saveas( f, sprintf( 'residualsByIterationR%2.1fFig%d.png', r, fignum ) ) ;
+      savePlot( f, sprintf( 'residualsByIterationR%2.1fFig%d.%s', r, fignum, fileExtension ) ) ;
    end
 
    fignum = fignum + 1 ;

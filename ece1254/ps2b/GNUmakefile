@@ -1,8 +1,8 @@
-include ../pd/make.vars
+include ../util/make.vars
 
 all : $(LOCALFILES)
 
 clean : 
 	rm -f $(LOCALFILES)
 
-include ../pd/make.rules
+include ../util/make.rules

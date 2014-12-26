@@ -1,4 +1,4 @@
-include ../pd/make.vars
+include ../util/make.vars
 
 FROMPS2a += tridiagonal.m
 FROMPS3a += NodalAnalysis.m
@@ -11,7 +11,7 @@ all :: $(LOCALFILES)
 all :: $(FROMPS2a)
 all :: $(FROMPS3a)
 
-include ../pd/make.rules
+include ../util/make.rules
 
 clean: 
 	rm -f $(FROMPS2a) $(FROMPS3a) $(CLEAN)

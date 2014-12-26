@@ -1,4 +1,4 @@
-include ../pd/make.vars
+include ../util/make.vars
 
 all : $(LOCALFILES)
 
@@ -6,4 +6,4 @@ clean :
 	rm -f ps1.2.netlist heat.netlist
 	rm -f $(LOCALFILES)
 
-include ../pd/make.rules
+include ../util/make.rules

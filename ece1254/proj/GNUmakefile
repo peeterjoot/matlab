@@ -1,16 +1,6 @@
-include ../pd/make.vars
-
-# git clone git@github.com:ojwoodford/export_fig.git ~/export_fig
-EFIGDIR := $(HOME)/export_fig
-EFIGPATHNAMES := $(wildcard $(EFIGDIR)/*.m)
-EFIGFILENAMES := $(notdir $(EFIGPATHNAMES))
-
-# git clone git@github.com:jschwizer99/plot2svg.git ~/plot2svg
-SVGDIR := $(HOME)/plot2svg
-SVGSRCPATHNAMES := $(wildcard $(SVGDIR)/src/*.m)
-SVGSRCFILENAMES := $(notdir $(SVGSRCPATHNAMES))
-SVGEXPATHNAMES := $(wildcard $(SVGDIR)/example/*.m)
-SVGEXFILENAMES := $(notdir $(SVGEXPATHNAMES))
+include ../util/make.vars
+#include ../make.svg
+include ../make.efig
 
 CLEAN += *.mat
 CLEAN += *.png
@@ -18,7 +8,7 @@ CLEAN += *.pdf
 CLEAN += *.bak
 CLEAN += *~
 
-#LOCALFILES += $(EFIGFILENAMES)
+LOCALFILES += $(EFIGFILENAMES)
 #LOCALFILES += $(SVGSRCFILENAMES)
 #LOCALFILES += $(SVGEXFILENAMES)
 
@@ -27,18 +17,13 @@ PDFFILES := $(EPSFILES:.eps=.pdf)
 
 all : $(LOCALFILES)
 
-include ../pd/make.rules
+include ../util/make.rules
+#include ../make.svgrules
 
 pdf : $(PDFFILES)
 
-$(EFIGFILENAMES) : %.m: $(EFIGDIR)/%.m
-	cp $< $@
-
-$(SVGSRCFILENAMES) : %.m: $(SVGDIR)/src/%.m
-	cp $< $@
-
-$(SVGEXFILENAMES) : %.m: $(SVGDIR)/example/%.m
-	cp $< $@
+include ../make.svgrules
+include ../make.efigrules
 
 clean: 
 	rm -f $(CLEAN) $(LOCALFILES)
