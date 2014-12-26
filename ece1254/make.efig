@@ -2,3 +2,5 @@
 EFIGDIR := $(HOME)/export_fig
 EFIGPATHNAMES := $(wildcard $(EFIGDIR)/*.m)
 EFIGFILENAMES := $(notdir $(EFIGPATHNAMES))
+
+LOCALFILES += $(EFIGFILENAMES)

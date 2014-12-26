@@ -16,6 +16,8 @@ Vs = [1 10 20 100] ;
 %enableTrace() ;
 disableTrace() ;
 
+[fileExtension, savePlot] = saveHelper() ;
+
 % | V | st1 nd | st2 nd | st1 w/d| st2 w/d |
 c = 1 ;
 out = '' ;
@@ -32,14 +34,14 @@ for V = Vs
          if ( showPlot )
 
             if ( nd )
-               name = sprintf( 'ps2bP2PlotOfPsiV%dStepSize%dNoDampingFig%d.png', V, s, fignum ) ;
+               name = sprintf( 'ps2bP2PlotOfPsiV%dStepSize%dNoDampingFig%d.%s', V, s, fignum, fileExtension ) ;
             else
-               name = sprintf( 'ps2bP2PlotOfPsiV%dStepSize%dWithDampingFig%d.png', V, s, fignum ) ;
+               name = sprintf( 'ps2bP2PlotOfPsiV%dStepSize%dWithDampingFig%d.%s', V, s, fignum, fileExtension ) ;
             end
             fignum = fignum + 1 ;
 
             f = plot( 0:r.deltaX:1, y ) ; xlabel( 'x' ) ; ylabel( '\psi(x)' ) ;
-            saveas( f, name ) ;
+            savePlot( f, name ) ;
          end
       end
    end
