@@ -3,8 +3,6 @@ include ../util/make.vars
 FROMPS1 += backSubst.m forwardSubst.m noPivotLU.m withPivotLU.m
 
 LOCALFILES += $(FROMPS1)
-#LOCALFILES += $(SVGEXFILENAMES)
-LOCALFILES += $(EFIGFILENAMES)
 
 include ../make.efig
 

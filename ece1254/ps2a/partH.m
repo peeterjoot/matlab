@@ -101,9 +101,16 @@ for r = R
       x = [1:size(residuals, 2)] ;
 
       f = figure ;
-      plot( x, residuals ) ;
+%      if ( 0.1 == r )
+         plot( x, log10(residuals), '.-' ) ;
+         ylabel( 'log_{10}(residual)' ) ;
+         legend( sprintf('R = %2.1f', r) ) ;
+%      else
+%         plot( x, residuals ) ;
+%         ylabel( sprintf('residual, R = %2.1f', r) ) ;
+%      end
+
       xlabel( 'iteration' ) ;
-      ylabel( sprintf('residual, R = %2.1f', r) ) ;
 
       savePlot( f, sprintf( 'residualsByIterationR%2.1fFig%d.%s', r, fignum, fileExtension ) ) ;
    end
