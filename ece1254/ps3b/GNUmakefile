@@ -1,4 +1,5 @@
 include ../util/make.vars
+include ../make.efig
 
 FROMPS2a += tridiagonal.m
 FROMPS3a += NodalAnalysis.m
@@ -12,6 +13,7 @@ all :: $(FROMPS2a)
 all :: $(FROMPS3a)
 
 include ../util/make.rules
+include ../make.efigrules
 
 clean: 
 	rm -f $(FROMPS2a) $(FROMPS3a) $(CLEAN)

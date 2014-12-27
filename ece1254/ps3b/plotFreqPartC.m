@@ -14,6 +14,8 @@ if ( (where > (n+3)) || (where < 1) )
    error( 'plotFreqPartC:where', 'value for where (%d) not in range', where ) ;
 end
 
+[fileExtension, savePlot] = saveHelper() ;
+
 nodalCacheName = sprintf('nodal%d_%d_%d.mat', n, where, withOpenCircuitEndpoints ) ;
 if ( exist( nodalCacheName, 'file' ) )
    load( nodalCacheName ) ;
@@ -54,7 +56,7 @@ if ( 1 )
    legend( {'Real', 'Imag'} ) ;
    hold off ;
 
-   saveas( f, 'ps3bFreqResponsePartCFig1.png' ) ;
+   savePlot( f, sprintf( 'ps3bFreqResponsePartCFig1.%s', fileExtension ) ) ;
 end
 
 stateSpaceCacheName = sprintf('statespace%d_%d_%d.mat', n, where, withOpenCircuitEndpoints ) ;
@@ -73,7 +75,7 @@ else
    semilogx( 1:size(D, 1), log10( -diag(D) ), '-.ob' ) ;
    ylabel( 'log_{10}(-\lambda_i)' ) ;
    xlabel( 'i' ) ;
-   saveas( f, 'ps3bEigenvaluesFig1.png' ) ;
+   savePlot( f, sprintf( 'ps3bEigenvaluesFig1.%s', fileExtension ) ) ;
 
 %   dd = diag(D) ; dd(1:20)
 
@@ -110,7 +112,7 @@ if ( 1 )
                    sprintf('Imag (q = %d)', q)
                } ) ;
          xlabel( '\omega' ) ;
-         saveas( f, sprintf('ps3bFreqResponsePartCq%dFig%d.png', q, ii ) ) ;
+         savePlot( f, sprintf('ps3bFreqResponsePartCq%dFig%d.%s', q, ii, fileExtension ) ) ;
       end
 
       qCache = sprintf('modalReduction_q%d_n%d_w%d_o%d.mat', q, n, where, withOpenCircuitEndpoints ) ;

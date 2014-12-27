@@ -2,6 +2,8 @@ function tableData = displayOutputErrorAndCpuTimes()
 
    indexColumnDone = 0 ;
 
+   [fileExtension, savePlot] = saveHelper() ;
+
    methodNames = { 'modal', 'prima' } ;
 
    qs = [1 2 4 10 50 501] ;
@@ -35,14 +37,14 @@ function tableData = displayOutputErrorAndCpuTimes()
          legend( { 'y(t) - y_{q = 1}(t)', sprintf('y(t) - y_{q = %d}(t)', qo) } ) ;
          hold off ;
 
-         saveas( f, sprintf( 'ps3b%sDriverError%sFig1.png', names{ii}, methodNames{withPrima+1} ) ) ;
+         savePlot( f, sprintf( 'ps3b%sDriverError%sFig1.%s', names{ii}, methodNames{withPrima+1}, fileExtension ) ) ;
 
          f = figure ;
          plot( discreteTimes, s ) ;
          xlabel( 't [s]' ) ;
          ylabel( 'y(t) [C]' ) ;
 
-         saveas( f, sprintf( 'ps3b%sDriverOutput%sFig1.png', names{ii}, methodNames{withPrima+1} ) ) ;
+         savePlot( f, sprintf( 'ps3b%sDriverOutput%sFig1.%s', names{ii}, methodNames{withPrima+1}, fileExtension ) ) ;
 
          f = figure ;
          hold on ;
@@ -67,7 +69,7 @@ function tableData = displayOutputErrorAndCpuTimes()
          ylabel( 'cpu time [s]' ) ;
 
          hold off ;
-         saveas( f, sprintf( 'ps3b%sDriverCpuTimes%sFig1.png', names{ii}, methodNames{withPrima+1} ) ) ;
+         savePlot( f, sprintf( 'ps3b%sDriverCpuTimes%sFig1.%s', names{ii}, methodNames{withPrima+1}, fileExtension ) ) ;
 
          cpuColumn = {} ;
          indexColumn = {} ;
