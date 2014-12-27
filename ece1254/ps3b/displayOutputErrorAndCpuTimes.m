@@ -1,5 +1,7 @@
 function tableData = displayOutputErrorAndCpuTimes()
 
+   close all ;
+
    indexColumnDone = 0 ;
 
    [fileExtension, savePlot] = saveHelper() ;
