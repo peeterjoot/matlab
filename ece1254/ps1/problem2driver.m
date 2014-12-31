@@ -64,6 +64,12 @@ function problem2driver( doProblemB, figdesc )
    if ( doProblemB )
       totalTimes = luTimings + forwardTimings + backwardTimings ;
 
+      f = figure ;
+      plot( gridSizes, backwardTimings, '.-' ) ;
+      xlabel( 'N' ) ;
+      xlabel( 'cpu time (BE)' ) ;
+      savePlot( f, sprintf( '%s%s.%s', figdesc, 'cpuTimeVsN', fileExtension ) ) ;
+
       logTotalTimes = log( totalTimes ) ;
       logN = log( gridSizes ) ;
 

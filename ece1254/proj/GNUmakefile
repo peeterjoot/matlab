@@ -1,6 +1,6 @@
-include ../util/make.vars
-#include ../make.svg
-include ../make.efig
+include ../../util/make.vars
+#include ../../make.svg
+include ../../make.efig
 
 CLEAN += *.mat
 CLEAN += *.png
@@ -16,8 +16,8 @@ PDFFILES := $(EPSFILES:.eps=.pdf)
 
 all : $(LOCALFILES)
 
-include ../util/make.rules
-#include ../make.svgrules
+include ../../util/make.rules
+#include ../../make.svgrules
 
 pdf : $(PDFFILES)
 

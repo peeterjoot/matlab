@@ -7,7 +7,7 @@ my @matlab =
 (
 {
    DATE => 'Dec 25, 2014',
-   path => 'ece1254/util/saveHelper.m',
+   path => 'util/saveHelper.m',
    WHAT => qq(Choose how to plot, depending on the save'ing functions available.)
 },
 {
@@ -17,36 +17,36 @@ my @matlab =
 },
 {
    DATE => 'Oct 11, 2014',
-   path => 'ece1254/util/changeDebug.m',
+   path => 'util/changeDebug.m',
    WHAT => qq(Enable or disable trace)
 },
 {
    DATE => 'Oct 11, 2014',
-   path => 'ece1254/util/changeTrace.m',
+   path => 'util/changeTrace.m',
    WHAT => qq(Enable or disable trace)
 },
 {
    DATE => 'Oct 11, 2014',
-   path => 'ece1254/util/disableDebug.m',
+   path => 'util/disableDebug.m',
    WHAT => qq(Disable debug mode.  This sets a global debug variable to zero so that calls to traceit don't print anything.)
 },
 {
    DATE => 'Oct 11, 2014',
-   path => 'ece1254/util/disableTrace.m',
+   path => 'util/disableTrace.m',
    WHAT => qq(Disable debug tracing.
 Sets a global trace variable to zero so that calls to traceit don't print anything.
 )
 },
 {
    DATE => 'Oct 11, 2014',
-   path => 'ece1254/util/enableDebug.m',
+   path => 'util/enableDebug.m',
    WHAT => qq(
 enable debug mode.
 Sets a global debug variable to non-zero so that calls to verify( ... ) don't print anything.)
 },
 {
    DATE => 'Oct 11, 2014',
-   path => 'ece1254/util/enableTrace.m',
+   path => 'util/enableTrace.m',
    WHAT => qq(Enable debug tracing.
 Sets a global trace variable to non-zero so that calls to traceit( ... ) don't print anything.)
 },
@@ -73,7 +73,7 @@ N x N square grid of resistors of value R, where N is the number of...)
 },
 {
    DATE => 'Oct 11, 2014',
-   path => 'ece1254/util/isDebugEnabled.m',
+   path => 'util/isDebugEnabled.m',
    WHAT => qq(Check if debug mode is enabled.  If neither enableDebug nor disableDebug has been called, this 
 disable debug modes.)
 },
@@ -120,7 +120,7 @@ where L and U are lower and upper triangular respectively.)
 },
 {
    DATE => 'Oct 11, 2014',
-   path => 'ece1254/util/traceit.m',
+   path => 'util/traceit.m',
    WHAT => qq(Trace a string, along with the name/line of the caller.  This is done if enableTrace has been called, and disableTrace has not, then the value of the string will be printed following a 'debug: function:line: ' prefix.)
 },
 {
