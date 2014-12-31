@@ -21,8 +21,8 @@ include ../../util/make.rules
 
 pdf : $(PDFFILES)
 
-include ../make.svgrules
-include ../make.efigrules
+include ../../make.svgrules
+include ../../make.efigrules
 
 clean: 
 	rm -f $(CLEAN) $(LOCALFILES)
