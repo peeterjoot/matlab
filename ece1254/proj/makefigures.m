@@ -4,7 +4,9 @@ function makefigures()
    %clc
    close all ;
 
-   doAll = 0 ;
+   doAll = 1 ;
+   doAll2 = 1 ;
+   doAll3 = 0 ;
 
    if ( doAll || 0 )
       p = struct( 'fileName', '../circuits/BridgeRectifier.netlist' ) ;
@@ -151,7 +153,7 @@ function makefigures()
       PlotWaveforms( p ) ;
    end
 
-   if ( doAll || 0 )
+   if ( doAll3 || 0 )
       p = struct( 'fileName', '../circuits/halfWaveRectifier.netlist' ) ;
       p.figName = 'halfWaveRectifier' ;
       p.figNum = 2 ;
@@ -180,7 +182,7 @@ function makefigures()
       %PlotWaveforms( p ) ;
    end
 
-   if ( doAll || 0 )
+   if ( doAll2 || 0 )
       p = struct( 'fileName', '../circuits/halfWaveRectifierPow.netlist' ) ;
       p.figName = 'halfWaveRectifierPow' ;
       p.figNum = 2 ;
@@ -197,7 +199,7 @@ function makefigures()
       PlotWaveforms( p ) ;
    end
 
-   if ( doAll || 0 )
+   if ( doAll3 || 0 )
       % inputs:
       %V1 1 0 AC 10 1e6
       %D1 1 2 10e-12 25e-3
@@ -237,7 +239,7 @@ function makefigures()
       %PlotWaveforms( p ) ;
    end
 
-   if ( doAll || 0 )
+   if ( doAll3 || 0 )
       p = struct( 'fileName', '../circuits/simpleVrectSmallerCap.netlist' ) ;
       p.figName = 'typicalRectifierCircuitSmallerCap' ;
 
@@ -262,7 +264,65 @@ function makefigures()
       PlotWaveforms( p ) ;
    end
 
-   if ( doAll || 1 )
+   if ( 0 )
+      f = figure ;
+      hold on ;
+
+      p = struct( 'fileName', '../circuits/simpleVrectSmallerCap.netlist' ) ;
+      p.figName = 'typicalRectifierCircuitSmallerCap' ;
+      p.nofigure = 1 ;
+      p.nPlus = [ 1 2 ] ;
+      p.nMinus = [ 0 0 ] ;
+      %PlotWaveforms( p ) ;
+
+      p = struct( 'fileName', '../circuits/simpleVrect.netlist' ) ;
+      p.figName = 'typicalRectifier' ;
+      p.nofigure = 1 ;
+      p.nPlus = [ 2 ] ;
+      p.nMinus = [ 0 ] ;
+      %PlotWaveforms( p ) ;
+
+%      p = struct( 'fileName', '../circuits/halfWaveRectifier.netlist' ) ;
+%      p.figName = 'halfWaveRectifier' ;
+%      p.nofigure = 1 ;
+%      p.nPlus = 1 ;
+%      p.nMinus = 0 ;
+%      p.legends = { 'Source Voltage', 'Smaller cap', 'With cap', 'No cap' } ;
+%      p.xLabel = 'Time (s)' ;
+%      p.yLabel = 'Voltage (V)' ;
+%      PlotWaveforms( p ) ;
+
+      p = struct( 'fileName', '../circuits/halfWaveRectifier.netlist' ) ;
+      p.figName = 'halfWaveRectifier' ;
+      p.nofigure = 1 ;
+      p.figNum = 2 ;
+      %p.N = 1 ;
+      %p.dlambda = 1e-4 ;
+      %p.minStep = 1e-10 ;
+
+      p.xLabel = 'Time (s)' ;
+      p.yLabel = 'Voltage (V)' ;
+      %p.title = 'Voltage' ;
+      p.figDesc = 'Voltage' ;
+      p.legends = { 'Source Voltage', 'Output Voltage' } ;
+      p.nPlus = [ 1 2 ] ;
+      p.nMinus = [ 0 0 ] ;
+      %p.verbose = 1 ;
+      %p.allowCaching = 0 ;
+      PlotWaveforms( p ) ;
+
+      set( f, 'Color', 'w' ) ;
+
+      [fileExtension, savePlot] = saveHelper() ;
+
+      saveName = sprintf( 'a.%s', fileExtension ) ;
+
+      savePlot( f, saveName ) ;
+
+      hold off ;
+   end
+
+   if ( doAll2 || 0 )
       p = struct( 'fileName', '../circuits/LCLowpass.netlist' ) ;
       p.figName = 'lowPassFilter' ;
 %      p.useBigF = 0 ;

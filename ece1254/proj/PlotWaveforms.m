@@ -33,6 +33,14 @@ function PlotWaveforms( p )
       solutionMethodString = 'DirectSolution' ;
    end
 
+   if ( ~isfield( p, 'nofigure' ) )
+      p.nofigure = 0 ;
+   end
+
+   if ( ~p.nofigure )
+      f = figure ;
+   end
+
    cacheFile = sprintf( '%s_%s_%s_N%d.mat', p.figName, solutionMethodString, currentCalculationMethodString, N ) ;
    traceit( sprintf( 'cacheFile: %s', cacheFile ) ) ;
 
@@ -76,8 +84,6 @@ function PlotWaveforms( p )
 %   if ( isfield( p, 'verbose' ) )
 %      h.xnames
 %   end
-
-   f = figure ;
 
    if ( ~isfield( p, 'spectrum' ) )
       p.spectrum = 0 ;
@@ -146,15 +152,17 @@ function PlotWaveforms( p )
       title( p.title ) ;
    end
 
-   % eliminate the background that makes the saved plot look
-   % like the GUI display window background color:
-   set( f, 'Color', 'w' ) ;
+   if ( ~p.nofigure )
+      % eliminate the background that makes the saved plot look
+      % like the GUI display window background color:
+      set( f, 'Color', 'w' ) ;
 
-   hold off ;
+      hold off ;
 
-   [fileExtension, savePlot] = saveHelper() ;
+      [fileExtension, savePlot] = saveHelper() ;
 
-   saveName = sprintf( '%s%sFig%d.%s', p.figName, p.figDesc, p.figNum, fileExtension ) ;
+      saveName = sprintf( '%s%sFig%d.%s', p.figName, p.figDesc, p.figNum, fileExtension ) ;
 
-   savePlot( f, saveName ) ;
+      savePlot( f, saveName ) ;
+   end
 end
