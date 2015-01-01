@@ -4,9 +4,11 @@ function makefigures()
    %clc
    close all ;
 
-   doAll = 1 ;
-   doAll2 = 1 ;
+   doAll = 0 ;
+   doAll2 = 0 ;
    doAll3 = 0 ;
+
+   [fileExtension, savePlot] = saveHelper() ;
 
    if ( doAll || 0 )
       p = struct( 'fileName', '../circuits/BridgeRectifier.netlist' ) ;
@@ -264,58 +266,37 @@ function makefigures()
       PlotWaveforms( p ) ;
    end
 
-   if ( 0 )
+   if ( doAll3 || 1 )
       f = figure ;
       hold on ;
+
+      p = struct( 'fileName', '../circuits/halfWaveRectifier.netlist' ) ;
+      p.figName = 'halfWaveRectifier' ;
+      p.nofigure = 1 ;
+      p.nPlus = [ 1 2 ] ;
+      p.nMinus = [ 0 0 ] ;
+      PlotWaveforms( p ) ;
 
       p = struct( 'fileName', '../circuits/simpleVrectSmallerCap.netlist' ) ;
       p.figName = 'typicalRectifierCircuitSmallerCap' ;
       p.nofigure = 1 ;
-      p.nPlus = [ 1 2 ] ;
-      p.nMinus = [ 0 0 ] ;
-      %PlotWaveforms( p ) ;
+      p.nPlus = 2 ;
+      p.nMinus = 0 ;
+      PlotWaveforms( p ) ;
 
       p = struct( 'fileName', '../circuits/simpleVrect.netlist' ) ;
       p.figName = 'typicalRectifier' ;
       p.nofigure = 1 ;
       p.nPlus = [ 2 ] ;
       p.nMinus = [ 0 ] ;
-      %PlotWaveforms( p ) ;
-
-%      p = struct( 'fileName', '../circuits/halfWaveRectifier.netlist' ) ;
-%      p.figName = 'halfWaveRectifier' ;
-%      p.nofigure = 1 ;
-%      p.nPlus = 1 ;
-%      p.nMinus = 0 ;
-%      p.legends = { 'Source Voltage', 'Smaller cap', 'With cap', 'No cap' } ;
-%      p.xLabel = 'Time (s)' ;
-%      p.yLabel = 'Voltage (V)' ;
-%      PlotWaveforms( p ) ;
-
-      p = struct( 'fileName', '../circuits/halfWaveRectifier.netlist' ) ;
-      p.figName = 'halfWaveRectifier' ;
-      p.nofigure = 1 ;
-      p.figNum = 2 ;
-      %p.N = 1 ;
-      %p.dlambda = 1e-4 ;
-      %p.minStep = 1e-10 ;
-
+      p.legends = { 'Source Voltage', 'C = 0', 'C = 1nF', 'C = 1000nF' } ;
       p.xLabel = 'Time (s)' ;
       p.yLabel = 'Voltage (V)' ;
-      %p.title = 'Voltage' ;
-      p.figDesc = 'Voltage' ;
-      p.legends = { 'Source Voltage', 'Output Voltage' } ;
-      p.nPlus = [ 1 2 ] ;
-      p.nMinus = [ 0 0 ] ;
-      %p.verbose = 1 ;
-      %p.allowCaching = 0 ;
       PlotWaveforms( p ) ;
 
       set( f, 'Color', 'w' ) ;
 
-      [fileExtension, savePlot] = saveHelper() ;
-
-      saveName = sprintf( 'a.%s', fileExtension ) ;
+      saveName = sprintf( 'halfWaveRectifierRangeOfCapValues.%s', fileExtension ) ;
 
       savePlot( f, saveName ) ;
 

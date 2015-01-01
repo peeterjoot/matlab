@@ -65,15 +65,15 @@ function h = HBSolve( N, p )
    end
 
    % Newton's Method Parameters
-   if ( (rcond( r.Y ) > 1e-6) || 0 )
-      % suggested by wikipedia HB article: use the linear solution
-      % as a seed, but this doens't work out well for some circuits ( i.e. halfWaveRectifier )
-      V0 = r.Y\r.I ;
-   else
+%   if ( rcond( r.Y ) > 1e-6 )
+%      % suggested by wikipedia HB article: use the linear solution
+%      % as a seed, but this doesn't work out well for some circuits ( i.e. halfWaveRectifier )
+%      V0 = r.Y\r.I ;
+%   else
       V0 = zeros( R * ( 2 * N + 1 ), 1 ) ;
       %V0 = rand( R * ( 2 * N + 1 ), 1 ) ;
       %V0 = rand( R * ( 2 * N + 1 ), 1 ) + 1j * rand( R * ( 2 * N + 1 ), 1 ) ;
-   end
+%   end
 
    totalIterations = 0 ;
 
@@ -111,8 +111,19 @@ function h = HBSolve( N, p )
 
 %save('b.mat') ;
       % half wave rectifier (and perhaps other circuits) can't converge when lambda == 0.  have to start off bigger.
-      if ( (0 == lambda) && 1 )
+      if ( 0 == lambda )
          %while ( ( jcond < p.JcondTol ) || isnan( jcond ) )
+
+%         % First fall back to zeros for the initial vector.  Could alternately step that initial vector selection.
+%         if ( isnan( jcond ) )
+%            V0 = zeros( R * ( 2 * N + 1 ), 1 ) ;
+%            V = V0 ;
+%            f = r.Y * V - Inl - dlambda * r.I ;
+%
+%            J = r.Y - JI ;
+%            jcond = rcond( J ) ;
+%         end
+          
          while ( isnan( jcond ) )
             disp( sprintf( 'lambda: %e, cond = %e', dlambda, jcond ) ) ;
 

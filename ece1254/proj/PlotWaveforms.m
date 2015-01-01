@@ -2,7 +2,48 @@ function PlotWaveforms( p )
    % Calls a Harmonic Balance solution function to solve the
    % circuit described in fileName using the Harmonic Balance method,
    % truncating the harmonics to N multiples of fundamental.
-   % Various Parameters of interest are plotted
+   % Data of interest is plotted using one of: plot, stem, or loglog.
+   % 
+   % parameters are passed as a structure parameter for flexibility, and various defaults are assumed if 
+   % unspecified:
+   %
+   % p.logPlot
+   %    default 0   (loglog plot when 1)
+   % p.spectrum
+   %    default 0.  (stem plot when 1).
+   % p.allowCaching
+   %    default 1.  Set to zero to avoid caching intermediate state when experimenting with the solving algoritms.
+   % p.N
+   %    default 50
+   % p.useBigF
+   %    default 0
+   % p.nofigure
+   %    default 0
+   % p.legends
+   %    default {} (no legends)
+   % p.title
+   %    default '' (no title)
+   % p.figName
+   %    required when nofigure unspecified.  Used to construct the path to save the plot in.
+   % p.figNum
+   %    required when nofigure unspecified.  Used to construct the path to save the plot in.
+   % p.figDesc
+   %    default '' (additional text to add to the plot save name)
+   % p.xLabel
+   %    default: no xlabel.
+   % p.yLabel
+   %    default: no ylabel.
+   % p.nPlus
+   % p.nMinus
+   %    Arrays of plus and minus nodes of interest for the plots.
+   %
+   % parameters passed directly to HBSolve():
+   %    p.dispfrequency
+   %    p.dlambda
+   %    p.iterations
+   %    p.JcondTol
+   %    p.minStep
+   %    p.verbose
 
    if ( ~isfield( p, 'logPlot' ) )
       p.logPlot = 0 ;
@@ -142,7 +183,9 @@ function PlotWaveforms( p )
       legend( p.legends, 'Location', 'SouthEast' ) ;
    end
 
-   xlabel( p.xLabel ) ;
+   if ( isfield( p, 'yLabel' ) )
+      xlabel( p.xLabel ) ;
+   end
 
    if ( isfield( p, 'yLabel' ) )
       ylabel( p.yLabel ) ;
