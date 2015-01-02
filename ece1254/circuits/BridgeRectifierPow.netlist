@@ -1,4 +1,7 @@
 V1 2 1 AC 10 1e6
+*V1 4 1 AC 10 1e6
+*V2 4 5 AC 5 0.5e6 1
+*V3 5 2 AC 1 0.25e6
 * Simple single node Rectifier using a five non-zero terms of the Taylor expansion of I_0( e^v/vt - 1), with I_0 = 10e-12, based on:
 *
 * D1 2 3 10e-12 25e-3

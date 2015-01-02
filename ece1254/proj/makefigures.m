@@ -78,7 +78,7 @@ function makefigures()
       PlotWaveforms( p ) ;
    end
 
-   if ( doAll || 0 )
+   if ( doAll || 1 )
       p = struct( 'fileName', '../circuits/BridgeRectifierCap.netlist' ) ;
       p.figName = 'bridgeRectifierCapFilter' ;
       p.xLabel = 'Time (s)' ;
@@ -303,7 +303,7 @@ function makefigures()
       hold off ;
    end
 
-   if ( doAll3 || 1 )
+   if ( doAll3 || 0 )
       f = figure ;
       hold on ;
 
