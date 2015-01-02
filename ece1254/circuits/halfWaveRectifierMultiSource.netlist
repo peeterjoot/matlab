@@ -1,0 +1,8 @@
+* Half wave Rectifier
+*V1 1 0 AC 10 1e6
+V1 3 0 AC 10 1e6 0
+V1 3 4 AC 5 0.5e6 1
+V1 4 1 AC 1 0.25e6 0.5
+D1 1 2 10e-12 25e-3
+R1 2 0 1000
+.end

@@ -266,7 +266,7 @@ function makefigures()
       PlotWaveforms( p ) ;
    end
 
-   if ( doAll3 || 1 )
+   if ( doAll3 || 0 )
       f = figure ;
       hold on ;
 
@@ -297,6 +297,54 @@ function makefigures()
       set( f, 'Color', 'w' ) ;
 
       saveName = sprintf( 'halfWaveRectifierRangeOfCapValues.%s', fileExtension ) ;
+
+      savePlot( f, saveName ) ;
+
+      hold off ;
+   end
+
+   if ( doAll3 || 1 )
+      f = figure ;
+      hold on ;
+
+      % C = 0
+      p = struct( 'fileName', '../circuits/halfWaveRectifierMultiSource.netlist' ) ;
+      p.figName = 'halfWaveRectifierMultiSource' ;
+      p.nofigure = 1 ;
+      p.nPlus = [ 1 2 ] ;
+      p.nMinus = [ 0 0 ] ;
+      PlotWaveforms( p ) ;
+
+      % C = 1nF (1e-9)
+      p = struct( 'fileName', '../circuits/simpleVrectSmallerCapMultiSource.netlist' ) ;
+      p.figName = 'typicalRectifierCircuitSmallerCapMultiSource' ;
+      p.nofigure = 1 ;
+      p.nPlus = 2 ;
+      p.nMinus = 0 ;
+      PlotWaveforms( p ) ;
+
+      % C = 1e-9
+      p = struct( 'fileName', '../circuits/simpleVrectMediumCapMultiSource.netlist' ) ;
+      p.figName = 'typicalRectifierCircuitMediumCapMultiSource' ;
+      p.nofigure = 1 ;
+      p.nPlus = 2 ;
+      p.nMinus = 0 ;
+      PlotWaveforms( p ) ;
+
+      % C = 1e-6
+      p = struct( 'fileName', '../circuits/simpleVrectMultiSource.netlist' ) ;
+      p.figName = 'typicalRectifierMultiSource' ;
+      p.nofigure = 1 ;
+      p.nPlus = [ 2 ] ;
+      p.nMinus = [ 0 ] ;
+      p.legends = { 'Source Voltage', 'C = 0', 'C = 1nF', 'C = 10nF', 'C = 1000nF' } ;
+      p.xLabel = 'Time (s)' ;
+      p.yLabel = 'Voltage (V)' ;
+      PlotWaveforms( p ) ;
+
+      set( f, 'Color', 'w' ) ;
+
+      saveName = sprintf( 'halfWaveRectifierRangeOfCapValuesMultiSource.%s', fileExtension ) ;
 
       savePlot( f, saveName ) ;
 
