@@ -78,7 +78,7 @@ function makefigures()
       PlotWaveforms( p ) ;
    end
 
-   if ( doAll || 1 )
+   if ( doAll || 0 )
       p = struct( 'fileName', '../circuits/BridgeRectifierCap.netlist' ) ;
       p.figName = 'bridgeRectifierCapFilter' ;
       p.xLabel = 'Time (s)' ;
@@ -196,8 +196,9 @@ function makefigures()
       p.legends = { 'Source Voltage', 'Output Voltage' } ;
       p.nPlus = [ 1 2 ] ;
       p.nMinus = [ 0 0 ] ;
+      p.iterations = 200 ;
       %p.verbose = 1 ;
-      %p.allowCaching = 0 ;
+      p.allowCaching = 0 ; % experimenting with taylor expansion of exponential.  doesn't work well.
       PlotWaveforms( p ) ;
    end
 
