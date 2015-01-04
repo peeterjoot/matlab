@@ -77,11 +77,7 @@ function results = NodalAnalysis( filename, sourceStepScaling )
 %
 %     V_{node+} - V_{node-} = gain (( V_{nodectrl+} - V_{nodectrl-} )/Vt )^P.
 %
-%   Defaults: Vt = 1, P = 1.  When P is a number, this is a power-law non-linearity ( or linearity with P = 1).
-% NOT IMPLEMENTED:
-%%%%   When P is the string 'exp' the the voltage gain is the exponential function:
-%%%%
-%%%%     V_{node+} - V_{node-} = gain exp(( V_{nodectrl+} - V_{nodectrl-} )/Vt ).
+%   Defaults: Vt = 1, P = 1.  When P is not equal to 1, non-linear power-law elements are returned.
 %
 % - The syntax for specifying a capacitor is:
 %
