@@ -4,7 +4,7 @@ function makefigures()
    %clc
    close all ;
 
-   doAll = 0 ;
+   doAll  = 0 ;
    doAll2 = 0 ;
    doAll3 = 0 ;
 
@@ -18,6 +18,7 @@ function makefigures()
       p.logPlot = 1 ;
       %p.verbose = 1 ;
       p.figDesc = 'ErrorAndCpuTimes' ;
+      p.title = 'Error and CPU times' ;
       p.legends = { 'Normalized Error', 'CPU Time' } ;
       p.xLabel = 'N (Number of Harmonics)' ;
       PlotWaveforms( p ) ;
@@ -25,12 +26,11 @@ function makefigures()
       %p.N = 3 ;
       p.logPlot = 0 ;
       p.xLabel = 'Time (s)' ;
-      %p.allowCaching = 0 ;
       %p.useBigF = 0 ;
 
-      %p.title = 'Source and Output Voltages' ;
       p.figNum = 2 ;
       p.figDesc = 'SourceAndOutputVoltages' ;
+      p.title = 'Source and Output Voltages' ;
 
       p.nPlus = [ 2 3 ] ;
       p.nMinus = [ 1 0 ] ;
@@ -38,17 +38,18 @@ function makefigures()
       p.yLabel = 'Voltage (V)' ;
       PlotWaveforms( p ) ;
 
-      %p.title = 'Source Current' ;
       p.figNum = 3 ;
       p.figDesc = 'SourceCurrent' ;
+      p.title = 'Source Current' ;
       p.nPlus = 4 ;
       p.nMinus = 0 ;
       p.legends = {} ;
       p.yLabel = 'Current (A)' ;
       PlotWaveforms( p ) ;
 
-      %p.title = 'Diode Voltages' ;
+      %p.allowCaching = 0 ;
       p.figDesc = 'DiodeVoltages' ;
+      p.title = 'Diode Voltages' ;
       p.figNum = 4 ;
       p.nPlus = [ 2 0 1 0 ] ;
       p.nMinus = [ 3 1 3 2 ] ;
@@ -70,6 +71,7 @@ function makefigures()
 
       p.figNum = 2 ;
       p.figDesc = 'SourceAndOutputVoltages' ;
+      p.title = 'Source and Output Voltages' ;
 
       p.nPlus = [ 2 3 ] ;
       p.nMinus = [ 1 0 ] ;
@@ -83,9 +85,9 @@ function makefigures()
       p.figName = 'bridgeRectifierCapFilter' ;
       p.xLabel = 'Time (s)' ;
 
-      %p.title = 'Source and Output Voltages' ;
       p.figNum = 2 ;
       p.figDesc = 'SourceAndOutputVoltages' ;
+      p.title = 'Source and Output Voltages' ;
       %p.verbose = 1 ;
 
       % 'V_1'
@@ -99,23 +101,54 @@ function makefigures()
       p.yLabel = 'Voltage (V)' ;
       PlotWaveforms( p ) ;
 
-      %p.title = 'Source Current' ;
       p.figNum = 3 ;
       p.figDesc = 'SourceCurrent' ;
+      p.title = 'Source Current' ;
       p.nPlus = 4 ;
       p.nMinus = 0 ;
       p.legends = {} ;
       p.yLabel = 'Current (A)' ;
       PlotWaveforms( p ) ;
 
-      %p.title = 'Diode Voltages' ;
+%      p.allowCaching = 0 ;
       p.figDesc = 'DiodeVoltages' ;
+      p.title = 'Diode Voltages' ;
       p.figNum = 4 ;
       p.nPlus = [ 2 0 1 0 ] ;
       p.nMinus = [ 3 1 3 2 ] ;
       p.legends = { 'vd1', 'vd2', 'vd3', 'vd4' } ;
       p.yLabel = 'Voltage (V)' ;
       PlotWaveforms( p ) ;
+
+      p.figNum = 5 ;
+      p.nPlus = 2 ;
+      p.nMinus = 3 ;
+      p.legends = { 'vd1' } ;
+      p.yLabel = 'Voltage (V)' ;
+      %PlotWaveforms( p ) ;
+
+      p.figNum = 6 ;
+      p.nPlus = 0 ;
+      p.nMinus = 1 ;
+      p.legends = { 'vd2' } ;
+      p.yLabel = 'Voltage (V)' ;
+      %PlotWaveforms( p ) ;
+
+      p.figNum = 6 ;
+      p.nPlus = 1 ;
+      p.nMinus = 3 ;
+      p.legends = { 'vd3' } ;
+      p.yLabel = 'Voltage (V)' ;
+      %PlotWaveforms( p ) ;
+
+      p.figNum = 7 ;
+      p.nPlus = 0 ;
+      p.nMinus = 2 ;
+      p.legends = { 'vd4' } ;
+      p.yLabel = 'Voltage (V)' ;
+      %PlotWaveforms( p ) ;
+
+
 
       %p.N = 100 ;
       %p.figNum = 5 ;
@@ -139,14 +172,15 @@ function makefigures()
       p.figNum = 3 ;
       p.logPlot = 1 ;
       p.figDesc = 'ErrorAndCpuTimes' ;
+      p.title = 'Error and CPU times' ;
       p.legends = { 'Normalized Error', 'CPU Time' } ;
       p.xLabel = 'N (Number of Harmonics)' ;
       PlotWaveforms( p ) ;
 
       p.xLabel = 'Time (s)' ;
       p.yLabel = 'Voltage (V)' ;
-      %p.title = 'Voltage' ;
       p.figDesc = 'Voltage' ;
+      p.title = 'Voltage' ;
       p.logPlot = 0 ;
       p.legends = { } ;
       p.figNum = 2 ;
@@ -163,8 +197,8 @@ function makefigures()
 
       p.xLabel = 'Time (s)' ;
       p.yLabel = 'Voltage (V)' ;
-      %p.title = 'Voltage' ;
       p.figDesc = 'Voltage' ;
+      p.title = 'Voltage' ;
       p.legends = { 'Source Voltage', 'Output Voltage' } ;
       p.nPlus = [ 1 2 ] ;
       p.nMinus = [ 0 0 ] ;
@@ -174,8 +208,8 @@ function makefigures()
 
       p.figNum = 3 ;
       p.yLabel = 'Voltage (V)' ;
-      p.figDesc = 'Diode Current' ;
-      %p.title = p.figDesc ;
+      p.figDesc = 'DiodeCurrent' ;
+      p.title   = 'Diode Current' ;
       p.legends = {} ;
       p.nPlus = [ 3 ] ;
       p.nMinus = [ 0 ] ;
@@ -191,14 +225,14 @@ function makefigures()
 
       p.xLabel = 'Time (s)' ;
       p.yLabel = 'Voltage (V)' ;
-      %p.title = 'Voltage' ;
       p.figDesc = 'Voltage' ;
+      p.title = 'Voltage' ;
       p.legends = { 'Source Voltage', 'Output Voltage' } ;
       p.nPlus = [ 1 2 ] ;
       p.nMinus = [ 0 0 ] ;
       p.iterations = 200 ;
       %p.verbose = 1 ;
-      p.allowCaching = 0 ; % experimenting with taylor expansion of exponential.  doesn't work well.
+      %p.allowCaching = 0 ; % experimenting with taylor expansion of exponential.  doesn't work well.
       PlotWaveforms( p ) ;
    end
 
@@ -218,6 +252,7 @@ function makefigures()
       p.figNum = 3 ;
       p.logPlot = 1 ;
       p.figDesc = 'ErrorAndCpuTimes' ;
+      p.title   = 'Error and CPU times' ;
       p.legends = { 'Normalized Error', 'CPU Time' } ;
       p.xLabel = 'N (Number of Harmonics)' ;
       PlotWaveforms( p ) ;
@@ -226,6 +261,7 @@ function makefigures()
       p.logPlot = 0 ;
       p.figNum = 2 ;
       p.figDesc = 'SourceAndOutputVoltages' ;
+      p.title = 'Source and Output Voltages' ;
       p.nPlus = [ 1 2 ] ;
       p.nMinus = [ 0 0 ] ;
       %p.allowCaching = 0 ;
@@ -234,7 +270,8 @@ function makefigures()
       PlotWaveforms( p ) ;
 
       %p.figNum = 5 ;
-      %p.figDesc = 'Diode Current' ;
+      %p.figDesc = 'DiodeCurrent' ;
+      %p.title   = 'Diode Current' ;
       %p.nPlus = [ 3 ] ;
       %p.nMinus = [ 0 ] ;
       %p.legends = {} ;
@@ -250,6 +287,7 @@ function makefigures()
       p.logPlot = 0 ;
       p.figNum = 2 ;
       p.figDesc = 'SourceAndOutputVoltages' ;
+      p.title = 'Source and Output Voltages' ;
       p.nPlus = [ 1 2 ] ;
       p.nMinus = [ 0 0 ] ;
       %p.allowCaching = 0 ;
@@ -258,8 +296,8 @@ function makefigures()
       PlotWaveforms( p ) ;
 
       p.figNum = 3 ;
-      p.figName = 'DiodeCurrent' ;
-      p.figDesc = 'Diode Current' ;
+      p.figDesc = 'DiodeCurrent' ;
+      p.title   = 'Diode Current' ;
       p.nPlus = [ 3 ] ;
       p.nMinus = [ 0 ] ;
       p.legends = {} ;
@@ -362,41 +400,62 @@ function makefigures()
       p.yLabel = 'Voltage (V)' ;
       p.figNum = 2 ;
       p.figDesc = 'SourceAndOutputVoltages' ;
+      p.title = 'Source and Output Voltages' ;
       p.nPlus = [ 1 5 ] ;
       p.nMinus = [ 0 0 ] ;
       p.legends = { 'Source Voltage', 'Output Voltage' } ;
       PlotWaveforms( p ) ;
 
       p.spectrum = 1 ;
-      %p.title = 'Input Voltage Spectrum' ;
       p.xLabel = 'Frequency (MHz)' ;
       p.yLabel = 'Absolute Magnitude' ;
       p.figNum = 3 ;
       p.figDesc = 'InputVoltageSpectrum' ;
+      p.title = 'Input Voltage Spectrum' ;
       p.nPlus = 1 ;
+      p.nMinus = 0 ;
       p.legends = {} ;
       %p.verbose = 1 ;
-%      PlotWaveforms( p ) ;
+      PlotWaveforms( p ) ;
 
-      %p.title = 'Output Voltage Spectrum' ;
       p.figDesc = 'OutputVoltageSpectrum' ;
+      p.title = 'Output Voltage Spectrum' ;
       p.figNum = 4 ;
       p.nPlus = 5 ;
-%      PlotWaveforms( p ) ;
+      PlotWaveforms( p ) ;
    end
 
-   if ( doAll || 1 )
+   if ( doAll || 0 )
       p = struct( 'fileName', '../circuits/square.netlist' ) ;
       p.figName = 'PowerLawAmplifiers' ;
 
       p.useBigF = 0 ; % BigF Jacobian not implemented for this circuit.
       %p.allowCaching = 0 ;
       p.figNum = 1 ;
-      p.figDesc = 'voltage' ;
+      p.figDesc = 'Voltage' ;
+      p.title   = 'Voltage' ;
       p.nPlus = [ 1 3 4 ] ;
       p.nMinus = [ 0 0 0 ] ;
       p.legends = { 'v_s', 'v_s^2', 'v_s^3' } ;
       p.xLabel = 'Time (s)' ;
+      p.yLabel = 'Voltage (V)' ;
+      PlotWaveforms( p ) ;
+   end
+
+   if ( 1 )
+      p = struct( 'fileName', '../circuits/x.netlist' ) ;
+      p.figName = 'x' ;
+      p.xLabel = 'Time (s)' ;
+
+      p.allowCaching = 0 ;
+      p.figNum = 2 ;
+      p.figDesc = 'SourceAndOutputVoltages' ;
+      p.title = 'Source and Output Voltages' ;
+      p.verbose = 1 ;
+
+      p.nPlus = [ 1 2 ] ;
+      p.nMinus = [ 0 0 ] ;
+      p.legends = { 'Source Voltage', 'Output Voltage' } ;
       p.yLabel = 'Voltage (V)' ;
       PlotWaveforms( p ) ;
    end

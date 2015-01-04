@@ -78,12 +78,22 @@ function PlotWaveforms( p )
       p.nofigure = 0 ;
    end
 
+   if ( ~isfield( p, 'figDesc' ) )
+      p.figDesc = '' ;
+   end
+
+   if ( ~isfield( p, 'figNum' ) )
+      p.figNum = 0 ;
+   end
+
    if ( ~p.nofigure )
       f = figure ;
    end
 
    cacheFile = sprintf( '%s_%s_%s_N%d.mat', p.figName, solutionMethodString, currentCalculationMethodString, N ) ;
    traceit( sprintf( 'cacheFile: %s', cacheFile ) ) ;
+
+   disp( sprintf( 'PlotWaveForms: %s, %s%d', cacheFile, p.figDesc, p.figNum ) ) ;
 
    if ( exist( cacheFile, 'file' ) && p.allowCaching )
       load( cacheFile ) ;
@@ -190,10 +200,6 @@ function PlotWaveforms( p )
       ylabel( p.yLabel ) ;
    end
 
-   if ( size( p.title, 2 ) )
-      title( p.title ) ;
-   end
-
    if ( ~p.nofigure )
       % eliminate the background that makes the saved plot look
       % like the GUI display window background color:
@@ -206,5 +212,10 @@ function PlotWaveforms( p )
       saveName = sprintf( '%s%sFig%d.%s', p.figName, p.figDesc, p.figNum, fileExtension ) ;
 
       savePlot( f, saveName ) ;
+   end
+
+   % show the title after saving the file
+   if ( size( p.title, 2 ) )
+      title( p.title ) ;
    end
 end
