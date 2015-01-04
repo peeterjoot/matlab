@@ -66,12 +66,22 @@ function results = NodalAnalysis( filename, sourceStepScaling )
 %   freq is the frequency in Hertz of the input signal.
 %
 % - The syntax for specifying a voltage-controlled voltage source,
-%   connected between the nodesnode+ and node-, is:
+%   connected between the nodes node+ and node-, is:
 %
-%     Elabel node+ node- nodectrl+ nodectrl- gain
+%     Elabel node+ node- nodectrl+ nodectrl- gain [Vt P]
 %
 %   The controlling voltage is between the nodes nodectrl+ and nodectrl-,
 %   and the last argument is the source gain (a floating point number).
+%
+%   This models:
+%
+%     V_{node+} - V_{node-} = gain (( V_{nodectrl+} - V_{nodectrl-} )/Vt )^P.
+%
+%   Defaults: Vt = 1, P = 1.  When P is a number, this is a power-law non-linearity ( or linearity with P = 1).
+% NOT IMPLEMENTED:
+%%%%   When P is the string 'exp' the the voltage gain is the exponential function:
+%%%%
+%%%%     V_{node+} - V_{node-} = gain exp(( V_{nodectrl+} - V_{nodectrl-} )/Vt ).
 %
 % - The syntax for specifying a capacitor is:
 %
@@ -200,6 +210,8 @@ function results = NodalAnalysis( filename, sourceStepScaling )
    diodeLables    = {} ;
    powerLables    = {} ;
 
+   numberOfNonlinearGains = 0 ;
+
    %----------------------------------------------------------------------------
    %
    % Parse the netlist file.  Collect up the results into some temporary arrays so we can figure out the max node number
@@ -271,8 +283,8 @@ function results = NodalAnalysis( filename, sourceStepScaling )
          tmp = strsplit( line ) ;
          sz = size( tmp, 2 ) ;
 
-         if ( sz ~= 6 )
-            error( 'NodalAnalysis:parseline:E', 'expected 6 fields, but read %d fields from controlling voltage line "%s"', sz, line ) ;
+         if ( (sz < 6) || (sz > 8) )
+            error( 'NodalAnalysis:parseline:E', 'expected 6-8 fields, but read %d fields from current line "%s"', sz, line ) ;
          end
 
          n1 = str2num( tmp{2} ) ;
@@ -280,7 +292,24 @@ function results = NodalAnalysis( filename, sourceStepScaling )
          nc1 = str2num( tmp{4} ) ;
          nc2 = str2num( tmp{5} ) ;
          g = str2double( tmp{6} ) ;
-         a = [ n1 n2 nc1 nc2 g ] ;
+
+         if ( sz > 6 )
+            vt = str2num( tmp{7} ) ;
+         else
+            vt = 1 ;
+         end
+
+         if ( sz > 7 )
+            alpha = str2num( tmp{8} ) ;
+         else
+            alpha = 1 ;
+         end
+
+         if ( alpha ~= 1 )
+            numberOfNonlinearGains = numberOfNonlinearGains + 1 ;
+         end
+
+         a = [ n1 n2 nc1 nc2 g vt alpha ] ;
 
          ampLines(:,end+1) = a ;
          ampLables{end+1} = tmp{1} ;
@@ -616,6 +645,13 @@ function results = NodalAnalysis( filename, sourceStepScaling )
       end
    end
 
+   nlIndex = 0 ;
+   numberOfDiodes = size( diodeLines, 2 ) ;
+   numberOfPowers = size( powerLines, 2 ) ;
+
+   D = zeros( size(B, 1), 1, 'like', G ) ;
+   nonlinear = cell( numberOfDiodes + numberOfPowers + numberOfNonlinearGains, 1 ) ;
+
    % value for r (fall through from loop above)
    % process the voltage controlled lines
    labelNumber = 0 ;
@@ -629,6 +665,8 @@ function results = NodalAnalysis( filename, sourceStepScaling )
       plusControlNodeNum   = amp(3) ;
       minusControlNodeNum  = amp(4) ;
       gain                 = amp(5) ;
+      vt                   = amp(6) ;
+      alpha                = amp(7) ;
 
       traceit( sprintf( '%s %d,%d (%d,%d) -> %d\n', label, plusNodeNum, minusNodeNum, plusControlNodeNum, minusControlNodeNum, gain ) ) ;
 
@@ -640,11 +678,20 @@ function results = NodalAnalysis( filename, sourceStepScaling )
          G( r, plusNodeNum ) = -1 ;
          G( plusNodeNum, r ) = 1 ;
       end
-      if ( plusControlNodeNum )
-         G( r, plusControlNodeNum ) = gain ;
-      end
-      if ( minusControlNodeNum )
-         G( r, minusControlNodeNum ) = -gain ;
+
+      if ( 1 == alpha )
+         if ( plusControlNodeNum )
+            G( r, plusControlNodeNum ) = gain/vt ;
+         end
+         if ( minusControlNodeNum )
+            G( r, minusControlNodeNum ) = -gain/vt ;
+         end
+      else
+         nlIndex = nlIndex + 1 ;
+
+         nonlinear{ nlIndex } = struct( 'io', gain, 'type', 'power', 'vt', vt, 'vp', plusControlNodeNum, 'vn', minusControlNodeNum ) ;
+
+         D( r, nlIndex ) = 1 ;
       end
 
       xnames{r} = sprintf( 'i_{%s_{%d,%d}}', label, plusNodeNum, minusNodeNum ) ;
@@ -729,13 +776,6 @@ function results = NodalAnalysis( filename, sourceStepScaling )
 
    % process the diode sources:
    labelNumber = 0 ;
-   d = 0 ;
-   numberOfDiodes = size( diodeLines, 2 ) ;
-   numberOfPowers = size( powerLines, 2 ) ;
-
-   D = zeros( size(B, 1), 1, 'like', G ) ;
-   nonlinear = cell( numberOfDiodes + numberOfPowers, 1 ) ;
-
    for dio = diodeLines
       labelNumber = labelNumber + 1 ;
       label       = diodeLables{labelNumber} ;
@@ -743,7 +783,7 @@ function results = NodalAnalysis( filename, sourceStepScaling )
       minusNode   = dio(2) ;
       io          = dio(3) ;
       vt          = dio(4) ;
-      d = d + 1 ;
+      nlIndex = nlIndex + 1 ;
 
       traceit( sprintf( '%s %d,%d -> %d\n', label, plusNode, minusNode, -io ) ) ;
 
@@ -752,14 +792,14 @@ function results = NodalAnalysis( filename, sourceStepScaling )
          error( 'NodalAnalysis:find', 'failed to find DC frequency entry in angularVelocities: %s', -omega, mat2str(angularVelocities) ) ;
       end
 
-      nonlinear{ d } = struct( 'io', -io, 'type', 'exp', 'vt', vt, 'vp', plusNode, 'vn', minusNode ) ;
+      nonlinear{ nlIndex } = struct( 'io', -io, 'type', 'exp', 'vt', vt, 'vp', plusNode, 'vn', minusNode ) ;
       if ( plusNode )
          B( plusNode, omegaIndex ) = B( plusNode, omegaIndex ) + io ;
-         D( plusNode, d ) = 1 ;
+         D( plusNode, nlIndex ) = 1 ;
       end
       if ( minusNode )
          B( minusNode, omegaIndex ) = B( minusNode, omegaIndex ) - io ;
-         D( minusNode, d ) = -1 ;
+         D( minusNode, nlIndex ) = -1 ;
       end
    end
 
@@ -774,16 +814,16 @@ function results = NodalAnalysis( filename, sourceStepScaling )
       io          = pow(3) ;
       vt          = pow(4) ;
       alpha       = pow(5) ;
-      d = d + 1 ;
+      nlIndex = nlIndex + 1 ;
 
       traceit( sprintf( '%s %d,%d -> %e, %e, %e\n', label, plusNode, minusNode, io, vt, alpha ) ) ;
 
-      nonlinear{ d } = struct( 'io', -io, 'type', 'power', 'vt', vt, 'vp', plusNode, 'vn', minusNode, 'exponent', alpha ) ;
+      nonlinear{ nlIndex } = struct( 'io', -io, 'type', 'power', 'vt', vt, 'vp', plusNode, 'vn', minusNode, 'exponent', alpha ) ;
       if ( plusNode )
-         D( plusNode, d ) = 1 ;
+         D( plusNode, nlIndex ) = 1 ;
       end
       if ( minusNode )
-         D( minusNode, d ) = -1 ;
+         D( minusNode, nlIndex ) = -1 ;
       end
    end
 
