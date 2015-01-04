@@ -385,23 +385,19 @@ function makefigures()
 %      PlotWaveforms( p ) ;
    end
 
-   if ( 0 )
+   if ( doAll || 1 )
       p = struct( 'fileName', '../circuits/square.netlist' ) ;
-      p.figName = 'square' ;
+      p.figName = 'PowerLawAmplifiers' ;
 
-      p.allowCaching = 0 ;
+      p.useBigF = 0 ; % BigF Jacobian not implemented for this circuit.
+      %p.allowCaching = 0 ;
       p.figNum = 1 ;
-      p.verbose = 1 ;
       p.figDesc = 'voltage' ;
-      p.nPlus = [ 1 2 ] ;
-      p.nMinus = [ 0 0 ] ;
-      p.legends = { 'Source', 'Output' } ;
+      p.nPlus = [ 1 3 4 ] ;
+      p.nMinus = [ 0 0 0 ] ;
+      p.legends = { 'v_s', 'v_s^2', 'v_s^3' } ;
       p.xLabel = 'Time (s)' ;
       p.yLabel = 'Voltage (V)' ;
-      p.minStep = 1e-6 ;
-      p.dlambda = 0.001 ;
-      p.randInit = 1 ;
-      p.iterations = 100 ;
       PlotWaveforms( p ) ;
    end
 end

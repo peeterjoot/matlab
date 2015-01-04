@@ -15,20 +15,31 @@ function nonlinearMatrices = DiodeNonVdependent( p )
 %traceit( sprintf('%d', i ) ) ;
       dio = nonlinear{i} ;
 
-      D = zeros( vSize, twoNplusOne, 'like', sparse(1) ) ;
+      innerD = zeros( vSize, twoNplusOne, 'like', sparse(1) ) ;
+      outerD = innerD ;
 
-      d = p.D( :, i ) ;
+      vecInnerD = zeros( dsz, 1, 'like', innerD ) ;
+      vecOuterD = p.D( :, i ) ;
 
-      for j = 1:twoNplusOne
-         D( 1 + (j-1) * dsz : j * dsz, j ) = d ;
+      % for Ennnn non-linear terms the selector of the vp/vn components differs from the scale of the non-linear contribution:
+      if ( dio.vp )
+         vecInnerD( dio.vp ) = 1 ;
+      end
+      if ( dio.vn )
+         vecInnerD( dio.vn ) = -1 ;
       end
 
-      A = dio.io * D * p.Finv ;
+      for j = 1:twoNplusOne
+         innerD( 1 + (j-1) * dsz : j * dsz, j ) = vecInnerD ;
+         outerD( 1 + (j-1) * dsz : j * dsz, j ) = vecOuterD ;
+      end
 
-      H = p.F * D.' /dio.vt ;
+      A = dio.io * outerD * p.Finv ;
 
-      % don't really have to cache D, but keep for debug for now.
-      nonlinearMatrices{ i } = struct( 'D', D, 'H', H, 'A', A ) ;
+      H = p.F * innerD.' /dio.vt ;
+
+      % don't really have to cache innerD,outerD but keep for debug for now.
+      nonlinearMatrices{ i } = struct( 'innerD', innerD, 'outerD', outerD, 'H', H, 'A', A ) ;
    end
 
    traceit( 'exit' ) ;

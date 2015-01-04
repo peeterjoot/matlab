@@ -689,9 +689,9 @@ function results = NodalAnalysis( filename, sourceStepScaling )
       else
          nlIndex = nlIndex + 1 ;
 
-         nonlinear{ nlIndex } = struct( 'io', gain, 'type', 'power', 'vt', vt, 'vp', plusControlNodeNum, 'vn', minusControlNodeNum ) ;
+         nonlinear{ nlIndex } = struct( 'io', gain, 'type', 'power', 'vt', vt, 'vp', plusControlNodeNum, 'vn', minusControlNodeNum, 'exponent', alpha ) ;
 
-         D( r, nlIndex ) = 1 ;
+         D( r, nlIndex ) = -1 ;
       end
 
       xnames{r} = sprintf( 'i_{%s_{%d,%d}}', label, plusNodeNum, minusNodeNum ) ;

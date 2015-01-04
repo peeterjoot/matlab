@@ -111,7 +111,6 @@ function h = HBSolve( N, p )
       J = r.Y - JI ;
       jcond = rcond( J ) ;
 
-%save('b.mat') ;
       % half wave rectifier (and perhaps other circuits) can't converge when lambda == 0.  have to start off bigger.
       if ( 0 == lambda )
          %while ( ( jcond < p.JcondTol ) || isnan( jcond ) )
@@ -227,6 +226,7 @@ function h = HBSolve( N, p )
    ecputime = cputime - ecputime ;
 
    if ( converged )
+%save( 'b.mat' ) ;
       disp( ['solution converged after ' num2str( totalIterations ) ' iterations '] ) ;
    else
       disp( 'solution did not converge' ) ;

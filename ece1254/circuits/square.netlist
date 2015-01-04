@@ -1,6 +1,12 @@
 I1 1 0 AC 1 1e6
-R1 1 2 1000
+R1 1 0 1
+*     Elabel node+ node- nodectrl+ nodectrl- gain [Vt P]
+*     V_{node+} - V_{node-} = gain (( V_{nodectrl+} - V_{nodectrl-} )/Vt )^P.
+E1 2 0 1 0 1 1 1
+E2 3 0 1 0 1 1 2
+E3 4 0 1 0 1 1 3
+*
 R3 2 0 1000
-P1 2 3 2 1 2
-R2 3 0 1000
+R3 3 0 1000
+R3 4 0 1000
 .end
