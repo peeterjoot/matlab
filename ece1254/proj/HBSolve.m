@@ -65,15 +65,17 @@ function h = HBSolve( N, p )
    end
 
    % Newton's Method Parameters
-%   if ( rcond( r.Y ) > 1e-6 )
-%      % suggested by wikipedia HB article: use the linear solution
-%      % as a seed, but this doesn't work out well for some circuits ( i.e. halfWaveRectifier )
-%      V0 = r.Y\r.I ;
-%   else
+   if ( isfield( p, 'linearInit' ) && p.linearInit && (rcond( r.Y ) > 1e-6) )
+      % suggested by wikipedia HB article: use the linear solution
+      % as a seed, but this doesn't work out well for some circuits ( i.e. halfWaveRectifier )
+      V0 = r.Y\r.I ;
+   elseif ( isfield( p, 'complexRandInit' ) && p.complexRandInit )
+      V0 = rand( R * ( 2 * N + 1 ), 1 ) + 1j * rand( R * ( 2 * N + 1 ), 1 ) ;
+   elseif ( isfield( p, 'randInit' ) && p.randInit )
+      V0 = rand( R * ( 2 * N + 1 ), 1 ) ;
+   else
       V0 = zeros( R * ( 2 * N + 1 ), 1 ) ;
-      %V0 = rand( R * ( 2 * N + 1 ), 1 ) ;
-      %V0 = rand( R * ( 2 * N + 1 ), 1 ) + 1j * rand( R * ( 2 * N + 1 ), 1 ) ;
-%   end
+   end
 
    totalIterations = 0 ;
 

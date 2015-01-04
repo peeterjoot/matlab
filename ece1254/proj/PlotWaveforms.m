@@ -121,10 +121,9 @@ function PlotWaveforms( p )
       numPlots = size( p.nPlus, 2 ) ;
    end
 
-% FIXME: not returning this in all cases. (probably TestSolver)
-%   if ( isfield( p, 'verbose' ) )
-%      h.xnames
-%   end
+   if ( isfield( p, 'verbose' ) )
+      h.xnames
+   end
 
    if ( ~isfield( p, 'spectrum' ) )
       p.spectrum = 0 ;

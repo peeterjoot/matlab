@@ -384,4 +384,24 @@ function makefigures()
       p.nPlus = 5 ;
 %      PlotWaveforms( p ) ;
    end
+
+   if ( 0 )
+      p = struct( 'fileName', '../circuits/square.netlist' ) ;
+      p.figName = 'square' ;
+
+      p.allowCaching = 0 ;
+      p.figNum = 1 ;
+      p.verbose = 1 ;
+      p.figDesc = 'voltage' ;
+      p.nPlus = [ 1 2 ] ;
+      p.nMinus = [ 0 0 ] ;
+      p.legends = { 'Source', 'Output' } ;
+      p.xLabel = 'Time (s)' ;
+      p.yLabel = 'Voltage (V)' ;
+      p.minStep = 1e-6 ;
+      p.dlambda = 0.001 ;
+      p.randInit = 1 ;
+      p.iterations = 100 ;
+      PlotWaveforms( p ) ;
+   end
 end
