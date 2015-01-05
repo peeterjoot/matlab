@@ -85,10 +85,17 @@ function makefigures()
       p.figName = 'bridgeRectifierCapFilter' ;
       p.xLabel = 'Time (s)' ;
 
+% for omega_0 lowering experiment
+%      p.N = 100 ;
+%      p.dlambda = 0.005 ;
+%      p.iterations = 200 ;
+%      p.JcondTol = 1e-21 ;
+%      p.verbose = 1 ;
+%      p.allowCaching = 0 ;
+
       p.figNum = 2 ;
       p.figDesc = 'SourceAndOutputVoltages' ;
       p.title = 'Source and Output Voltages' ;
-      %p.verbose = 1 ;
 
       % 'V_1'
       % 'V_2'
@@ -110,45 +117,44 @@ function makefigures()
       p.yLabel = 'Current (A)' ;
       PlotWaveforms( p ) ;
 
-%      p.allowCaching = 0 ;
-      p.figDesc = 'DiodeVoltages' ;
-      p.title = 'Diode Voltages' ;
-      p.figNum = 4 ;
-      p.nPlus = [ 2 0 1 0 ] ;
-      p.nMinus = [ 3 1 3 2 ] ;
-      p.legends = { 'vd1', 'vd2', 'vd3', 'vd4' } ;
-      p.yLabel = 'Voltage (V)' ;
-      PlotWaveforms( p ) ;
+      if ( 1 )
+         p.figDesc = 'DiodeVoltages' ;
+         p.title = 'Diode Voltages' ;
+         p.figNum = 4 ;
+         p.nPlus = [ 2 0 1 0 ] ;
+         p.nMinus = [ 3 1 3 2 ] ;
+         p.legends = { 'vd1', 'vd2', 'vd3', 'vd4' } ;
+         p.yLabel = 'Voltage (V)' ;
+         PlotWaveforms( p ) ;
+      else
+         p.figNum = 5 ;
+         p.nPlus = 2 ;
+         p.nMinus = 3 ;
+         p.legends = { 'vd1' } ;
+         p.yLabel = 'Voltage (V)' ;
+         PlotWaveforms( p ) ;
 
-      p.figNum = 5 ;
-      p.nPlus = 2 ;
-      p.nMinus = 3 ;
-      p.legends = { 'vd1' } ;
-      p.yLabel = 'Voltage (V)' ;
-      %PlotWaveforms( p ) ;
+         p.figNum = 6 ;
+         p.nPlus = 0 ;
+         p.nMinus = 1 ;
+         p.legends = { 'vd2' } ;
+         p.yLabel = 'Voltage (V)' ;
+         PlotWaveforms( p ) ;
 
-      p.figNum = 6 ;
-      p.nPlus = 0 ;
-      p.nMinus = 1 ;
-      p.legends = { 'vd2' } ;
-      p.yLabel = 'Voltage (V)' ;
-      %PlotWaveforms( p ) ;
+         p.figNum = 6 ;
+         p.nPlus = 1 ;
+         p.nMinus = 3 ;
+         p.legends = { 'vd3' } ;
+         p.yLabel = 'Voltage (V)' ;
+         PlotWaveforms( p ) ;
 
-      p.figNum = 6 ;
-      p.nPlus = 1 ;
-      p.nMinus = 3 ;
-      p.legends = { 'vd3' } ;
-      p.yLabel = 'Voltage (V)' ;
-      %PlotWaveforms( p ) ;
-
-      p.figNum = 7 ;
-      p.nPlus = 0 ;
-      p.nMinus = 2 ;
-      p.legends = { 'vd4' } ;
-      p.yLabel = 'Voltage (V)' ;
-      %PlotWaveforms( p ) ;
-
-
+         p.figNum = 7 ;
+         p.nPlus = 0 ;
+         p.nMinus = 2 ;
+         p.legends = { 'vd4' } ;
+         p.yLabel = 'Voltage (V)' ;
+         PlotWaveforms( p ) ;
+      end
 
       %p.N = 100 ;
       %p.figNum = 5 ;
@@ -157,7 +163,6 @@ function makefigures()
       %p.N = 50 ;
       p.figNum = 6 ;
       p.dlambda = 0.001 ;
-      p.allowCaching = 0 ;
       p.iterations = 20000 ;
       p.minStep = 1e-14 ;
       p.dispfrequency = 10 ;
@@ -442,20 +447,22 @@ function makefigures()
       PlotWaveforms( p ) ;
    end
 
-   if ( 1 )
+   % basic visual test of source voltage addition.
+   if ( 0 )
       p = struct( 'fileName', '../circuits/x.netlist' ) ;
       p.figName = 'x' ;
       p.xLabel = 'Time (s)' ;
 
-      p.allowCaching = 0 ;
+%      p.N = 2 ;
+%      p.allowCaching = 0 ;
       p.figNum = 2 ;
-      p.figDesc = 'SourceAndOutputVoltages' ;
-      p.title = 'Source and Output Voltages' ;
+      p.figDesc = 'SourceVoltages' ;
+      p.title = 'Source voltages' ;
       p.verbose = 1 ;
 
-      p.nPlus = [ 1 2 ] ;
-      p.nMinus = [ 0 0 ] ;
-      p.legends = { 'Source Voltage', 'Output Voltage' } ;
+      p.nPlus = [ 1 3 1  ] ;
+      p.nMinus = [ 0 0 3  ] ;
+      p.legends = { 'Source Voltage', 's0', 's1' } ;
       p.yLabel = 'Voltage (V)' ;
       PlotWaveforms( p ) ;
    end

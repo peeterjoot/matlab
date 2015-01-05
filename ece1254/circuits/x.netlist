@@ -1,13 +1,9 @@
-* For debugging unexpected source superposition issues.
+* This can be used to verify that the source voltage addition is working properly.
 ********************************************
 *V1 0 1 AC 5 1e6
 ********************************************
-*V1 0 3 AC 5 1e6
-*V2 3 1 AC 5e-6 1e5
-********************************************
-I1 0 1 AC 5 1e6
-I2 0 1 AC 5e-6 1e5
-R2 0 1 1
+V1 3 0 AC 5 1e6
+V2 1 3 AC 1 0.5e6
 ********************************************
 L1 1 2 1e-7
 R1 2 0 1000

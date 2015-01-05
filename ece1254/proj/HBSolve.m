@@ -229,7 +229,7 @@ function h = HBSolve( N, p )
 %save( 'b.mat' ) ;
       disp( ['solution converged after ' num2str( totalIterations ) ' iterations '] ) ;
    else
-      disp( 'solution did not converge' ) ;
+      disp( ['solution did not converge after ' num2str( totalIterations ) ' iterations '] ) ;
    end
 
    % return this function's data along with the return data from HarmonicBalance().

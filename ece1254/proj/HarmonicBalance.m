@@ -138,7 +138,7 @@ function results = HarmonicBalance( inputs, N, omega )
       thisOmega = omega * n ;
       omegaIndex = find( angularVelocities == thisOmega ) ;
 
-      %traceit( sprintf('HarmonicBalance: n=%d, omega = %e, thisOmega = %e, omegaIndex = %s', n, omega, thisOmega, mat2str( omegaIndex ) ) ) ;
+      traceit( sprintf('HarmonicBalance: n=%d, nu_0 = %e, nu = %e, omegaIndex = %s', n, omega/(2 * pi), thisOmega/(2 * pi), mat2str( omegaIndex ) ) ) ;
 
       if ( size(omegaIndex) == size(1) )
          % found one (not an error not to find a matching frequency.  Our input sources may not have all the frequencies that
