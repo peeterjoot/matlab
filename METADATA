@@ -18,12 +18,12 @@ my @matlab =
 {
    DATE => 'Oct 11, 2014',
    path => 'util/changeDebug.m',
-   WHAT => qq(Enable or disable trace)
+   WHAT => qq(Enable or disable trace.)
 },
 {
    DATE => 'Oct 11, 2014',
    path => 'util/changeTrace.m',
-   WHAT => qq(Enable or disable trace)
+   WHAT => qq(Enable or disable trace.)
 },
 {
    DATE => 'Oct 11, 2014',
@@ -101,22 +101,22 @@ where L and U are lower and upper triangular respectively.)
 {
    DATE => 'Oct 14, 2014',
    path => 'ece1254/ps1/ps1d.m',
-   WHAT => qq(Driver that calculates an LU factorization based solution for ps3.p1, and compares to the direct Matlab solution)
+   WHAT => qq(Driver that calculates an LU factorization based solution for ps3.p1, and compares to the direct Matlab solution.)
 },
 {
    DATE => 'Oct 11, 2014',
    path => 'ece1254/ps1/tests/fit.m',
-   WHAT => qq(Polynomial fitting experimental code)
+   WHAT => qq(Polynomial fitting experimental code.)
 },
 {
    DATE => 'Oct 11, 2014',
    path => 'ece1254/ps1/tests/verifyUpperTriangular.m',
-   WHAT => qq(Unit tests for verifyUpperTriangular function)
+   WHAT => qq(Unit tests for verifyUpperTriangular function.)
 },
 {
    DATE => 'Oct 11, 2014',
    path => 'ece1254/ps1/tests/withPivotLU.m',
-   WHAT => qq(Unit tests for withPivotLU function)
+   WHAT => qq(Unit tests for withPivotLU function.)
 },
 {
    DATE => 'Oct 11, 2014',
@@ -141,7 +141,7 @@ where L and U are lower and upper triangular respectively.)
 {
    DATE => 'Oct 31, 2014',
    path => 'ece1254/ps2a/conjgrad.m',
-   WHAT => qq(A conjugate gradient implementation taken directly from 'Numerical Mathematics')
+   WHAT => qq(A conjugate gradient implementation taken directly from 'Numerical Mathematics'.)
 },
 {
    DATE => 'Nov 2, 2014',
@@ -159,22 +159,22 @@ where L and U are lower and upper triangular respectively.)
    DATE => 'Nov 2, 2014',
    path => 'ece1254/ps2a/conjugateGradientQuarteroniPrecond.m',
    WHAT => qq(A conjugate gradient implementation with preconditioning based on the algorithm from
-the algorithm in Quarteroni, et al's "Numerical Mathematics")
+the algorithm in Quarteroni, et al's "Numerical Mathematics".)
 },
 {
    DATE => 'Nov 2, 2014',
    path => 'ece1254/ps2a/generateNodalEquationsPartEH.m',
-   WHAT => qq(Generate the modified nodal analysis equations G x = b, for the grid specified in ps2 problem 1 part a)
+   WHAT => qq(Generate the modified nodal analysis equations G x = b, for the grid specified in ps2 problem 1 part a.)
 },
 {
    DATE => 'Nov 2, 2014',
    path => 'ece1254/ps2a/generateResistorGridNetlist.m',
-   WHAT => qq(Generate a resistor grid network for the problem of ps2a.  Relative to the network of the previous problem set, this one has a resistance from each node to ground, and also has a series resistance on the voltage source to ground.  An option to use a Norton equivalent current source for the voltage source is also provided, which allows the MNA matrix to be symmetric, which in turn allows CG methods to be used to solve)
+   WHAT => qq(Generate a resistor grid network for the problem of ps2a.  Relative to the network of the previous problem set, this one has a resistance from each node to ground, and also has a series resistance on the voltage source to ground.  An option to use a Norton equivalent current source for the voltage source is also provided, which allows the MNA matrix to be symmetric, which in turn allows CG methods to be used to solve.)
 },
 {
    DATE => 'Oct 29, 2014',
    path => 'ece1254/ps2a/NodalAnalysis.m',
-   WHAT => qq(Based on NodalAnalysis.m from ps1, but generalized to allow alphanumeric labels)
+   WHAT => qq(Based on NodalAnalysis.m from ps1, but generalized to allow alphanumeric labels.)
 },
 {
    DATE => 'Nov 2, 2014',
@@ -184,7 +184,7 @@ the algorithm in Quarteroni, et al's "Numerical Mathematics")
 {
    DATE => 'Nov 2, 2014',
    path => 'ece1254/ps2a/partH.m',
-   WHAT => qq(Collect timing data for each of the part e solution methods with and without preconditioning, and optionally plotting the Gershgorin circles)
+   WHAT => qq(Collect timing data for each of the part e solution methods with and without preconditioning, and optionally plotting the Gershgorin circles.)
 },
 {
    DATE => 'Nov 2, 2014',
@@ -194,12 +194,12 @@ the algorithm in Quarteroni, et al's "Numerical Mathematics")
 {
    DATE => 'Nov 2, 2014',
    path => 'ece1254/ps2a/tridiagonal.m',
-   WHAT => qq(Extract just the tridiagonal subset of the matrix a, returning the result in sparse form)
+   WHAT => qq(Extract just the tridiagonal subset of the matrix a, returning the result in sparse form.)
 },
 {
    DATE => 'Nov 2, 2014',
    path => 'ece1254/ps2a/usenetlistProblemBD.m',
-   WHAT => qq(Solve the ps2a netlist with various methods)
+   WHAT => qq(Solve the ps2a netlist with various methods.)
 },
 {
    DATE => 'Nov 9, 2014',
@@ -244,7 +244,7 @@ the algorithm in Quarteroni, et al's "Numerical Mathematics")
 {
    DATE => 'Nov 19, 2014',
    path => 'ece1254/ps3a/NodalAnalysis.m',
-   WHAT => qq(Generate MNA equations for systems that also include inductors and capacitors)
+   WHAT => qq(Generate MNA equations for systems that also include inductors and capacitors.)
 },
 {
    DATE => 'Nov 19, 2014',
@@ -264,12 +264,12 @@ the algorithm in Quarteroni, et al's "Numerical Mathematics")
 {
    DATE => 'Nov 22, 2014',
    path => 'ece1254/ps3a/generateNetlistSegmentForLevel.m',
-   WHAT => qq(For a given level greater than 1, call generateNetlistSegment for each fork of the clock distribution network in this level)
+   WHAT => qq(For a given level greater than 1, call generateNetlistSegment for each fork of the clock distribution network in this level.)
 },
 {
    DATE => 'Nov 23, 2014',
    path => 'ece1254/ps3a/tests/checkvclock.m',
-   WHAT => qq(Test vclock function by plotting and visual verification)
+   WHAT => qq(Test vclock function by plotting and visual verification.)
 },
 {
    DATE => 'Nov 23, 2014',
@@ -304,9 +304,7 @@ the algorithm in Quarteroni, et al's "Numerical Mathematics")
 {
    DATE => 'Nov 27, 2014',
    path => 'ece1254/ps3b/PlotFreqResp.m',
-   WHAT => qq(Implements a Matlab routine PlotFreqResp(omegaSet,G,C,B,L) which takes in omegaSet, G,C, B, L as input and
-plots the system frequency response. Here omegaSet is a vector of frequencies in rad/s.
-)
+   WHAT => qq(Implements a Matlab routine PlotFreqResp(omegaSet,G,C,B,L) which takes in omegaSet, G,C, B, L as input and plots the system frequency response. Here omegaSet is a vector of frequencies in rad/s.)
 },
 {
    DATE => 'Nov 27, 2014',
@@ -331,7 +329,7 @@ plots the system frequency response. Here omegaSet is a vector of frequencies in
 {
    DATE => 'Dec 1, 2014',
    path => 'ece1254/ps3b/calculateSolutionForTimestep.m',
-   WHAT => qq(Implements TR or BE algorithms (based on ps3a time step solver).  Also collects CPU measurements for the time required.  The set of measured times and the solutions are cached for use in a variety of plots.)
+   WHAT => qq(Implements TR or BE algorithms, based on ps3a time step solver.  Also collects CPU measurements for the time required.  The set of measured times and the solutions are cached for use in a variety of plots.)
 },
 {
    DATE => 'Dec 1, 2014',
@@ -364,7 +362,7 @@ for the voltages contained in x. (Time domain)
    location and parameters of all diodes in the circuit
    x is the vector of all unknown quantities
    Nh is the number of harmonics used in the analysis
-   Nm is the number of physical unknowns of the MNA
+   Nm is the number of physical unknowns of the MNA.
 ),
    SHORT => qq(Determines the nonlinear contribution to the currents.),
 },
@@ -378,10 +376,10 @@ required to solve a nonlinear circuit using Newton's Method
    location and parameters of all diodes in the circuit
    x is the vector of all unknown quantities
    Nh is the number of harmonics used in the analysis
-   Nm is the number of physical unknowns of the MNA
+   Nm is the number of physical unknowns of the MNA.
 ),
    SHORT => qq(Produces the nonlinear contribution to the Jacobian
-   required to solve a nonlinear circuit using Newton's Method),
+   required to solve a nonlinear circuit using Newton's Method.),
 },
 {
    DATE => 'Dec 9, 2014',
@@ -408,7 +406,7 @@ circuit using Newton's Method is also returned.
 #{
 #   DATE => 'Dec 9, 2014',
 #   path => 'ece1254/proj/deadcode/NewtonsMethod.m',
-#   WHAT => qq(Harmonic Balance Newton's method iterations)
+#   WHAT => qq(Harmonic Balance Newton's method iterations.)
 #},
 {
    DATE => 'Dec 9, 2014',
@@ -426,7 +424,7 @@ The circuit is solved for varying values of N and the cputime required
 to solve and the maximum error between the solution and a solution of
 ``sufficiently large'' N is computed
 ),
-   SHORT => qq(Generates the cputime/error plot data),
+   SHORT => qq(Generates the cputime/error plot data.),
 },
 {
    DATE => 'Dec 9, 2014',
@@ -510,8 +508,7 @@ encoding of any non-linear elements.)
    WHAT => qq(
 Verify FourierMatrixComplex( N ), produced with vectorized code, against dumb
 programmatic loop construction method.
-N is the number of Harmonics to be used
-),
+N is the number of Harmonics to be used.),
    FILTERIF => '/proj',
 },
 #{
@@ -522,13 +519,13 @@ N is the number of Harmonics to be used
 {
    DATE => 'Dec 10, 2014',
    path => 'ece1254/proj/makefigures.m',
-   WHAT => qq(Driver for all the plots.  Calls PlotWaveforms()),
+   WHAT => qq(Driver for all the plots.  Calls PlotWaveforms().),
    FILTERIF => '/proj',
 },
 {
    DATE => 'Dec 14, 2014',
    path => 'ece1254/proj/DiodeNonVdependent.m',
-   WHAT => qq(V independent portions of the nonlinear current and Jacobian calculations)
+   WHAT => qq(V independent portions of the nonlinear current and Jacobian calculations.)
 },
 {
    DATE => 'Dec 26, 2014',
