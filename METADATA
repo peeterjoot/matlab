@@ -430,7 +430,7 @@ to solve and the maximum error between the solution and a solution of
    DATE => 'Dec 9, 2014',
    path => 'ece1254/proj/DiodeCurrentAndJacobian.m',
    WHAT => qq(
-Calculate the non-linear current contributions of the diode
+Calculate the nonlinear current contributions of the diode
 and its associated Jacobian.
 )
 },
@@ -465,7 +465,7 @@ representation.
 
    Y V = B U = I + II,                                        (1)
 
-where II represents non-linear contributions not returned directly as a matrix.
+where II represents nonlinear contributions not returned directly as a matrix.
 ),
    SHORT => qq(
       Construct the Frequency domain equivalents of the linear portions of the network.
@@ -500,7 +500,7 @@ generates the modified nodal analysis (MNA) equations
 Here the column vector u(t) contains all sources, and x(t) is a vector of all the sources.
 ),
    SHORT => qq(Parse the netlist file and return the time domain MNA equation matrices and an
-encoding of any non-linear elements.)
+encoding of any nonlinear elements.)
 },
 {
    DATE => 'Dec 9, 2014',
