@@ -395,7 +395,7 @@ function makefigures()
       hold off ;
    end
 
-   if ( doAll2 || 0 )
+   if ( doAll2 || 1 )
       p = struct( 'fileName', '../circuits/LCLowpass.netlist' ) ;
       p.figName = 'lowPassFilter' ;
 %      p.useBigF = 0 ;
@@ -406,7 +406,7 @@ function makefigures()
       p.figNum = 2 ;
       p.figDesc = 'SourceAndOutputVoltages' ;
       p.title = 'Source and Output Voltages' ;
-      p.nPlus = [ 1 5 ] ;
+      p.nPlus = [ 2 5 ] ;
       p.nMinus = [ 0 0 ] ;
       p.legends = { 'Source Voltage', 'Output Voltage' } ;
       PlotWaveforms( p ) ;
