@@ -395,7 +395,7 @@ function makefigures()
       hold off ;
    end
 
-   if ( doAll2 || 1 )
+   if ( doAll2 || 0 )
       p = struct( 'fileName', '../circuits/LCLowpass.netlist' ) ;
       p.figName = 'lowPassFilter' ;
 %      p.useBigF = 0 ;
@@ -406,9 +406,25 @@ function makefigures()
       p.figNum = 2 ;
       p.figDesc = 'SourceAndOutputVoltages' ;
       p.title = 'Source and Output Voltages' ;
-      p.nPlus = [ 2 5 ] ;
-      p.nMinus = [ 0 0 ] ;
-      p.legends = { 'Source Voltage', 'Output Voltage' } ;
+
+      % We tried plotting after R2, to see if the voltage drop in the output
+      % could be eliminated in comparison to the input source.  However,
+      % R2 is really part of the low pass circuit, and plotting there
+      % changes the input spectrum.
+      % 
+      % There may are likely better filters than this one (both with respect
+      % to the gross attenuation of the output signal, and with respect to 
+      % how much of the higher frequency signals get through the circuit).
+      %
+      if ( 1 )
+         p.nPlus = [ 1 5 ] ;
+         p.nMinus = [ 0 0 ] ;
+         p.legends = { 'Source Voltage', 'Output Voltage' } ;
+      else
+         p.nPlus = [ 1 2 5 ] ;
+         p.nMinus = [ 0 0 0 ] ;
+         p.legends = { 'Source Voltage', 's r2', 'Output Voltage' } ;
+      end
       PlotWaveforms( p ) ;
 
       p.spectrum = 1 ;
