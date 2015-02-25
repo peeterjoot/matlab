@@ -17,6 +17,9 @@ Infrastructure:
    FourierMatrix.m
       Compute the "Big F" Fourier matrix for the discrete Fourier transform and its inverse.
 
+   HBSolve.m
+      Harmonic Balance workhorse. 
+
 -------------------------------------------------------------------
 "Big F" solver:
 
@@ -26,9 +29,6 @@ Infrastructure:
    Gprime.m
       Produces the nonlinear contribution to the Jacobian
       required to solve a nonlinear circuit using Newton's Method
-
-   HBSolve.m
-      Harmonic Balance workhorse. 
 
 -------------------------------------------------------------------
 "Small F" solver:

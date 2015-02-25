@@ -13,6 +13,7 @@ my @matlab =
 {
    DATE => 'Nov 2, 2014',
    path => 'ece1254/ps1/backSubst.m',
+   PROBLEMSET => 1,
    WHAT => qq(BackSubst performs a back substitution returning x for the system U x = b, where U is upper triangular and has no zeros on the diagonal.)
 },
 {
@@ -53,21 +54,25 @@ Sets a global trace variable to non-zero so that calls to traceit( ... ) don't p
 {
    DATE => 'Oct 11, 2014',
    path => 'ece1254/ps1/findMaxIndexOfColumnMatrix.m',
+   PROBLEMSET => 1,
    WHAT => qq(Finds the index of the pivot element, the element with the biggest absolute value.)
 },
 {
    DATE => 'Nov 2, 2014',
    path => 'ece1254/ps1/forwardSubst.m',
+   PROBLEMSET => 1,
    WHAT => qq(Performs a back substitution returning x for the system L x = b, where L is lower triangular and has no zeros on the diagonal.)
 },
 {
    DATE => 'Oct 14, 2014',
    path => 'ece1254/ps1/generateHeatNetlist.m',
+   PROBLEMSET => 1,
    WHAT => qq(A small Matlab function that generates a netlist for the heat network in ps1 p3a.)
 },
 {
    DATE => 'Oct 14, 2014',
    path => 'ece1254/ps1/generateResistorGridNetlist.m',
+   PROBLEMSET => 1,
    WHAT => qq(A small Matlab function that generates a netlist for a network made by:
 N x N square grid of resistors of value R, where N is the number of...)
 },
@@ -80,42 +85,50 @@ disable debug modes.)
 {
    DATE => 'Oct 14, 2014',
    path => 'ece1254/ps1/NodalAnalysis.m',
+   PROBLEMSET => 1,
    WHAT => qq(NodalAnalysis generates the MNA, modified nodal analysis, equations from a text file.)
 },
 {
    DATE => 'Nov 2, 2014',
    path => 'ece1254/ps1/noPivotLU.m',
+   PROBLEMSET => 1,
    WHAT => qq(Performs a, not in place, LU factorization of the input matrix, producing the factors: M = L U,
 where L and U are lower and upper triangular respectively.)
 },
 {
    DATE => 'Oct 14, 2014',
    path => 'ece1254/ps1/plotHeatQ.m',
+   PROBLEMSET => 1,
    WHAT => qq(Plot the netlist results for ps1 p3b, and p3d.)
 },
 {
    DATE => 'Oct 14, 2014',
    path => 'ece1254/ps1/problem2driver.m',
+   PROBLEMSET => 1,
    WHAT => qq(Driver for ps1 problem 2, part a and b.)
 },
 {
    DATE => 'Oct 14, 2014',
    path => 'ece1254/ps1/ps1d.m',
+   PROBLEMSET => 1,
    WHAT => qq(Driver that calculates an LU factorization based solution for ps3.p1, and compares to the direct Matlab solution.)
 },
 {
    DATE => 'Oct 11, 2014',
    path => 'ece1254/ps1/tests/fit.m',
+   PROBLEMSET => 1,
    WHAT => qq(Polynomial fitting experimental code.)
 },
 {
    DATE => 'Oct 11, 2014',
    path => 'ece1254/ps1/tests/verifyUpperTriangular.m',
+   PROBLEMSET => 1,
    WHAT => qq(Unit tests for verifyUpperTriangular function.)
 },
 {
    DATE => 'Oct 11, 2014',
    path => 'ece1254/ps1/tests/withPivotLU.m',
+   PROBLEMSET => 1,
    WHAT => qq(Unit tests for withPivotLU function.)
 },
 {
@@ -126,234 +139,280 @@ where L and U are lower and upper triangular respectively.)
 {
    DATE => 'Oct 11, 2014',
    path => 'ece1254/ps1/verifyUpperTriangular.m',
+   PROBLEMSET => 1,
    WHAT => qq(Produces an error if the matrix U is not upper triangular within precision epsilon.)
 },
 {
    DATE => 'Oct 14, 2014',
    path => 'ece1254/ps1/withPivotLU.m',
+   PROBLEMSET => 1,
    WHAT => qq(Performs a not in place LU factorization of the input matrix, producing the factors: M = L U, where L' = P L and U are lower and upper triangular respectively, and P is a permutation matrix.)
 },
 {
    DATE => 'Nov 2, 2014',
    path => 'ece1254/ps2a/compareBD.m',
+   PROBLEMSET => 1,
    WHAT => qq(Compare the solutions for the transformed and original circuits of ps2 parts b and d.)
 },
 {
    DATE => 'Oct 31, 2014',
    path => 'ece1254/ps2a/conjgrad.m',
+   PROBLEMSET => 1,
    WHAT => qq(A conjugate gradient implementation taken directly from 'Numerical Mathematics'.)
 },
 {
    DATE => 'Nov 2, 2014',
    path => 'ece1254/ps2a/conjugateGradientPainlessB2.m',
+   PROBLEMSET => 1,
    WHAT => qq(A conjugate gradient implementation based on the pseudocode algorithm from Shewchuk's
 "An Introduction to the Conjugate Gradient Method Without the Agonizing Pain" appendix B.2)
 },
 {
    DATE => 'Oct 31, 2014',
    path => 'ece1254/ps2a/conjugateGradientPainlessB3.m',
+   PROBLEMSET => 1,
    WHAT => qq(A conjugate gradient implementation based on the pseudocode algorithm from Shewchuk's
 "An Introduction to the Conjugate Gradient Method Without the Agonizing Pain" appendix B.3)
 },
 {
    DATE => 'Nov 2, 2014',
    path => 'ece1254/ps2a/conjugateGradientQuarteroniPrecond.m',
+   PROBLEMSET => 1,
    WHAT => qq(A conjugate gradient implementation with preconditioning based on the algorithm from
 the algorithm in Quarteroni, et al's "Numerical Mathematics".)
 },
 {
    DATE => 'Nov 2, 2014',
    path => 'ece1254/ps2a/generateNodalEquationsPartEH.m',
+   PROBLEMSET => 1,
    WHAT => qq(Generate the modified nodal analysis equations G x = b, for the grid specified in ps2 problem 1 part a.)
 },
 {
    DATE => 'Nov 2, 2014',
    path => 'ece1254/ps2a/generateResistorGridNetlist.m',
+   PROBLEMSET => 1,
    WHAT => qq(Generate a resistor grid network for the problem of ps2a.  Relative to the network of the previous problem set, this one has a resistance from each node to ground, and also has a series resistance on the voltage source to ground.  An option to use a Norton equivalent current source for the voltage source is also provided, which allows the MNA matrix to be symmetric, which in turn allows CG methods to be used to solve.)
 },
 {
    DATE => 'Oct 29, 2014',
    path => 'ece1254/ps2a/NodalAnalysis.m',
+   PROBLEMSET => 1,
    WHAT => qq(Based on NodalAnalysis.m from ps1, but generalized to allow alphanumeric labels.)
 },
 {
    DATE => 'Nov 2, 2014',
    path => 'ece1254/ps2a/partEcollectTimings.m',
+   PROBLEMSET => 1,
    WHAT => qq(Collect and plot timing info for all the different solution methods: CG, LU, ...)
 },
 {
    DATE => 'Nov 2, 2014',
    path => 'ece1254/ps2a/partH.m',
+   PROBLEMSET => 1,
    WHAT => qq(Collect timing data for each of the part e solution methods with and without preconditioning, and optionally plotting the Gershgorin circles.)
 },
 {
    DATE => 'Nov 2, 2014',
    path => 'ece1254/ps2a/tests/lutest.m',
+   PROBLEMSET => 1,
    WHAT => qq(Test driver to try Matlab builtin lu function.)
 },
 {
    DATE => 'Nov 2, 2014',
    path => 'ece1254/ps2a/tridiagonal.m',
+   PROBLEMSET => 1,
    WHAT => qq(Extract just the tridiagonal subset of the matrix a, returning the result in sparse form.)
 },
 {
    DATE => 'Nov 2, 2014',
    path => 'ece1254/ps2a/usenetlistProblemBD.m',
+   PROBLEMSET => 1,
    WHAT => qq(Solve the ps2a netlist with various methods.)
 },
 {
    DATE => 'Nov 9, 2014',
    path => 'ece1254/ps2b/countItersAndPlot.m',
+   PROBLEMSET => 1,
    WHAT => qq(Count the Newton's method iterations required to solve the ps2b diffusion problem 2.)
 },
 {
    DATE => 'Nov 3, 2014',
    path => 'ece1254/ps2b/ddiode.m',
+   PROBLEMSET => 1,
    WHAT => qq(Derivative of the diode Newton's method function for ps2b problem 1.)
 },
 {
    DATE => 'Nov 3, 2014',
    path => 'ece1254/ps2b/diode.m',
+   PROBLEMSET => 1,
    WHAT => qq(The diode Newton's method function for ps2b problem 1.)
 },
 {
    DATE => 'Nov 2, 2014',
    path => 'ece1254/ps2b/dplot.m',
+   PROBLEMSET => 1,
    WHAT => qq(Attempt to plot the diode function with Matlab.  Gave up and plotted it with Mathematica instead.)
 },
 {
    DATE => 'Nov 9, 2014',
    path => 'ece1254/ps2b/newtonsDiffusion.m',
+   PROBLEMSET => 1,
    WHAT => qq(Implementation of Newton's method with and without stepping and damping for problem 2 of ps2b.)
 },
 {
    DATE => 'Nov 4, 2014',
    path => 'ece1254/ps2b/newtonsDiode.m',
+   PROBLEMSET => 1,
    WHAT => qq(Implementation of Newton's method with and without stepping for problem 1 of ps2b.)
 },
 {
    DATE => 'Nov 5, 2014',
    path => 'ece1254/ps2b/newtonsSquareroot.m',
+   PROBLEMSET => 1,
    WHAT => qq(Reference implementation of Newton's method for a square root computation.)
 },
 {
    DATE => 'Nov 9, 2014',
    path => 'ece1254/ps2b/quadraticDifferences.m',
+   PROBLEMSET => 1,
    WHAT => qq(Demonstrate quadratic convergence for the multivariable Newton's method of ps2b problem 2.)
 },
 {
    DATE => 'Nov 19, 2014',
    path => 'ece1254/ps3a/NodalAnalysis.m',
+   PROBLEMSET => 1,
    WHAT => qq(Generate MNA equations for systems that also include inductors and capacitors.)
 },
 {
    DATE => 'Nov 19, 2014',
    path => 'ece1254/ps3a/tests/nat.m',
+   PROBLEMSET => 1,
    WHAT => qq(Test cases for NodalAnalysis.m)
 },
 {
    DATE => 'Nov 22, 2014',
    path => 'ece1254/ps3a/generateNetlist.m',
+   PROBLEMSET => 1,
    WHAT => qq(Generates the netlist for part b, and returns the table of RLC values and the numbers of these RLC segments for each level.)
 },
 {
    DATE => 'Nov 22, 2014',
    path => 'ece1254/ps3a/generateNetlistSegment.m',
+   PROBLEMSET => 1,
    WHAT => qq(A helper function that generates a sequence of serially connected RLC segments for one branch of the clock distribution network.)
 },
 {
    DATE => 'Nov 22, 2014',
    path => 'ece1254/ps3a/generateNetlistSegmentForLevel.m',
+   PROBLEMSET => 1,
    WHAT => qq(For a given level greater than 1, call generateNetlistSegment for each fork of the clock distribution network in this level.)
 },
 {
    DATE => 'Nov 23, 2014',
    path => 'ece1254/ps3a/tests/checkvclock.m',
+   PROBLEMSET => 1,
    WHAT => qq(Test vclock function by plotting and visual verification.)
 },
 {
    DATE => 'Nov 23, 2014',
    path => 'ece1254/ps3a/vclock.m',
+   PROBLEMSET => 1,
    WHAT => qq(Implement a function for the specified clock signal.  This function is vectorized and uses vclk to calculate the voltage for a single, scalar, point in time.)
 },
 {
    DATE => 'Nov 24, 2014',
    path => 'ece1254/ps3a/calculateSolutionForTimestep.m',
+   PROBLEMSET => 1,
    WHAT => qq(Calculate and cache the netlist file for the circuit and the associated MNA equations.  Calculate the BE or TR discretized solution for a given timestep.)
 },
 {
    DATE => 'Nov 25, 2014',
    path => 'ece1254/ps3a/driver.m',
+   PROBLEMSET => 1,
    WHAT => qq(High level driver for the plots.  Calls plotSolutionIterations as appropriate to generate the figures for part c, d.)
 },
 {
    DATE => 'Nov 25, 2014',
    path => 'ece1254/ps3a/clk.m',
+   PROBLEMSET => 1,
    WHAT => qq(Split out piecewise clock function for scalar value to allow for vectorized vclock implementation.)
 },
 {
    DATE => 'Nov 25, 2014',
    path => 'ece1254/ps3a/interpolate.m',
+   PROBLEMSET => 1,
    WHAT => qq(Given a set of values v measured at all the points in [0, maxT] separated by timestep inputDeltaT: A set of interpolated values for v are computed using a different, presumably finer granularity, timestep size newDeltaT.)
 },
 {
    DATE => 'Nov 25, 2014',
    path => 'ece1254/ps3a/loglogExponential.m',
+   PROBLEMSET => 1,
    WHAT => qq(Plot the order relationships measured for N vs error for BE and TR.)
 },
 {
    DATE => 'Nov 27, 2014',
    path => 'ece1254/ps3b/PlotFreqResp.m',
+   PROBLEMSET => 1,
    WHAT => qq(Implements a Matlab routine PlotFreqResp(omegaSet,G,C,B,L) which takes in omegaSet, G,C, B, L as input and plots the system frequency response. Here omegaSet is a vector of frequencies in rad/s.)
 },
 {
    DATE => 'Nov 27, 2014',
    path => 'ece1254/ps3b/testPlotFreqResp.m',
+   PROBLEMSET => 1,
    WHAT => qq(Simple test case for PlotFreqResp().)
 },
 {
    DATE => 'Nov 29, 2014',
    path => 'ece1254/ps3b/plotFreqPartC.m',
+   PROBLEMSET => 1,
    WHAT => qq(Plot the N=500 frequency response for part c.)
 },
 {
    DATE => 'Nov 29, 2014',
    path => 'ece1254/ps3b/generateNetlist.m',
+   PROBLEMSET => 1,
    WHAT => qq(Generate the netlist to use in the part c N=500 frequency response plot.)
 },
 {
    DATE => 'Dec 1, 2014',
    path => 'ece1254/ps3b/displayOutputErrorAndCpuTimes.m',
+   PROBLEMSET => 1,
    WHAT => qq(Plot and save the time step output, error and CPU time plots.)
 },
 {
    DATE => 'Dec 1, 2014',
    path => 'ece1254/ps3b/calculateSolutionForTimestep.m',
+   PROBLEMSET => 1,
    WHAT => qq(Implements TR or BE algorithms, based on ps3a time step solver.  Also collects CPU measurements for the time required.  The set of measured times and the solutions are cached for use in a variety of plots.)
 },
 {
    DATE => 'Dec 1, 2014',
    path => 'ece1254/ps3b/computeFreqResp.m',
+   PROBLEMSET => 1,
    WHAT => qq(Compute the frequency response curve for use in PlotFreqResp().)
 },
 {
    DATE => 'Nov 30, 2014',
    path => 'ece1254/ps3b/sorteig.m',
+   PROBLEMSET => 1,
    WHAT => qq(Get the eigenvalues and vectors for an input matrix, and sort them as desired.  Apply the same sort to the columns of the eigenvector matrix.)
 },
 {
    DATE => 'Nov 30, 2014',
    path => 'ece1254/ps3b/testsorteig.m',
+   PROBLEMSET => 1,
    WHAT => qq(Test code for sorteig().)
 },
 {
    DATE => 'Dec 9, 2014',
    path => 'ece1254/proj/FourierMatrix.m',
+   PROBLEMSET => 1,
    WHAT => qq(Compute the fourier matrix for the discrete fourier transform and its inverse.),
 },
 {
    DATE => 'Dec 9, 2014',
    path => 'ece1254/proj/gnl.m',
+   PROBLEMSET => 1,
    WHAT => qq(
 Determines the nonlinear currents of the diodes in bdiodes
 for the voltages contained in x. (Time domain)
@@ -369,6 +428,7 @@ for the voltages contained in x. (Time domain)
 {
    DATE => 'Dec 9, 2014',
    path => 'ece1254/proj/Gprime.m',
+   PROBLEMSET => 1,
    WHAT => qq(
 Produces the nonlinear contribution to the Jacobian
 required to solve a nonlinear circuit using Newton's Method
@@ -384,6 +444,7 @@ required to solve a nonlinear circuit using Newton's Method
 {
    DATE => 'Dec 9, 2014',
    path => 'ece1254/proj/HBSolve.m',
+   PROBLEMSET => 1,
    WHAT => qq(
 This function uses the Harmonic Balance Method to solve the
 steady state condtion of the circuit described in fileName for frequencies in the -N,N range.
@@ -411,11 +472,13 @@ circuit using Newton's Method is also returned.
 {
    DATE => 'Dec 9, 2014',
    path => 'ece1254/proj/PlotWaveforms.m',
+   PROBLEMSET => 1,
    WHAT => qq(Calls HBSolve() for a netlist file and caches the result.  Then plots the results using a set of plot specifications.),
 },
 {
    DATE => 'Dec 9, 2014',
    path => 'ece1254/proj/TestSolver.m',
+   PROBLEMSET => 1,
    WHAT => qq(
 Calls the HBSolve function to solve the
 circuit described in fileName using the Harmonic Balance method,
@@ -429,6 +492,7 @@ to solve and the maximum error between the solution and a solution of
 {
    DATE => 'Dec 9, 2014',
    path => 'ece1254/proj/DiodeCurrentAndJacobian.m',
+   PROBLEMSET => 1,
    WHAT => qq(
 Calculate the nonlinear current contributions of the diode
 and its associated Jacobian.
@@ -452,6 +516,7 @@ and its associated Jacobian.
 {
    DATE => 'Dec 9, 2014',
    path => 'ece1254/proj/FourierMatrixComplex.m',
+   PROBLEMSET => 1,
    WHAT => qq(
 Determines the fourier matrix for the discrete fourier transform and its inverse.
 )
@@ -459,6 +524,7 @@ Determines the fourier matrix for the discrete fourier transform and its inverse
 {
    DATE => 'Dec 9, 2014',
    path => 'ece1254/proj/HarmonicBalance.m',
+   PROBLEMSET => 1,
    WHAT => qq(
 Generates the Harmonic balance modified nodal analysis (MNA) equations from the time domain MNA
 representation.
@@ -486,6 +552,7 @@ where II represents nonlinear contributions not returned directly as a matrix.
 {
    DATE => 'Dec 9, 2014',
    path => 'ece1254/proj/NodalAnalysis.m',
+   PROBLEMSET => 1,
    WHAT => qq(
 Generates the modified nodal analysis (MNA) equations from a text file
 
@@ -505,6 +572,7 @@ encoding of any nonlinear elements.)
 {
    DATE => 'Dec 9, 2014',
    path => 'ece1254/proj/testFourierMatrixComplex.m',
+   PROBLEMSET => 1,
    WHAT => qq(
 Verify FourierMatrixComplex( N ), produced with vectorized code, against dumb
 programmatic loop construction method.
@@ -519,17 +587,20 @@ N is the number of Harmonics to be used.),
 {
    DATE => 'Dec 10, 2014',
    path => 'ece1254/proj/makefigures.m',
+   PROBLEMSET => 1,
    WHAT => qq(Driver for all the plots.  Calls PlotWaveforms().),
    FILTERIF => '/proj',
 },
 {
    DATE => 'Dec 14, 2014',
    path => 'ece1254/proj/DiodeNonVdependent.m',
+   PROBLEMSET => 1,
    WHAT => qq(V independent portions of the nonlinear current and Jacobian calculations.)
 },
 {
    DATE => 'Dec 26, 2014',
    path => 'ece1254/ps2b/plotConvergence.m',
+   PROBLEMSET => 1,
    WHAT => qq(Generate the convergence log log plots.)
 },
 ) ; # @matlab
