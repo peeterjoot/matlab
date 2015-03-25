@@ -603,6 +603,16 @@ N is the number of Harmonics to be used.),
    PROBLEMSET => 1,
    WHAT => qq(Generate the convergence log log plots.)
 },
+{
+   DATE => 'Mar 25, 2015',
+   path => 'ece1229/ps4/p1plot.m',
+   WHAT => qq(Plot the ps4 p1 AF for one value of ad.)
+},
+{
+   DATE => 'Mar 25, 2015',
+   path => 'ece1229/ps4/p1plots.m',
+   WHAT => qq(Generate all the plots for p1 and save the plots to files for the report.)
+},
 ) ; # @matlab
 
    return @matlab ;
