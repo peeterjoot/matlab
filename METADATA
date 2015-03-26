@@ -613,6 +613,11 @@ N is the number of Harmonics to be used.),
    path => 'ece1229/ps4/p1plots.m',
    WHAT => qq(Generate all the plots for p1 and save the plots to files for the report.)
 },
+{
+   DATE => 'Mar 25, 2015',
+   path => 'ece1229/ps4/p2.m',
+   WHAT => qq(Problem 2.  Code to confirm the zeros numerically, and to plot the absolute array factor.)
+},
 ) ; # @matlab
 
    return @matlab ;

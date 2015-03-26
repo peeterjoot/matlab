@@ -3,7 +3,7 @@ include ../../make.efig
 
 #CLEAN += *.mat
 #CLEAN += *.png
-#CLEAN += *.pdf
+CLEAN += *.pdf
 #CLEAN += *.bak
 CLEAN += *~
 
