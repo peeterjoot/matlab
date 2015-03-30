@@ -1,5 +1,5 @@
 function f = p1plot( ad )
-   % plots: plot the array factor for a given value of ad.
+   % plots: ps4. p1: plot the array factor for a given value of ad.
 
    kd = 2 * pi * (1/2) ;
 

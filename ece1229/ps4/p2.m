@@ -12,6 +12,9 @@ function p2( )
    af = abs((1 + expValues + expValues.^2 + expValues.^3)/4) ;
    afz = (1 + expValuesZ + expValuesZ.^2 + expValuesZ.^3)/4 ;
 
+   % This is to verify my hand expansion of the array factor in terms of cosines
+   % (looks like I could have also used a sinc expansion by summing first).
+   %
    cosValues = abs( cos( kd * cos( theta )/2 ) + cos( 3 * kd * cos( theta )/2 ) )/2 ;
    cosValuesZ = (cos( kd * cos( thetaZeros )/2 ) + cos( 3 * kd * cos( thetaZeros )/2 ))/2 ;
 

@@ -1,4 +1,5 @@
 function p1plots()
+   % plots: ps4. p1: generate and save the plots for each of the desired values of: a d
 
    adValues = 0 : pi/2 : 3 * pi/2 ;
    labelValues = { '0', '90', '180', '270' } ;
