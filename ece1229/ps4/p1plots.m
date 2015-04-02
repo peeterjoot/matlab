@@ -1,4 +1,4 @@
-function p1plots()
+function p1plots( saveEmToo )
    % plots: ps4. p1: generate and save the plots for each of the desired values of: a d
 
    adValues = 0 : pi/2 : 3 * pi/2 ;
@@ -10,10 +10,12 @@ function p1plots()
    for ad = adValues
       f = p1plot( ad ) ;
 
-      saveName = sprintf( 'ps4p1PlotAdEquals%sDegreesFig%d.%s', labelValues{figNum}, figNum, fileExtension ) ;
+      if ( saveEmToo )
+         saveName = sprintf( 'ps4p1PlotAdEquals%sDegreesFig%d.%s', labelValues{figNum}, figNum, fileExtension ) ;
 
-      savePlot( f, saveName ) ;
+         savePlot( f, saveName ) ;
 
-      figNum = figNum + 1 ;
+         figNum = figNum + 1 ;
+      end
    end
 end
