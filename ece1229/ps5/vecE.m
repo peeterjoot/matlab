@@ -4,6 +4,7 @@ function determineEHplanes()
 
    paramCacheFile = 'params.mat' ;
 
+   % construct the electric field function:
    if ( exist( paramCacheFile, 'file' ) )
 
       load( paramCacheFile ) ;
@@ -18,10 +19,6 @@ function determineEHplanes()
       % $ c k = 2 \pi f $
       k = 2 * pi * f / 3e8 ;
 
-      %rCap = @(t,p) [ sin(t) * cos(p) , sin(t) * sin(p) , cos(t) ] ;
-      %thetaCap = @(t,p) [ cos(t) * cos(p) , cos(t) * sin(p) , -sin(t) ] ;
-      %phiCap = @(t,p) [ -sin(p) , cos(p) , 0 ] ;
-
       X = @(t, p) k * sin(t) * cos(p) ;
       Y = @(t, p) k * sin(t) * sin(p) ;
 
@@ -30,14 +27,14 @@ function determineEHplanes()
       edir = @(t, p) (cos(t) * cos(p) * phicap(t, p) + sin(p) * thetacap(t, p)) ;
       hdir = @(t, p) (cos(t) * cos(p) * thetacap(t, p) - sin(p) * phicap(t, p)) ;
 
-   %disp( phicap(0,0) ) 
-   %disp( thetacap(0,0) ) 
-   %edir(0,0)
+      %disp( phicap(0,0) ) 
+      %disp( thetacap(0,0) ) 
+      %edir(0,0)
       ee = @(t, p) edir(t,p) * (cos( X(t,p) * a / 2 )/(X(t,p)^2 - (pi/a)^2)) * (sin(Y(t,p)* b /2)/(Y(t,p)/2)) ;
-   %disp(   ee(0,0) ) ;
+      %disp(   ee(0,0) ) ;
 
       save( paramCacheFile ) ;
-   fi
+   end
 
    maxE = -1.0 ;
    thetaAtMax = 0.0 ;
@@ -50,7 +47,16 @@ function determineEHplanes()
 
    rad = zeros( length(trange), length(prange) ) ;
 
-   if ( 1 )
+   %
+   % precompute the magnitude of the field in all the various directions (used
+   % to find the zeros, 3dB point, and sidelobe levels)
+   %
+   radCacheFile = 'rad.mat' ;
+   if ( exist( radCacheFile, 'file' ) )
+
+      load( radCacheFile ) ;
+
+   else
       % find the direction of the maximum field
 
       r = 1 ; 
@@ -75,6 +81,7 @@ function determineEHplanes()
          r = r + 1 ;
       end
 
+      disp( sprintf('E_max(%g,%g)[%d,%d] = %g\n', thetaAtMax, phiAtMax, ithetaAtMax, iphiAtMax, maxE) ) ;
       rad = rad/maxE ;
 
       % examining this data shows that we have the max at theta = 0 (for any phi), so we can 
@@ -92,11 +99,60 @@ function determineEHplanes()
 
       % E-plane == y-z plane.  phi=pi/2
       % H-plane == z-x plane.  phi=0
-
-      save('b.mat') ;
-   else
-      load('b.mat') ;
    end
 
-   disp( sprintf('E_max(%g,%g)[%d,%d] = %g\n', thetaAtMax, phiAtMax, ithetaAtMax, iphiAtMax, maxE) ) ;
+   eplane = rad(:,1)
+   hplane = rad(:, floor(length(prange)/4)) % 2 pi / 4 = pi/2
+
+   [fileExtension, savePlot] = saveHelper() ;
+
+   close all ;
+   fe = figure ;
+   de = diff(eplane) ;
+   plot( trange, eplane )
+   xlabel( '\theta' )
+
+   % show the adjacent differences, and their signs to visualize the null-search:
+   if ( 0 )
+      hold on ;
+      plot( trange(1:length(de)), de )
+      plot( trange(1:length(de)), sign(de) )
+   end
+
+   saveName = sprintf( 'eplaneFig%d.%s', 2, fileExtension ) ;
+   savePlot( f, saveName ) ;
+
+   fh = figure ;
+   dh = diff(hplane) ;
+   plot( trange, hplane )
+   xlabel( '\theta' )
+
+   % show the adjacent differences, and their signs to visualize the null-search:
+   if ( 0 )
+      hold on ;
+      plot( trange(1:length(dh)), dh )
+      plot( trange(1:length(dh)), sign(dh) )
+   end
+
+   saveName = sprintf( 'hplaneFig%d.%s', 3, fileExtension ) ;
+   savePlot( f, saveName ) ;
+
+   % http://stackoverflow.com/a/29607885/189270
+   findzeros = @(a) find( diff( sign( diff( a ) ) ) == 2 ) + 1 ;
+   ze = findzeros( eplane ) ;
+   zh = findzeros( hplane ) ;
+
+%   disp( findzeros( eplane ) ) ;
+%   disp( findzeros( hplane ) ) ;
+   disp( trange( ze ) ) ;
+   disp( trange( zh ) ) ;
+
+   disp( trange( ze ) * 180 / pi ) ;
+   disp( trange( zh ) * 180 / pi ) ;
+
+   %save('c.mat') ;
+
+   % do a log polar plot instead/too.  Want to rewrite the scale levels ... how?
+   %f = figure ;
+   %polar( trange, eplane.' )
 end
