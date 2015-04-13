@@ -618,6 +618,31 @@ N is the number of Harmonics to be used.),
    path => 'ece1229/ps4/p2.m',
    WHAT => qq(Problem 2.  Code to confirm the zeros numerically, and to plot the absolute array factor.)
 },
+{
+   DATE => 'Apr 13, 2015',
+   path => 'ece1229/ps5/phicap.m',
+   WHAT => qq(spherical polar phicap function)
+},
+{
+   DATE => 'Apr 13, 2015',
+   path => 'ece1229/ps5/rcap.m',
+   WHAT => qq(spherical polar rcap function)
+},
+{
+   DATE => 'Apr 13, 2015',
+   path => 'ece1229/ps5/thetacap.m',
+   WHAT => qq(spherical polar thetacap function)
+},
+{
+   DATE => 'Apr 13, 2015',
+   path => 'ece1229/ps5/vecE.m',
+   WHAT => qq(ps5 p1 compuation and plots)
+},
+{
+   DATE => 'Apr 13, 2015',
+   path => 'ece1229/ps5/zf.m',
+   WHAT => qq(standalone question posted to stackoverflow related to refining my zero-find method)
+},
 ) ; # @matlab
 
    return @matlab ;
