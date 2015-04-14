@@ -42,8 +42,8 @@ function determineEHplanes()
    ithetaAtMax = 0 ;
    iphiAtMax = 0 ;
 
-   trange = 0:0.01:pi ;
-   prange = 0:0.02:2 * pi ;
+   trange = linspace( 0, pi, 300 ) ;
+   prange = linspace( 0, 2 * pi, 300 ) ;
 
    rad = zeros( length(trange), length(prange) ) ;
 
@@ -99,60 +99,125 @@ function determineEHplanes()
 
       % E-plane == y-z plane.  phi=pi/2
       % H-plane == z-x plane.  phi=0
+
+      save( radCacheFile ) ;
    end
 
-   eplane = rad(:,1)
-   hplane = rad(:, floor(length(prange)/4)) % 2 pi / 4 = pi/2
+   eplane = rad(:,1) ;
+   hplane = rad(:, floor(length(prange)/4)) ; % 2 pi / 4 = pi/2
 
-   [fileExtension, savePlot] = saveHelper() ;
-
-   close all ;
-   fe = figure ;
    de = diff(eplane) ;
-   plot( trange, eplane )
-   xlabel( '\theta' )
-
-   % show the adjacent differences, and their signs to visualize the null-search:
-   if ( 0 )
-      hold on ;
-      plot( trange(1:length(de)), de )
-      plot( trange(1:length(de)), sign(de) )
-   end
-
-   saveName = sprintf( 'eplaneFig%d.%s', 2, fileExtension ) ;
-   savePlot( f, saveName ) ;
-
-   fh = figure ;
    dh = diff(hplane) ;
-   plot( trange, hplane )
-   xlabel( '\theta' )
 
-   % show the adjacent differences, and their signs to visualize the null-search:
-   if ( 0 )
-      hold on ;
-      plot( trange(1:length(dh)), dh )
-      plot( trange(1:length(dh)), sign(dh) )
+   showPlots = 1 ;
+   if ( showPlots )
+      [fileExtension, savePlot] = saveHelper() ;
+      close all ;
+      fe = figure ;
+      plot( trange, eplane )
+      xlabel( '\theta' )
+
+      piGradientTicks = 1 ;
+
+      if ( piGradientTicks )
+         xlim([0 pi()])
+         % Set axis gca's Xtick and XtickLabel to manually input data
+         set(gca, 'XTick',[0,0.25*pi,.5*pi,0.75*pi,pi]);
+         set(gca,'XTickLabel',{'0','\pi/4','\pi/2','3 \pi/4','\pi'});
+      end
+
+      % show the adjacent differences, and their signs to visualize the null-search:
+      if ( 0 )
+         hold on ;
+         plot( trange(1:length(de)), de )
+         plot( trange(1:length(de)), sign(de) )
+      end
+
+      saveName = sprintf( 'eplaneFig%d.%s', 2, fileExtension ) ;
+      savePlot( fe, saveName ) ;
+
+      fh = figure ;
+      plot( trange, hplane )
+      xlabel( '\theta' )
+
+      if ( piGradientTicks )
+         xlim([0 pi()])
+         % Set axis gca's Xtick and XtickLabel to manually input data
+         set(gca, 'XTick',[0,0.25*pi,.5*pi,0.75*pi,pi]);
+         set(gca,'XTickLabel',{'0','\pi/4','\pi/2','3 \pi/4','\pi'});
+      end
+
+      % show the adjacent differences, and their signs to visualize the null-search:
+      if ( 0 )
+         hold on ;
+         plot( trange(1:length(dh)), dh )
+         plot( trange(1:length(dh)), sign(dh) )
+      end
+
+      saveName = sprintf( 'hplaneFig%d.%s', 3, fileExtension ) ;
+      savePlot( fh, saveName ) ;
    end
-
-   saveName = sprintf( 'hplaneFig%d.%s', 3, fileExtension ) ;
-   savePlot( f, saveName ) ;
 
    % http://stackoverflow.com/a/29607885/189270
    findzeros = @(a) find( diff( sign( diff( a ) ) ) == 2 ) + 1 ;
+   findlevels = @(a) find( diff( sign( diff( a ) ) ) == -2 ) + 1 ;
    ze = findzeros( eplane ) ;
    zh = findzeros( hplane ) ;
+   le = findlevels( eplane ) ;
+   lh = findlevels( hplane ) ;
 
 %   disp( findzeros( eplane ) ) ;
 %   disp( findzeros( hplane ) ) ;
-   disp( trange( ze ) ) ;
-   disp( trange( zh ) ) ;
+%   disp( trange( ze ) ) ;
+%   disp( trange( zh ) ) ;
 
+   disp( 'zeros' ) ;
    disp( trange( ze ) * 180 / pi ) ;
    disp( trange( zh ) * 180 / pi ) ;
 
-   %save('c.mat') ;
+   disp( 'peaks (rad)' ) ;
+   disp( trange( le ) ) ;
+   disp( trange( lh ) ) ;
+   disp( 'peaks (degrees)' ) ;
+   disp( trange( le ) * 180 / pi ) ;
+   disp( trange( lh ) * 180 / pi ) ;
+   disp( 'peaks (levels)' ) ;
+   disp( eplane( le ) ) ;
+   disp( hplane( lh ) ) ;
+   disp( 'peak levels power, (dB)' ) ;
+   disp( 10 * log10(eplane( le ).^2) ) ;
+   disp( 10 * log10(hplane( lh ).^2) ) ;
 
-   % do a log polar plot instead/too.  Want to rewrite the scale levels ... how?
-   %f = figure ;
-   %polar( trange, eplane.' )
+   threeDbThresh = 10^(-3/20) ;
+   disp( '3 dB point (rad)' ) ;
+   threeDbPtE = findzeros( abs(eplane - threeDbThresh) ) ;
+   threeDbPtH = findzeros( abs(hplane - threeDbThresh) ) ;
+   threeDbPtE = threeDbPtE(1) ;
+   threeDbPtH = threeDbPtH(1) ;
+   disp( trange( threeDbPtE ) ) ;
+   disp( trange( threeDbPtH ) ) ;
+   disp( '3 dB point (degrees)' ) ;
+   disp( trange( threeDbPtE ) * 180 / pi ) ;
+   disp( trange( threeDbPtH ) * 180 / pi ) ;
+   disp( '3 dB level (field)' ) ;
+   disp( eplane( threeDbPtE ) ) ;
+   disp( hplane( threeDbPtH ) ) ;
+   disp( '[check] 3 dB power level, (dB)' ) ;
+   disp( 10 * log10(eplane( threeDbPtE ).^2) ) ;
+   disp( 10 * log10(hplane( threeDbPtH ).^2) ) ;
+
+   polarPlots = 1 ;
+   if ( showPlots && polarPlots )
+      f3 = figure ;
+      logpolar( trange, logscale( eplane.^2, -50 ).' )
+      saveName = sprintf( 'eplanePolarFig%d.%s', 4, fileExtension ) ;
+      savePlot( f3, saveName ) ;
+
+      f4 = figure ;
+      logpolar( trange, logscale( hplane.^2, -50 ).' )
+      saveName = sprintf( 'hplanePolarFig%d.%s', 5, fileExtension ) ;
+      savePlot( f4, saveName ) ;
+   end
+
+%   save('c.mat') ;
 end

@@ -1,0 +1,43 @@
+Specifically hacked assuming 0:-50 dB scaling (-50 dB at the origin).
+
+--- logpolar.m.orig	2015-04-13 22:39:13.846647700 -0400
++++ logpolar.m	2015-04-13 22:41:02.698873700 -0400
+@@ -1,4 +1,4 @@
+-function hpol = polar(varargin)
++function hpol = logpolar(varargin)
+     %POLAR  Polar coordinate plot.
+     %   POLAR(THETA, RHO) makes a plot using polar coordinates of
+     %   the angle THETA, in radians, versus the radius RHO.
+@@ -131,17 +131,30 @@ function hpol = polar(varargin)
+                 'EdgeColor', tc, 'FaceColor', get(cax, 'Color'), ...
+                 'HandleVisibility', 'off', 'Parent', cax);
+         end
+-        
++
+         % draw radial circles
+         c82 = cos(82 * pi / 180);
+         s82 = sin(82 * pi / 180);
+         rinc = (rmax - rmin) / rticks;
++% <hack>
++        ri = 1 ;
++        rho_labels2 = {'-40' '-30' '-20' '-10' '0'};
++% </hack>
+         for i = (rmin + rinc) : rinc : rmax
+             hhh = line(xunit * i, yunit * i, 'LineStyle', ls, 'Color', tc, 'LineWidth', 1, ...
+                 'HandleVisibility', 'off', 'Parent', cax);
++
++% <hack>
++%            text((i + rinc / 20) * c82, (i + rinc / 20) * s82, ...
++%                ['  ' num2str(i)], 'VerticalAlignment', 'bottom', ...
++%                'HandleVisibility', 'off', 'Parent', cax);
++
+             text((i + rinc / 20) * c82, (i + rinc / 20) * s82, ...
+-                ['  ' num2str(i)], 'VerticalAlignment', 'bottom', ...
++                [' ' rho_labels2{ri}], 'VerticalAlignment', 'bottom', ...
+                 'HandleVisibility', 'off', 'Parent', cax);
++
++            ri = ri + 1 ;
++% </hack>
+         end
+         set(hhh, 'LineStyle', '-'); % Make outer circle solid
+         
