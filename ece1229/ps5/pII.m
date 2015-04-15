@@ -36,8 +36,12 @@
    % cm
    deltaL = deltaLoverH * h
 
+   save( 'pII.mat' ) ;
+
+   m = 2 ;
+
    % cm
-   L = L0 - 2 * deltaL 
+   L = L0 - m * deltaL 
 
    %------------------------------
    % (e)
@@ -68,4 +72,22 @@
    Yin2 = 1/Zin2 
    Yin2Radius = abs(Yin2)
    Yin2Degrees = angle(Yin2) * 180 /pi
+
+   %------------------------------
+   % (g)
+   %
+   Ytotal = Yin2 + Ys
+   Zin = 1/Ytotal 
+   ZinRadius = abs(Zin)
+   ZinDegrees = angle(Zin) * 180 /pi
+
+   m = 0:0.01:3 ;
+   zz = zeros(size(m)) ;
+   k = 1 ;
+   for i = m
+      zz(k) = findZinReal( i ) ;
+      k = k + 1 ;
+   end
+   close all ;
+   plot( m, imag(zz) ) ;
 %end
