@@ -653,6 +653,11 @@ N is the number of Harmonics to be used.),
    path => 'ece1229/ps5/logscale.m',
    WHAT => qq(db values for an input array rescaled to fit in the 0,1 interval.)
 },
+{
+   DATE => 'Apr 14, 2015',
+   path => 'ece1229/ps5/pII.m',
+   WHAT => qq(Problem 2 numeric substitutions)
+},
 ) ; # @matlab
 
    return @matlab ;
