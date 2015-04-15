@@ -41,6 +41,7 @@
    %------------------------------
    % (h)
    %
+   % brute force way, but gives a plot as a side effect
    m = 0:0.1:3 ;
    zz = zeros(size(m)) ;
    k = 1 ;
@@ -50,54 +51,43 @@
       k = k + 1 ;
    end
    close all ;
-if ( 0 )
-   plot( m, imag(zz) ) ;
-end
+   f = plot( m, imag(zz) ) ;
+   xlabel( 'm' ) ;
+   ylabel( 'Im(Z_{in})' ) ;
+
+   [fileExtension, savePlot] = saveHelper() ;
+   saveName = sprintf( 'imagZinFig%d.%s', 6, fileExtension ) ;
+   savePlot( f, saveName ) ;
 
    findzeros = @(a) find( diff( sign( diff( a ) ) ) == 2 ) + 1 ;
 
    zpos = findzeros( abs(imag(zz)) ) ;
-
    zero = m(zpos)
 
-   % refine a bit:
+   % refine (could also do this on the 0:3 interval)
+   minm = zero-0.1 ;
+   maxm = zero+0.1 ;
+   %r = calculateZinAndStuff( p, minm )
+   %r = calculateZinAndStuff( p, maxm )
 
-   m = -0.1 + zero : 0.0001 : 0.1 + zero ;
-   zz = zeros(size(m)) ;
-   k = 1 ;
-   for i = m
-      r = calculateZinAndStuff( p, i ) ;
-      zz(k) = r.Zin ;
-      k = k + 1 ;
+   maxIter = 20 ;   
+   for i = 0:maxIter
+      midm = (maxm + minm)/2 ;
+
+      r = calculateZinAndStuff( p, midm ) ;
+
+      if ( imag(r.Zin) > 0 )
+         maxm = midm ;
+      else
+         minm = midm ;
+      end
+
+%      disp( [ imag(r.Zin), minm, midm, maxm ] ) ;
    end
-%   close all ;
-%   plot( m, imag(zz) ) ;
 
-   zpos = findzeros( abs(imag(zz)) ) ;
+   disp( sprintf( '%g\n', midm ) ) ;
 
-   zero = m(zpos)
-
-% Could refine a bit more, but this is a dumb way to do it.
-% If I wanted a better answer should use a narrowing search algorithm, or 
-% just do it analytically.
-if ( 0 )
-
-   m = -0.01 + zero : 0.00001 : 0.01 + zero ;
-   zz = zeros(size(m)) ;
-   k = 1 ;
-   for i = m
-      r = calculateZinAndStuff( p, i ) ;
-      zz(k) = r.Zin ;
-      k = k + 1 ;
-   end
-%   close all ;
-%   plot( m, imag(zz) ) ;
-
-   zpos = findzeros( abs(imag(zz)) ) ;
-
-   zero = m(zpos)
-end
-
-   r = calculateZinAndStuff( p, zero ) 
+   r.Zin
+%   r = calculateZinAndStuff( p, midm ) 
 
    displayAsPhasor( 'Z_in,new', r.Zin ) ;

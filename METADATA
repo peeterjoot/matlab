@@ -638,11 +638,11 @@ N is the number of Harmonics to be used.),
    path => 'ece1229/ps5/vecE.m',
    WHAT => qq(ps5 p1 compuation and plots)
 },
-%{
-%   DATE => 'Apr 13, 2015',
-%   path => 'ece1229/ps5/.junk/zf.m',
-%   WHAT => qq(standalone question posted to stackoverflow related to refining my zero-find method)
-%},
+#{
+#   DATE => 'Apr 13, 2015',
+#   path => 'ece1229/ps5/.junk/zf.m',
+#   WHAT => qq(standalone question posted to stackoverflow related to refining my zero-find method)
+#},
 {
    DATE => 'Apr 13, 2015',
    path => 'ece1229/ps5/logpolar.m',
@@ -656,12 +656,12 @@ N is the number of Harmonics to be used.),
 {
    DATE => 'Apr 14, 2015',
    path => 'ece1229/ps5/pII.m',
-   WHAT => qq(Problem 2 numeric substitutions)
+   WHAT => qq(Display the numeric substitutions, and compute the value of m for part h that has zero imaginary input impedance.)
 },
 {
    DATE => 'Apr 14, 2015',
    path => 'ece1229/ps5/calculateZinAndStuff.m',
-   WHAT => qq(Calculate Zin given a value of m.)
+   WHAT => qq(Calculate Zin given a single value of m.  Returns all the intermediate calculations in a structure for display purposes.)
 },
 ) ; # @matlab
 
