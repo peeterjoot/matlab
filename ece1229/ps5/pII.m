@@ -1,26 +1,36 @@
 
    r = calculateZinAndStuff( 2 )
 
-   YsRadius = abs(r.Ys)
-   YsDegrees = angle(r.Ys) * 180/pi
+   YsRadius = abs(r.Ys) ;
+   YsDegrees = angle(r.Ys) * 180/pi ;
+
+   disp( sprintf('Y_s = %g /_ %g\n', YsRadius, YsDegrees ) ) ;
 
    %------------------------------
    % (f)
    %
-   ZsRadius = abs(r.Zs)
-   ZsDegrees = angle(r.Zs) * 180 /pi
+   ZsRadius = abs(r.Zs) ;
+   ZsDegrees = angle(r.Zs) * 180 /pi ;
 
-   Zin2Radius = abs(r.Zin2)
-   Zin2Degrees = angle(r.Zin2) * 180 /pi
+   disp( sprintf('Z_s = %g /_ %g\n', ZsRadius, ZsDegrees ) ) ;
 
-   Yin2Radius = abs(r.Yin2)
-   Yin2Degrees = angle(r.Yin2) * 180 /pi
+   Zin2Radius = abs(r.Zin2) ;
+   Zin2Degrees = angle(r.Zin2) * 180 /pi ;
+
+   disp( sprintf('Z_in2 = %g /_ %g\n', Zin2Radius, Zin2Degrees ) ) ;
+
+   Yin2Radius = abs(r.Yin2) ;
+   Yin2Degrees = angle(r.Yin2) * 180 /pi ;
+
+   disp( sprintf('Y_in2 = %g /_ %g\n', Yin2Radius, Yin2Degrees ) ) ;
 
    %------------------------------
    % (g)
    %
-   ZinRadius = abs(r.Zin)
-   ZinDegrees = angle(r.Zin) * 180 /pi
+   ZinRadius = abs(r.Zin) ;
+   ZinDegrees = angle(r.Zin) * 180 /pi ;
+
+   disp( sprintf('Z_in = %g /_ %g\n', ZinRadius, ZinDegrees ) ) ;
 
    %------------------------------
    % (h)
