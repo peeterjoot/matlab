@@ -1,38 +1,31 @@
-function r = calculateZinAndStuff( m )
+function r = calculateZinAndStuff( p, m )
    % calculateZinAndStuff: given input value of m, calculate Z_in and other stuff
-
-   f0 = 10e9 ; % 1/s
-   er = 2.2 ; % dimensionless
-   c = 3e8 ; % m/s 
-   cmInMeter = 100 ;
-
-   h = 0.1588 ; % cm
 
    %------------------------------
    % (a)
    %
-   % m->cm
-   W = sqrt(2/(1 + er)) * (c/(2 * f0)) * cmInMeter ;
+   % (cm units because lambda0 is)
+   W = sqrt(2/(1 + p.er)) * (p.lambda0/2) ;
 
    %------------------------------
    % (b)
    %
-   eEff = (er + 1)/2 + (er - 1)/2/sqrt(1 + 12 * h/W) ;
+   eEff = (p.er + 1)/2 + (p.er - 1)/2/sqrt(1 + 12 * p.h/W) ;
 
    %------------------------------
    % (c)
    %
-   % m->cm
-   L0 = cmInMeter * c/(2 * f0) / sqrt(eEff) ;
+   % (cm units because lambda0 is)
+   L0 = ( p.lambda0/2 ) / sqrt(eEff) ;
 
    %------------------------------
    % (d)
    %
    % dimensionless
-   deltaLoverH = 0.412 * ( eEff + 0.3 ) * ( W/h + 0.264 )/( (eEff - 0.258) * (W/h + 0.8) ) ;
+   deltaLoverH = 0.412 * ( eEff + 0.3 ) * ( W/p.h + 0.264 )/( (eEff - 0.258) * (W/p.h + 0.8) ) ;
 
    % cm
-   deltaL = deltaLoverH * h ;
+   deltaL = deltaLoverH * p.h ;
 
    % cm
    L = L0 - m * deltaL ;
@@ -40,11 +33,10 @@ function r = calculateZinAndStuff( m )
    %------------------------------
    % (e)
    %
-   lambda0 = 2 * L0 ;
-   k0 = 2 * pi/ lambda0 ;
+   k0h = p.k0 * p.h ;
 
-   G = (W/(120 * lambda0)) * ( 1 - (1/24)*((k0 * h)^2) ) ;
-   B = (W/(120 * lambda0)) * ( 1 - 0.636 * log(k0 * h)) ;
+   G = (W/(120 * p.lambda0)) * ( 1 - (1/24)* k0h^2 ) ;
+   B = (W/(120 * p.lambda0)) * ( 1 - 0.636 * log( k0h )) ;
 
    Ys = G + 1j * B ;
 
@@ -52,10 +44,9 @@ function r = calculateZinAndStuff( m )
    % (f)
    %
    Zs = 1/Ys ;
-   Z0 = 26 ;
-   beta = k0 * sqrt( eEff ) ;
+   beta = p.k0 * sqrt( eEff ) ;
 
-   Zin2 = Z0 * (Zs + 1j * Z0 * tan( beta * L ))/(Z0 + 1j * Zs * tan( beta * L )) ;
+   Zin2 = p.Z0 * (Zs + 1j * p.Z0 * tan( beta * L ))/(p.Z0 + 1j * Zs * tan( beta * L )) ;
 
    Yin2 = 1/Zin2  ;
 
@@ -65,5 +56,18 @@ function r = calculateZinAndStuff( m )
    Ytotal = Yin2 + Ys ;
    Zin = 1/Ytotal ;
 
-   r = struct( 'W', W, 'eEff', eEff, 'L0', L0, 'L', L, 'k0', k0, 'lambda0', lambda0, 'G', G, 'B', B, 'Ys', Ys, 'beta', beta, 'Zs', Zs, 'Zin2', Zin2, 'Yin2', Yin2, 'Ytotal', Ytotal, 'Zin', Zin, 'hOverLambda0', h/lambda0 ) ;
+   r = struct( 'W', W, ...
+               'eEff', eEff, ...
+               'L0', L0, ...
+               'L', L, ...
+               'deltaL', deltaL, ...
+               'G', G, ...
+               'B', B, ...
+               'Ys', Ys, ...
+               'beta', beta, ...
+               'Zs', Zs, ...
+               'Zin2', Zin2, ...
+               'Yin2', Yin2, ...
+               'Ytotal', Ytotal, ...
+               'Zin', Zin ) ;
 end

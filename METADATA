@@ -638,11 +638,11 @@ N is the number of Harmonics to be used.),
    path => 'ece1229/ps5/vecE.m',
    WHAT => qq(ps5 p1 compuation and plots)
 },
-{
-   DATE => 'Apr 13, 2015',
-   path => 'ece1229/ps5/zf.m',
-   WHAT => qq(standalone question posted to stackoverflow related to refining my zero-find method)
-},
+%{
+%   DATE => 'Apr 13, 2015',
+%   path => 'ece1229/ps5/.junk/zf.m',
+%   WHAT => qq(standalone question posted to stackoverflow related to refining my zero-find method)
+%},
 {
    DATE => 'Apr 13, 2015',
    path => 'ece1229/ps5/logpolar.m',
