@@ -1,93 +1,78 @@
 
-
-%function pII()
-   % pII: docs go here.
-
-   f0 = 10e9 ; % 1/s
-   er = 2.2 ; % dimensionless
-   c = 3e8 ; % m/s 
-   cmInMeter = 100 ;
-
-   h = 0.1588 ; % cm
+   r = calculateZinAndStuff( 2 ) ;
 
    %------------------------------
    % (a)
    %
    % m->cm
-   W = sqrt(2/(1 + er)) * (c/(2 * f0)) * cmInMeter
+   r.W
 
    %------------------------------
    % (b)
    %
-   eEff = (er + 1)/2 + (er - 1)/2/sqrt(1 + 12 * h/W) 
+   r.eEff
 
    %------------------------------
    % (c)
    %
-   % m->cm
-   L0 = cmInMeter * c/(2 * f0) / sqrt(eEff)
+   r.L0 
 
    %------------------------------
    % (d)
-   %
-   % dimensionless
-   deltaLoverH = 0.412 * ( eEff + 0.3 ) * ( W/h + 0.264 )/( (eEff - 0.258) * (W/h + 0.8) )
-
    % cm
-   deltaL = deltaLoverH * h
-
-   save( 'pII.mat' ) ;
-
-   m = 2 ;
-
-   % cm
-   L = L0 - m * deltaL 
+   disp('L') ;
+   r.L
 
    %------------------------------
    % (e)
-   %
-   k0 = pi/L0
-   lambda0 = 2 * L0
 
-   G = (W/(120 * lambda0)) * ( 1 - (k0 * h)^2/24)
-   B = (W/(120 * lambda0)) * ( 1 - 0.636 * log(k0 * h))
+   disp( 'k0 lambda0 G B Ys' ) ;
+   r.k0
+   r.lambda0
+   r.G
+   r.B
+   r.Ys
 
-   Ys = G + 1j * B
-   YsRadius = abs(Ys)
-   YsDegrees = angle(Ys) * 180/pi
+   YsRadius = abs(r.Ys)
+   YsDegrees = angle(r.Ys) * 180/pi
 
    %------------------------------
    % (f)
    %
-   Zs = 1/Ys
-   ZsRadius = abs(Zs)
-   ZsDegrees = angle(Zs) * 180 /pi
-   Z0 = 26 ;
-   beta = k0 * sqrt( eEff )
+   r.Zs
+   ZsRadius = abs(r.Zs)
+   ZsDegrees = angle(r.Zs) * 180 /pi
+   r.beta
 
-   Zin2 = Z0 * (Zs + 1j * Z0 * tan( beta * L ))/(Z0 + 1j * Zs * tan( beta * L ))
-   Zin2Radius = abs(Zin2)
-   Zin2Degrees = angle(Zin2) * 180 /pi
+   r.Zin2
+   Zin2Radius = abs(r.Zin2)
+   Zin2Degrees = angle(r.Zin2) * 180 /pi
 
-   Yin2 = 1/Zin2 
-   Yin2Radius = abs(Yin2)
-   Yin2Degrees = angle(Yin2) * 180 /pi
+   r.Yin2
+   Yin2Radius = abs(r.Yin2)
+   Yin2Degrees = angle(r.Yin2) * 180 /pi
+
+   %disp('hOverLambda0') ;
+   %r.hOverLambda0
 
    %------------------------------
    % (g)
    %
-   Ytotal = Yin2 + Ys
-   Zin = 1/Ytotal 
-   ZinRadius = abs(Zin)
-   ZinDegrees = angle(Zin) * 180 /pi
+   r.Ytotal
+   r.Zin
+   ZinRadius = abs(r.Zin)
+   ZinDegrees = angle(r.Zin) * 180 /pi
 
+   %------------------------------
+   % (h)
+   %
    m = 0:0.01:3 ;
    zz = zeros(size(m)) ;
    k = 1 ;
    for i = m
-      zz(k) = findZinReal( i ) ;
+      r = calculateZinAndStuff( i ) ;
+      zz(k) = r.Zin ;
       k = k + 1 ;
    end
    close all ;
    plot( m, imag(zz) ) ;
-%end

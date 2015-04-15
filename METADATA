@@ -658,6 +658,11 @@ N is the number of Harmonics to be used.),
    path => 'ece1229/ps5/pII.m',
    WHAT => qq(Problem 2 numeric substitutions)
 },
+{
+   DATE => 'Apr 14, 2015',
+   path => 'ece1229/ps5/calculateZinAndStuff.m',
+   WHAT => qq(Calculate Zin given a value of m.)
+},
 ) ; # @matlab
 
    return @matlab ;

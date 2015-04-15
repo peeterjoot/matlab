@@ -40,10 +40,10 @@ function r = calculateZinAndStuff( m )
    %------------------------------
    % (e)
    %
-   k0 = pi/L0 ;
    lambda0 = 2 * L0 ;
+   k0 = 2 * pi/ lambda0 ;
 
-   G = (W/(120 * lambda0)) * ( 1 - (k0 * h)^2/24) ;
+   G = (W/(120 * lambda0)) * ( 1 - (1/24)*((k0 * h)^2) ) ;
    B = (W/(120 * lambda0)) * ( 1 - 0.636 * log(k0 * h)) ;
 
    Ys = G + 1j * B ;
@@ -55,7 +55,7 @@ function r = calculateZinAndStuff( m )
    Z0 = 26 ;
    beta = k0 * sqrt( eEff ) ;
 
-   Zin2 = Z0 * (Zs + 1j * Z0 * tan( beta * L ))/(Z0 + 1j * Zs * tan( beta * L ))
+   Zin2 = Z0 * (Zs + 1j * Z0 * tan( beta * L ))/(Z0 + 1j * Zs * tan( beta * L )) ;
 
    Yin2 = 1/Zin2  ;
 
@@ -65,5 +65,5 @@ function r = calculateZinAndStuff( m )
    Ytotal = Yin2 + Ys ;
    Zin = 1/Ytotal ;
 
-   r = struct( 'W', W, 'eEff', eEff, 'L0', L0, 'L', L, 'k0', k0, 'lambda0', lambda0, 'G', G, 'B', B, 'Ys', Ys, 'beta', beta, 'Zin2', Zin2, 'Yin2', Yin2, 'Ytotal', Ytotal, 'Zin', Zin ) ;
+   r = struct( 'W', W, 'eEff', eEff, 'L0', L0, 'L', L, 'k0', k0, 'lambda0', lambda0, 'G', G, 'B', B, 'Ys', Ys, 'beta', beta, 'Zs', Zs, 'Zin2', Zin2, 'Yin2', Yin2, 'Ytotal', Ytotal, 'Zin', Zin, 'hOverLambda0', h/lambda0 ) ;
 end
