@@ -11,6 +11,32 @@
 
    hOverLambda0 = h / lambda0
 
+   %------------------------------
+   % (a)
+   %
+   % (cm units because lambda0 is)
+   W = sqrt(2/(1 + er)) * (lambda0/2) ;
+
+   %------------------------------
+   % (b)
+   %
+   eEff = (er + 1)/2 + (er - 1)/2/sqrt(1 + 12 * h/W) ;
+
+   %------------------------------
+   % (c)
+   %
+   % (cm units because lambda0 is)
+   L0 = ( lambda0/2 ) / sqrt(eEff) ;
+
+   %------------------------------
+   % (d)
+   %
+   % dimensionless
+   deltaLoverH = 0.412 * ( eEff + 0.3 ) * ( W/h + 0.264 )/( (eEff - 0.258) * (W/h + 0.8) ) ;
+
+   % cm
+   deltaL = deltaLoverH * h ;
+
    p = struct( 'f0', f0, ...
                'er', er, ...
                'k0', k0, ...
@@ -18,6 +44,10 @@
                'cmInMeter', cmInMeter, ...
                'h', h, ...
                'lambda0', lambda0, ...
+               'W', W, ...
+               'eEff', eEff, ...
+               'L0', L0, ...
+               'deltaL', deltaL, ...
                'Z0', Z0 ) 
 
    r = calculateZinAndStuff( p, 2 ) 

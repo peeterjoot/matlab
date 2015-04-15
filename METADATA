@@ -643,11 +643,11 @@ N is the number of Harmonics to be used.),
 #   path => 'ece1229/ps5/.junk/zf.m',
 #   WHAT => qq(standalone question posted to stackoverflow related to refining my zero-find method)
 #},
-{
-   DATE => 'Apr 13, 2015',
-   path => 'ece1229/ps5/logpolar.m',
-   WHAT => qq(This is a hacked version of matlab's built in POLAR function, with radial ticks changed to db scale.)
-},
+#{
+#   DATE => 'Apr 13, 2015',
+#   path => 'ece1229/ps5/logpolar.m',
+#   WHAT => qq(This is a hacked version of matlab's built in POLAR function, with radial ticks changed to db scale.)
+#},
 {
    DATE => 'Apr 13, 2015',
    path => 'ece1229/ps5/logscale.m',
