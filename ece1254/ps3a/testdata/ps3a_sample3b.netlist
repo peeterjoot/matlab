@@ -4,4 +4,4 @@ C1 2 0 5
 L1 1 2 7
 .end
 
-Same as ps3a_sample3b.netlist, but with the inductor current sign reversed.
+* Same as ps3a_sample3b.netlist, but with the inductor current sign reversed.
