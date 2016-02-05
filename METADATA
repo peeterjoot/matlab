@@ -663,6 +663,11 @@ N is the number of Harmonics to be used.),
    path => 'ece1229/ps5/calculateZinAndStuff.m',
    WHAT => qq(Calculate Zin given a single value of m.  Returns all the intermediate calculations in a structure for display purposes.)
 },
+{
+   DATE => 'Feb 4, 2016',
+   path => 'ece1236/smith/run.m',
+   WHAT => qq(run mathworks plotSmithChart() and save output to a file.)
+},
 ) ; # @matlab
 
    return @matlab ;
