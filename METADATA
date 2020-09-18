@@ -453,7 +453,8 @@ Harmonic Balance equations of the form
 
      f(V) = Y V - I -II(V),
 
-are constructed from the supplied .netlist specification.  The zeros of this function are sought, determining the
+are constructed from the supplied .netlist specification.
+The zeros of this function are sought, determining
 the DFT Fourier coefficent vector V that solves the system in the frequency domain.
 
 The vectors containing the unknowns V,v of the circuit are returned (in the frequency and
