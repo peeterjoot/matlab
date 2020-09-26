@@ -65,13 +65,13 @@ Sets a global trace variable to non-zero so that calls to traceit( ... ) don't p
 },
 {
    DATE => 'Oct 14, 2014',
-   path => 'ece1254/ps1/generateHeatNetlist.m',
+   path => 'ece1254/ps1/genHeatNl.m',
    PROBLEMSET => 1,
    WHAT => qq(A small Matlab function that generates a netlist for the heat network in ps1 p3a.)
 },
 {
    DATE => 'Oct 14, 2014',
-   path => 'ece1254/ps1/generateResistorGridNetlist.m',
+   path => 'ece1254/ps1/genResistorGridNl.m',
    PROBLEMSET => 1,
    WHAT => qq(A small Matlab function that generates a netlist for a network made by:
 N x N square grid of resistors of value R, where N is the number of...)
@@ -183,13 +183,13 @@ the algorithm in Quarteroni, et al's "Numerical Mathematics".)
 },
 {
    DATE => 'Nov 2, 2014',
-   path => 'ece1254/ps2a/generateNodalEquationsPartEH.m',
+   path => 'ece1254/ps2a/nodalEquationsPartEH.m',
    PROBLEMSET => 1,
    WHAT => qq(Generate the modified nodal analysis equations G x = b, for the grid specified in ps2 problem 1 part a.)
 },
 {
    DATE => 'Nov 2, 2014',
-   path => 'ece1254/ps2a/generateResistorGridNetlist.m',
+   path => 'ece1254/ps2a/genResistorGridNl.m',
    PROBLEMSET => 1,
    WHAT => qq(Generate a resistor grid network for the problem of ps2a.  Relative to the network of the previous problem set, this one has a resistance from each node to ground, and also has a series resistance on the voltage source to ground.  An option to use a Norton equivalent current source for the voltage source is also provided, which allows the MNA matrix to be symmetric, which in turn allows CG methods to be used to solve.)
 },
@@ -201,7 +201,7 @@ the algorithm in Quarteroni, et al's "Numerical Mathematics".)
 },
 {
    DATE => 'Nov 2, 2014',
-   path => 'ece1254/ps2a/partEcollectTimings.m',
+   path => 'ece1254/ps2a/partEtimings.m',
    PROBLEMSET => 1,
    WHAT => qq(Collect and plot timing info for all the different solution methods: CG, LU, ...)
 },
@@ -291,19 +291,19 @@ the algorithm in Quarteroni, et al's "Numerical Mathematics".)
 },
 {
    DATE => 'Nov 22, 2014',
-   path => 'ece1254/ps3a/generateNetlist.m',
+   path => 'ece1254/ps3a/genNl.m',
    PROBLEMSET => 1,
    WHAT => qq(Generates the netlist for part b, and returns the table of RLC values and the numbers of these RLC segments for each level.)
 },
 {
    DATE => 'Nov 22, 2014',
-   path => 'ece1254/ps3a/generateNetlistSegment.m',
+   path => 'ece1254/ps3a/genNlSegment.m',
    PROBLEMSET => 1,
    WHAT => qq(A helper function that generates a sequence of serially connected RLC segments for one branch of the clock distribution network.)
 },
 {
    DATE => 'Nov 22, 2014',
-   path => 'ece1254/ps3a/generateNetlistSegmentForLevel.m',
+   path => 'ece1254/ps3a/genNlSegmentForLevel.m',
    PROBLEMSET => 1,
    WHAT => qq(For a given level greater than 1, call generateNetlistSegment for each fork of the clock distribution network in this level.)
 },
@@ -369,7 +369,7 @@ the algorithm in Quarteroni, et al's "Numerical Mathematics".)
 },
 {
    DATE => 'Nov 29, 2014',
-   path => 'ece1254/ps3b/generateNetlist.m',
+   path => 'ece1254/ps3b/genNl.m',
    PROBLEMSET => 1,
    WHAT => qq(Generate the netlist to use in the part c N=500 frequency response plot.)
 },
